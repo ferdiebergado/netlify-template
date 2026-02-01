@@ -1,7 +1,8 @@
-import { ComponentExample } from "@/components/component-example";
+import { RouterRoot } from 'waymark';
+import { routes } from './routes';
 
 export function App() {
-return <ComponentExample />;
+  return <RouterRoot routes={routes} />;
 }
 
 export default App;
