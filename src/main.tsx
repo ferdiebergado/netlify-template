@@ -1,9 +1,9 @@
+import { ErrorFallback } from '@/components/ErrorFallback';
 import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 import App from './App';
-import { ErrorFallback } from './components/ErrorFallback';
 import './index.css';
 
 const queryClient = new QueryClient();
