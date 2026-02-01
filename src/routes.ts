@@ -1,8 +1,6 @@
-import { lazy } from 'react';
 import { route } from 'waymark';
 
-const Home = lazy(() => import('./Home'));
+const home = route('/').lazy(() => import('./Home'));
+const notFound = route('/*').lazy(() => import('./components/NotFoundPage'));
 
-const home = route('/').component(Home);
-
-export const routes = [home];
+export const routes = [home, notFound];
