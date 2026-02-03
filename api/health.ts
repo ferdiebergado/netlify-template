@@ -1,7 +1,5 @@
-type Health = {
-  nodeVersion: string;
-};
+import { type Database } from './db';
 
-export function getHealth(): Health {
-  return { nodeVersion: process.version };
+export async function checkHealth(db: Database) {
+  await db.execute('SELECT 1');
 }
