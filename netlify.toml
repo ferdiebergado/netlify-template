@@ -1,3 +1,6 @@
+[functions]
+directory = "api/netlify"
+
 [[redirects]]
 from = "/*"
 to = "/index.html"
