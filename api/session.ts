@@ -1,5 +1,5 @@
 import type { Context } from '@netlify/functions';
-import { randomBytes } from 'crypto';
+import { randomBytes } from 'node:crypto';
 import type { NewUser } from '../shared/schema';
 import { RANDOM_BYTES_SIZE, SESSION_COOKIE_NAME, SESSION_DURATION_HOURS } from './constants';
 import { db } from './db';
