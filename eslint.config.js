@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import pluginQuery from '@tanstack/eslint-plugin-query';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import { defineConfig, globalIgnores } from 'eslint/config';
@@ -16,6 +17,7 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
       ...pluginQuery.configs['flat/recommended'],
+      eslintConfigPrettier,
     ],
     languageOptions: {
       ecmaVersion: 2020,
@@ -23,7 +25,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['netlify/**/*.{ts,js}'],
+    files: ['netlify/**/*.{ts,js}', 'api/**/*.{ts,js}'],
     extends: [js.configs.recommended, tseslint.configs.strictTypeChecked, eslintConfigPrettier],
     languageOptions: {
       ecmaVersion: 2020,
