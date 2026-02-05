@@ -35,7 +35,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['netlify/**/*.{ts,js}', 'api/**/*.{ts,js}', 'shared/**/*.{ts,js}'],
+    files: ['netlify/**/*.{ts,js}', 'shared/**/*.{ts,js}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.strictTypeChecked,
