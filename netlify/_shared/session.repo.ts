@@ -1,5 +1,5 @@
-import type { Database } from '../db';
-import { setSessionDuration, type Session } from '../session';
+import type { Database } from './db';
+import { setSessionDuration, type Session } from './session';
 
 export async function createSession(db: Database, session: Session): Promise<void> {
   console.log('Creating session...');

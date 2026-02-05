@@ -1,5 +1,5 @@
-import type { NewUser } from '../../shared/schema';
-import type { Database } from '../db';
+import type { User } from '../../shared/schemas/user.schema';
+import type { Database } from './db';
 
 type UpsertUserRow = {
   id: number;
@@ -7,7 +7,7 @@ type UpsertUserRow = {
 
 export async function upsertUser(
   db: Database,
-  { googleId, name, email, picture }: NewUser
+  { googleId, name, email, picture }: User
 ): Promise<number> {
   console.log('Creating user...');
 

@@ -1,7 +1,7 @@
 import type { Config } from '@netlify/functions';
-import { db } from '../db';
+import { db } from '../_shared/db';
+import { checkHealth } from '../_shared/ping';
 import { respondWithError } from '../errors';
-import { checkHealth } from '../use-cases/ping';
 
 export const config: Config = {
   method: 'GET',

@@ -1,4 +1,4 @@
-import type { APIResponse } from './response';
+import type { APIResponse } from '../response';
 
 export class HttpError extends Error {
   public readonly statusCode: number;
