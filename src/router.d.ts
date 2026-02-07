@@ -1,6 +1,6 @@
 import { routes } from './routes';
 
-declare module 'waymark' {
+declare module '@typeroute/router' {
   interface Register {
     routes: typeof routes;
   }

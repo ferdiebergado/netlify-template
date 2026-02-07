@@ -1,4 +1,4 @@
-import { route } from 'waymark';
+import { route } from '@typeroute/router';
 import Home from './Home';
 import NotFoundPage from './pages/not-found-page';
 

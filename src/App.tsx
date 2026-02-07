@@ -1,7 +1,7 @@
-import { ErrorFallback } from '@/components/ErrorFallback';
 import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from '@tanstack/react-query';
+import { RouterRoot } from '@typeroute/router';
 import { ErrorBoundary } from 'react-error-boundary';
-import { RouterRoot } from 'waymark';
+import FallbackPage from './pages/fallback-page';
 import { routes } from './routes';
 
 const queryClient = new QueryClient();
@@ -13,7 +13,7 @@ export function App() {
         {({ reset }) => (
           <ErrorBoundary
             fallbackRender={({ error, resetErrorBoundary }) => (
-              <ErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
+              <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
             )}
             onReset={reset}
           >
