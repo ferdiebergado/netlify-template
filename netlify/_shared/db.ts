@@ -20,7 +20,7 @@ export interface Database {
 }
 
 export const db = createClient({
-  url: process.env.TURSO_DATABASE_URL ?? DEFAULT_DB,
+  url: process.env.DATABASE_URL ?? DEFAULT_DB,
   authToken: process.env.TURSO_AUTH_TOKEN,
 });
 
