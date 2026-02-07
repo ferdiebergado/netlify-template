@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
   return (
-    <Card>
+    <Card className="w-full md:w-8/10">
       <CardHeader>
         <CardTitle>Home</CardTitle>
       </CardHeader>
