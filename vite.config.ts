@@ -17,7 +17,7 @@ export default defineConfig({
       {
         test: {
           name: 'node',
-          include: ['netlify/functions/**/*.{test,spec}.ts', 'api/**/*.{test,spec}.ts'],
+          include: ['netlify/**/*.{test,spec}.ts'],
           environment: 'node',
           setupFiles: ['setup.node.ts'],
         },
