@@ -9,12 +9,12 @@ import {
 } from '@/components/ui/empty';
 import { RefreshCcwIcon, TriangleAlert } from 'lucide-react';
 
-type ErrorFallbackProps = {
+type FallbackPageProps = {
   error: unknown;
   resetErrorBoundary: (...args: unknown[]) => void;
 };
 
-export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+export default function FallbackPage({ error, resetErrorBoundary }: FallbackPageProps) {
   const handleClick = () => resetErrorBoundary();
 
   return (
@@ -23,7 +23,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
         <EmptyMedia variant="icon">
           <TriangleAlert />
         </EmptyMedia>
-        <EmptyTitle>SYSTEM ERROR</EmptyTitle>
+        <EmptyTitle>CRITICAL ERROR</EmptyTitle>
         <EmptyDescription className="max-w-xs text-pretty">
           {error instanceof Error ? error.message : 'An unknown error occurred.'}
         </EmptyDescription>
