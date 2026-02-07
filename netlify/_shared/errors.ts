@@ -1,4 +1,4 @@
-import type { APIResponse } from '../response';
+import type { Failure } from '../../shared/types/api';
 
 export class HttpError extends Error {
   public readonly statusCode: number;
@@ -30,19 +30,17 @@ export class UnauthorizedError extends HttpError {
 }
 
 export function respondWithError(error: unknown) {
-  const res: APIResponse<{ message: string }> = {
+  const failure: Failure = {
     status: 'failed',
-    error: {
-      message: 'Something went wrong.',
-    },
+    error: 'Something went wrong.',
   };
 
   let statusCode = 500;
 
   if (error instanceof HttpError) {
-    res.error.message = error.message;
+    failure.error = error.message;
     statusCode = error.statusCode;
   }
 
-  return Response.json(res, { status: statusCode });
+  return Response.json(failure, { status: statusCode });
 }
