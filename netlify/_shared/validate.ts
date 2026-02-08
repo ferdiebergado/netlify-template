@@ -1,15 +1,10 @@
 import * as z from 'zod';
-import type { APIResponse } from '../../shared/types/api';
+import { BadRequestError } from './errors';
 
-export function validateBody<T>(body: string | null, schema: z.ZodType<T>): T | Response {
-  try {
-    return schema.parse(JSON.parse(body ?? '{}'));
-  } catch {
-    const payload: APIResponse<string> = {
-      status: 'failed',
-      error: 'Invalid request body',
-    };
+export function validateBody<T>(body: unknown, schema: z.ZodType<T>): T {
+  const { error, data } = schema.safeParse(body);
 
-    return Response.json(payload, { status: 400 });
-  }
+  if (error) throw new BadRequestError(error.message);
+
+  return data;
 }
