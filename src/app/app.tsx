@@ -1,4 +1,6 @@
+import Loader from '@/components/loader';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import FallbackPage from './pages/fallback-page';
 import Provider from './provider';
@@ -15,7 +17,9 @@ export function App() {
             )}
             onReset={reset}
           >
-            <Router />
+            <Suspense fallback={<Loader />}>
+              <Router />
+            </Suspense>
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
