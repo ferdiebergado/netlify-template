@@ -30,6 +30,8 @@ export class UnauthorizedError extends HttpError {
 }
 
 export function respondWithError(error: unknown) {
+  console.error(error);
+
   const failure: Failure = {
     status: 'failed',
     error: 'Something went wrong.',
