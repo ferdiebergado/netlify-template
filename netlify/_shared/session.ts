@@ -1,8 +1,9 @@
 import type { Context } from '@netlify/functions';
 import { randomBytes } from 'node:crypto';
-import type { User } from '../../shared/schemas/user.schema';
+import type { NewUser } from '../../shared/schemas/user.schema';
 import { RANDOM_BYTES_SIZE, SESSION_COOKIE_NAME, SESSION_DURATION_HOURS } from './constants';
 import { db } from './db';
+import { UnauthorizedError } from './errors';
 import { createSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
 import { getClientIP } from './utils';
@@ -16,7 +17,7 @@ export type Session = {
   maxAge: number;
 };
 
-export async function newSession(user: User, req: Request): Promise<Session> {
+export async function newSession(user: NewUser, req: Request): Promise<Session> {
   const userId = await upsertUser(db, user);
 
   const sessionId = generateSessionId();

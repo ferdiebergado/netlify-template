@@ -1,0 +1,41 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { FieldDescription } from '@/components/ui/field';
+import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
+import { useCallback, type ComponentProps } from 'react';
+import { cn } from '../../../lib/utils';
+import { useMe } from '../hooks';
+
+export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
+  const { mutate } = useMe();
+
+  const handleSuccess = useCallback(
+    ({ credential }: CredentialResponse) => {
+      if (!credential) return;
+      mutate(credential);
+    },
+    [mutate]
+  );
+
+  return (
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardDescription>Login with your Google account</CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center">
+          <GoogleLogin
+            size="large"
+            theme="filled_blue"
+            shape="rectangular"
+            onSuccess={handleSuccess}
+          />
+        </CardContent>
+      </Card>
+      <FieldDescription className="px-6 text-center">
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
+        <a href="#">Privacy Policy</a>.
+      </FieldDescription>
+    </div>
+  );
+}
