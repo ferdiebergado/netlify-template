@@ -1,6 +1,7 @@
 # Todos
 
-- [ ] Suspense Boundary
-- Data-table component
-- Reusable datatable components
-- browser tests
+- [x] Suspense Boundary
+- [x] Data-table component
+- [x] Reusable datatable components
+- [ ] browser tests
+- [ ] google oauth
