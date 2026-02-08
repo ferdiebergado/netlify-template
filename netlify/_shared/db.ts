@@ -6,8 +6,7 @@ import {
   type ResultSet,
   type Row,
 } from '@libsql/client';
-
-const DEFAULT_DB = 'file:local.db';
+import { env } from './config';
 
 export type TResultSet<T> = Omit<ResultSet, 'rows'> & {
   rows: T[];
@@ -20,8 +19,8 @@ export interface Database {
 }
 
 export const db = createClient({
-  url: process.env.DATABASE_URL ?? DEFAULT_DB,
-  authToken: process.env.TURSO_AUTH_TOKEN,
+  url: env.DATABASE_URL,
+  authToken: env.TURSO_AUTH_TOKEN,
 });
 
 export async function runInTransaction<TArgs extends unknown[], TReturn>(
