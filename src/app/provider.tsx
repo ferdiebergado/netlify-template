@@ -1,8 +1,8 @@
-import DarkModeProvider from '@/features/dark-mode/components/mode-provider';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router';
+import DarkModeProvider from '../features/dark-mode/components/mode-provider';
 
 const queryClient = new QueryClient();
 
