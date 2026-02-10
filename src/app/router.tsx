@@ -1,9 +1,11 @@
 import Layout from '@/components/layout';
 import PublicLayout from '@/components/public-layout';
+import { lazy } from 'react';
 import { useRoutes, type RouteObject } from 'react-router';
-import LoginPage from '../features/auth/components/login-page';
-import Home from './pages/home';
 import NotFoundPage from './pages/not-found-page';
+
+const LoginPage = lazy(() => import('../features/auth/components/login-page'));
+const Home = lazy(() => import('./pages/home'));
 
 const routes: RouteObject[] = [
   {
