@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { fetchMe } from './api';
+import { login } from './api';
 
-export function useMe() {
+export function useLogin() {
   return useMutation({
-    mutationFn: (token: string) => fetchMe(token),
+    mutationFn: (token: string) => login(token),
   });
 }

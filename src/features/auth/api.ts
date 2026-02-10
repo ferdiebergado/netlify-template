@@ -1,5 +1,5 @@
 import { api } from '../../lib/client';
 
-export function fetchMe(token: string) {
-  return api.post('/me', { token });
+export function login(token: string) {
+  return api.post('/login', { token });
 }

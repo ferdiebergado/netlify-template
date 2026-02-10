@@ -3,17 +3,17 @@ import { FieldDescription } from '@/components/ui/field';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { useCallback, type ComponentProps } from 'react';
 import { cn } from '../../../lib/utils';
-import { useMe } from '../hooks';
+import { useLogin } from '../hooks';
 
 export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
-  const { mutate } = useMe();
+  const { mutate: login } = useLogin();
 
   const handleSuccess = useCallback(
     ({ credential }: CredentialResponse) => {
       if (!credential) return;
-      mutate(credential);
+      login(credential);
     },
-    [mutate]
+    [login]
   );
 
   return (

@@ -1,4 +1,4 @@
-import type { Context } from '@netlify/functions';
+import type { Config, Context } from '@netlify/functions';
 import { OAuth2Client, type TokenPayload } from 'google-auth-library';
 import * as z from 'zod';
 import type { Success } from '../../shared/types/api';
@@ -14,6 +14,10 @@ const client = new OAuth2Client(clientId);
 const loginSchema = z.object({
   token: z.jwt(),
 });
+
+export const config: Config = {
+  method: 'POST',
+};
 
 export default async (req: Request, ctx: Context) => {
   try {
