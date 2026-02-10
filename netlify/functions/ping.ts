@@ -14,6 +14,6 @@ export default async () => {
     const data = { message: 'up' };
     return Response.json({ data });
   } catch (error) {
-    respondWithError(error);
+    return respondWithError(error);
   }
 };

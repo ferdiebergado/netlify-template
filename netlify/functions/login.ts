@@ -62,6 +62,6 @@ export default async (req: Request, ctx: Context) => {
 
     return Response.json(res);
   } catch (error) {
-    respondWithError(error);
+    return respondWithError(error);
   }
 };
