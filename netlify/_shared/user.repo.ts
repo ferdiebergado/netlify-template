@@ -1,4 +1,4 @@
-import type { NewUser } from '../../shared/schemas/user.schema';
+import type { NewUser, User } from '../../shared/schemas/user.schema';
 import type { Database } from './db';
 
 type UpsertUserRow = {
@@ -36,4 +36,30 @@ RETURNING
   if (rows.length === 0) throw new Error('Failed to upsert user: no data returned.');
 
   return rows[0].id;
+}
+
+type UserRow = {
+  name: string;
+  email: string;
+  picture: string;
+};
+
+export async function getUser(db: Database, id: number): Promise<Omit<User, 'id' | 'googleId'>> {
+  const sql = `
+SELECT
+  name,
+  email,
+  picture
+FROM
+  users
+WHERE
+  id = ?
+AND
+    deleted_at IS NULL`;
+
+  const { rows } = await db.execute<UserRow>(sql, [id]);
+
+  if (rows.length === 0) throw new Error(`User with id: ${id.toString()} does not exist.`);
+
+  return rows[0];
 }

@@ -1,21 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldDescription } from '@/components/ui/field';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
-import { useCallback, type ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 import { cn } from '../../../lib/utils';
-import { useLogin } from '../hooks';
 
-export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
-  const { mutate: login } = useLogin();
+type LoginFormProps = ComponentProps<'div'> & {
+  onSuccess: (creds: CredentialResponse) => void;
+};
 
-  const handleSuccess = useCallback(
-    ({ credential }: CredentialResponse) => {
-      if (!credential) return;
-      login(credential);
-    },
-    [login]
-  );
-
+export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -24,12 +17,7 @@ export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
           <CardDescription>Login with your Google account</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
-          <GoogleLogin
-            size="large"
-            theme="filled_blue"
-            shape="rectangular"
-            onSuccess={handleSuccess}
-          />
+          <GoogleLogin size="large" theme="filled_blue" shape="rectangular" onSuccess={onSuccess} />
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">

@@ -1,5 +1,10 @@
+import type { User } from 'shared/schemas/user.schema';
 import { api } from '../../lib/client';
 
-export function login(token: string) {
-  return api.post('/login', { token });
+export async function login(token: string) {
+  return await api.post('/login', { token });
+}
+
+export async function fetchMe() {
+  return await api.get<User>('/me');
 }

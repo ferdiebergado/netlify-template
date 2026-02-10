@@ -2,6 +2,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router';
+import { AuthProvider } from '../features/auth/components/auth-provider';
 import DarkModeProvider from '../features/dark-mode/components/mode-provider';
 
 const queryClient = new QueryClient();
@@ -15,7 +16,9 @@ export default function Provider({ children }: ProviderProps) {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-          <DarkModeProvider>{children}</DarkModeProvider>
+          <AuthProvider>
+            <DarkModeProvider>{children}</DarkModeProvider>
+          </AuthProvider>
         </GoogleOAuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

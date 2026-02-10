@@ -1,7 +1,25 @@
+import Loader from '@/components/loader';
+import type { CredentialResponse } from '@react-oauth/google';
 import { GalleryVerticalEnd } from 'lucide-react';
+import { useCallback } from 'react';
+import { useAuth } from '../context';
+import { useLogin } from '../hooks';
 import { LoginForm } from './login-form';
 
 export default function LoginPage() {
+  const { isLoading } = useAuth();
+  const { isPending, mutate: login } = useLogin();
+
+  const handleSuccess = useCallback(
+    ({ credential }: CredentialResponse) => {
+      if (!credential) return;
+      login(credential);
+    },
+    [login]
+  );
+
+  if (isPending || isLoading) return <Loader />;
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -11,7 +29,7 @@ export default function LoginPage() {
           </div>
           Acme Inc.
         </a>
-        <LoginForm />
+        <LoginForm onSuccess={handleSuccess} />
       </div>
     </div>
   );
