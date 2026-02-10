@@ -13,7 +13,9 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle>
+            <h1 className="text-xl">Welcome back</h1>
+          </CardTitle>
           <CardDescription>Login with your Google account</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
