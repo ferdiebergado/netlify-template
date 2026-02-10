@@ -25,7 +25,7 @@ export default defineConfig({
       },
       {
         test: {
-          include: ['src/**/*.browser.{test,spec}.tsx'],
+          include: ['src/**/*.{test,spec}.tsx'],
           name: 'browser',
           alias: {
             '@': path.resolve(__dirname, './src'),
