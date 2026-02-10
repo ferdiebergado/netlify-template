@@ -18,12 +18,12 @@ export default function FallbackPage({ error, resetErrorBoundary }: FallbackPage
   const handleClick = () => resetErrorBoundary();
 
   return (
-    <Empty className="bg-muted/30 h-full">
+    <Empty className="h-screen">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <TriangleAlert />
         </EmptyMedia>
-        <EmptyTitle>CRITICAL ERROR</EmptyTitle>
+        <EmptyTitle className="text-destructive text-2xl">CRITICAL ERROR</EmptyTitle>
         <EmptyDescription className="max-w-xs text-pretty">
           {error instanceof Error ? error.message : 'An unknown error occurred.'}
         </EmptyDescription>

@@ -2,9 +2,9 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/u
 
 export default function NotFoundPage() {
   return (
-    <Empty>
+    <Empty className="flex h-screen items-center">
       <EmptyHeader>
-        <EmptyTitle>Page Not Found</EmptyTitle>
+        <EmptyTitle className="text-4xl">Page Not Found</EmptyTitle>
         <EmptyDescription>The page you&apos;re looking for doesn&apos;t exist.</EmptyDescription>
       </EmptyHeader>
     </Empty>
