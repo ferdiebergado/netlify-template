@@ -1,9 +1,14 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchMe, login } from './api';
 
 export function useLogin() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (token: string) => login(token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+    },
   });
 }
 
