@@ -22,6 +22,10 @@ VALUES
   await db.execute(sql, [sessionId, userId, ip, userAgent, expiresAt.toISOString()]);
 }
 
+type TouchSessionRow = {
+  user_id: number;
+};
+
 export async function touchSession(db: Database, sessionId: string): Promise<number> {
   const sql = `
 UPDATE
@@ -30,17 +34,16 @@ SET
   last_active_at = CURRENT_TIMESTAMP,
   expires_at = ?
 WHERE 
-  deleted_at IS NULL
+    session_id = ?
 AND
-  session_id = ?
+    deleted_at IS NULL
 RETURNING
   user_id`;
 
   const { expiresAt } = setSessionDuration();
-  const { rows } = await db.execute(sql, [expiresAt.toISOString(), sessionId]);
+  const { rows } = await db.execute<TouchSessionRow>(sql, [expiresAt.toISOString(), sessionId]);
 
-  if (rows.length === 0)
-    throw new ResourceNotFoundError(`session with id: ${sessionId} does not exists.`);
+  if (rows.length === 0) throw new Error(`session with id: ${sessionId} does not exists.`);
 
-  return rows[0].user_id as number;
+  return rows[0].user_id;
 }
