@@ -16,7 +16,7 @@ export default function Provider({ children }: ProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID}>
+        <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID} locale="en-US">
           <AuthProvider>
             <DarkModeProvider>{children}</DarkModeProvider>
           </AuthProvider>
