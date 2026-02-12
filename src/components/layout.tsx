@@ -3,7 +3,6 @@ import { Outlet } from 'react-router';
 import { ModeToggle } from '../features/dark-mode/components/mode-toggle';
 import { AppSidebar } from './app-sidebar';
 import { SidebarProvider, SidebarTrigger } from './ui/sidebar';
-import { Toaster } from './ui/sonner';
 import { TooltipProvider } from './ui/tooltip';
 
 export default function Layout() {
@@ -21,7 +20,6 @@ export default function Layout() {
           </main>
         </SidebarProvider>
       </TooltipProvider>
-      <Toaster />
     </div>
   );
 }

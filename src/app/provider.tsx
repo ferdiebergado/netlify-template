@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
@@ -18,7 +19,10 @@ export default function Provider({ children }: ProviderProps) {
       <BrowserRouter>
         <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID} locale="en-US">
           <AuthProvider>
-            <DarkModeProvider>{children}</DarkModeProvider>
+            <DarkModeProvider>
+              {children}
+              <Toaster position="top-right" richColors closeButton />
+            </DarkModeProvider>
           </AuthProvider>
         </GoogleOAuthProvider>
       </BrowserRouter>

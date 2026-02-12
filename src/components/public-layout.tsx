@@ -1,7 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
-import { useAuth } from '../features/auth/context';
+import { useAuth } from '../features/auth/hooks';
 import Loader from './loader';
-import { Toaster } from './ui/sonner';
 
 export default function PublicLayout() {
   const { user, isLoading } = useAuth();
@@ -10,11 +9,8 @@ export default function PublicLayout() {
   if (user) return <Navigate to="/" replace />;
 
   return (
-    <>
-      <main className="bg-muted flex h-screen items-center justify-center">
-        <Outlet />
-      </main>
-      <Toaster />
-    </>
+    <main className="bg-muted flex h-screen items-center justify-center">
+      <Outlet />
+    </main>
   );
 }
