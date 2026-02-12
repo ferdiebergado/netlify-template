@@ -1,34 +1,34 @@
-import type { APIResponse } from '../../shared/types/api';
+import type { UnknownRecord } from 'type-fest';
+import type { APIData, APIResponse } from '../../shared/types/api';
 
 const BASE_URL = '/.netlify/functions';
+const headers = { 'Content-Type': 'application/json' };
 
-async function request<T>(path: string, options?: RequestInit): Promise<T> {
+async function request<T extends UnknownRecord>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, options);
 
   const json = (await res.json()) as APIResponse<T>;
 
-  if (json.status === 'failed') {
-    throw new Error(json.error);
-  }
+  if (json.status === 'failed') throw new Error(json.error);
 
   return json.data;
 }
 
 export const api = {
-  get: <T>(path: string) => request<T>(path),
-  post: <T>(path: string, body: unknown) =>
+  get: <T extends UnknownRecord = APIData>(path: string) => request<T>(path),
+  post: <T extends UnknownRecord = APIData>(path: string, body: unknown) =>
     request<T>(path, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(body),
     }),
-  put: <T>(path: string, body: unknown) =>
+  put: <T extends UnknownRecord = APIData>(path: string, body: unknown) =>
     request<T>(path, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(body),
     }),
-  delete: <T>(path: string) =>
+  delete: <T extends UnknownRecord = APIData>(path: string) =>
     request<T>(path, {
       method: 'DELETE',
     }),
