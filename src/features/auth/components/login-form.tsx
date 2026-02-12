@@ -6,9 +6,10 @@ import { cn } from '../../../lib/utils';
 
 type LoginFormProps = ComponentProps<'div'> & {
   onSuccess: (creds: CredentialResponse) => void;
+  onError: () => void;
 };
 
-export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
+export function LoginForm({ className, onSuccess, onError, ...props }: LoginFormProps) {
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -19,7 +20,13 @@ export function LoginForm({ className, onSuccess, ...props }: LoginFormProps) {
           <CardDescription>Login with your Google account</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
-          <GoogleLogin size="large" theme="filled_blue" shape="rectangular" onSuccess={onSuccess} />
+          <GoogleLogin
+            size="large"
+            theme="filled_blue"
+            shape="rectangular"
+            onSuccess={onSuccess}
+            onError={onError}
+          />
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">

@@ -2,6 +2,7 @@ import Loader from '@/components/loader';
 import type { CredentialResponse } from '@react-oauth/google';
 import { GalleryVerticalEnd } from 'lucide-react';
 import { useCallback } from 'react';
+import { toast } from 'sonner';
 import { useAuth } from '../context';
 import { useLogin } from '../hooks';
 import { LoginForm } from './login-form';
@@ -18,6 +19,10 @@ export default function LoginPage() {
     [login]
   );
 
+  const handleError = useCallback(() => {
+    toast.error('Login failed.');
+  }, []);
+
   if (isPending || isLoading) return <Loader />;
 
   return (
@@ -29,7 +34,7 @@ export default function LoginPage() {
           </div>
           Acme Inc.
         </a>
-        <LoginForm onSuccess={handleSuccess} />
+        <LoginForm onSuccess={handleSuccess} onError={handleError} />
       </div>
     </div>
   );
