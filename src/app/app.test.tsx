@@ -9,8 +9,8 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { AuthProvider } from '../features/auth/components/auth-provider';
 import DarkModeProvider from '../features/dark-mode/components/mode-provider';
+import Page from './page';
 import FallbackPage from './pages/fallback-page';
-import Router from './router';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,7 +51,7 @@ async function renderApp() {
             onReset={reset}
           >
             <Suspense fallback={<Loader />}>
-              <Router />
+              <Page />
             </Suspense>
           </ErrorBoundary>
         )}

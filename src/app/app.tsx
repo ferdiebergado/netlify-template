@@ -2,9 +2,9 @@ import Loader from '@/components/loader';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import Page from './page';
 import FallbackPage from './pages/fallback-page';
 import Provider from './provider';
-import Router from './router';
 
 export function App() {
   return (
@@ -18,7 +18,7 @@ export function App() {
             onReset={reset}
           >
             <Suspense fallback={<Loader />}>
-              <Router />
+              <Page />
             </Suspense>
           </ErrorBoundary>
         )}
