@@ -5,10 +5,7 @@ type UpsertUserRow = {
   id: number;
 };
 
-export async function upsertUser(
-  db: Database,
-  { googleId, name, email, picture }: NewUser
-): Promise<number> {
+export async function upsertUser(db: Database, user: NewUser): Promise<number> {
   console.log('Creating user...');
 
   const sql = `
@@ -31,7 +28,12 @@ ON CONFLICT
 RETURNING
   id`;
 
-  const { rows } = await db.execute<UpsertUserRow>(sql, [googleId, name, email, picture]);
+  const { rows } = await db.execute<UpsertUserRow>(sql, [
+    user.googleId,
+    user.name,
+    user.email,
+    user.picture ?? '',
+  ]);
 
   if (rows.length === 0) throw new Error('Failed to upsert user: no data returned.');
 

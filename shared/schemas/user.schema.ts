@@ -5,7 +5,7 @@ export const userSchema = z.object({
   googleId: z.string(),
   name: z.string().min(1, 'Name is required.'),
   email: z.email(),
-  picture: z.string().min(1, 'Picture is required.'),
+  picture: z.url().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;

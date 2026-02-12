@@ -29,14 +29,14 @@ export default async (req: Request, ctx: Context) => {
       audience: clientId,
     });
 
-    const payload: TokenPayload | undefined = ticket.getPayload();
+    const tokenPayload: TokenPayload | undefined = ticket.getPayload();
 
-    if (!payload) throw new UnauthorizedError('Invalid token payload');
+    if (!tokenPayload) throw new UnauthorizedError('Invalid token payload');
 
-    console.debug('payload:', payload);
-    const { sub, name, email, picture, iss } = payload;
+    console.debug('payload:', tokenPayload);
+    const { sub, name, email, picture, iss } = tokenPayload;
 
-    if (!name || !email || !picture) throw new UnauthorizedError('Insufficient scope');
+    if (!name || !email) throw new UnauthorizedError('Insufficient scope');
 
     if (iss !== 'https://accounts.google.com') throw new UnauthorizedError('Invalid issuer');
 
@@ -54,13 +54,12 @@ export default async (req: Request, ctx: Context) => {
     });
 
     const data = { message: 'Logged in.' };
-
-    const res: Success<typeof data> = {
+    const payload: Success = {
       status: 'success',
       data,
     };
 
-    return Response.json(res);
+    return Response.json(payload);
   } catch (error) {
     return respondWithError(error);
   }
