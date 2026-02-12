@@ -4,4 +4,6 @@
 - [x] Data-table component
 - [x] Reusable datatable components
 - [ ] browser tests
-- [ ] google oauth
+- [x] google oauth
+- [ ] remove next-themes
+- [ ] suspend auth provider

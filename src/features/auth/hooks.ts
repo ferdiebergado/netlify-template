@@ -1,28 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLocation, useNavigate } from 'react-router';
-import { fetchMe, login } from './api';
+import { createContext, useContext } from 'react';
+import type { User } from 'shared/schemas/user.schema';
 
-export function useLogin() {
-  const queryClient = useQueryClient();
-  const location = useLocation();
-  const navigate = useNavigate();
+type AuthContextValue = {
+  user?: User;
+  isLoading: boolean;
+};
 
-  return useMutation({
-    mutationFn: (token: string) => login(token),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['me'] });
-      const from = location.state?.from ?? '/';
-      navigate(from, { replace: true });
-    },
-  });
-}
+export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function useMe() {
-  return useQuery({
-    queryKey: ['me'],
-    queryFn: fetchMe,
-    staleTime: 5 * 60 * 1000,
-    retry: false,
-    throwOnError: false,
-  });
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+
+  return ctx;
 }

@@ -1,6 +1,6 @@
 import Loader from '@/components/loader';
 import { Navigate, Outlet, useLocation } from 'react-router';
-import { useAuth } from '../context';
+import { useAuth } from '../hooks';
 
 export default function AuthGuard() {
   const { isLoading, user } = useAuth();

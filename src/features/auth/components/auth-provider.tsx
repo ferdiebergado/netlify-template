@@ -1,6 +1,6 @@
 import { useMemo, type ReactNode } from 'react';
-import { AuthContext } from '../context';
-import { useMe } from '../hooks';
+import { AuthContext } from '../hooks';
+import { useMe } from '../queries';
 
 type AuthProviderProps = {
   children: ReactNode;

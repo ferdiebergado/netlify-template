@@ -3,8 +3,8 @@ import type { CredentialResponse } from '@react-oauth/google';
 import { GalleryVerticalEnd } from 'lucide-react';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
-import { useAuth } from '../context';
-import { useLogin } from '../hooks';
+import { useAuth } from '../hooks';
+import { useLogin } from '../queries';
 import { LoginForm } from './login-form';
 
 export default function LoginPage() {
