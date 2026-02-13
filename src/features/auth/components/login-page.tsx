@@ -2,21 +2,33 @@ import Loader from '@/components/loader';
 import type { CredentialResponse } from '@react-oauth/google';
 import { GalleryVerticalEnd } from 'lucide-react';
 import { useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { useAuth } from '../hooks';
-import { useLogin } from '../queries';
+import { useLoginMutation } from '../queries';
 import { LoginForm } from './login-form';
 
 export default function LoginPage() {
   const { isLoading } = useAuth();
-  const { isPending, mutate: login } = useLogin();
+  const { isPending, mutate: login } = useLoginMutation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSuccess = useCallback(
     ({ credential }: CredentialResponse) => {
       if (!credential) return;
-      login(credential);
+      login(credential, {
+        onSuccess: ({ message }) => {
+          if (message) toast.success(message);
+          const from = location.state?.from ?? '/';
+          navigate(from, { replace: true });
+        },
+        onError: (error: Error) => {
+          toast.error(error.message);
+        },
+      });
     },
-    [login]
+    [location.state?.from, login, navigate]
   );
 
   const handleError = useCallback(() => {
