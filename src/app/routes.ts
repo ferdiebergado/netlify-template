@@ -8,12 +8,16 @@ const LoginPage = lazy(() => import('../features/auth/components/login-page'));
 const Home = lazy(() => import('./pages/home'));
 const NotFoundPage = lazy(() => import('./pages/not-found-page'));
 
+export const paths = {
+  login: '/login' as const,
+};
+
 export const routes: RouteObject[] = [
   {
     Component: PublicLayout,
     children: [
       {
-        path: '/login',
+        path: paths.login,
         Component: LoginPage,
       },
     ],

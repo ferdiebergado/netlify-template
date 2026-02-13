@@ -1,6 +1,8 @@
-import Loader from '@/components/loader';
 import { type ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router';
+
+import Loader from '@/components/loader';
+import { paths } from '../../../app/routes';
 import { UserContext } from '../hooks';
 import { useCurrentUserQuery } from '../queries';
 
@@ -14,7 +16,7 @@ export default function CurrentUserProvider({ children }: CurrentUserProviderPro
 
   if (isLoading) return <Loader />;
 
-  if (isError) return <Navigate to="/login" replace state={{ from: pathname }} />;
+  if (isError) return <Navigate to={paths.login} replace state={{ from: pathname }} />;
 
   const value = {
     user,
