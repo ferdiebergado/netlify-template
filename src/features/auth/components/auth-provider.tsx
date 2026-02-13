@@ -1,13 +1,13 @@
 import { useMemo, type ReactNode } from 'react';
 import { AuthContext } from '../hooks';
-import { useMe } from '../queries';
+import { useMeQuery } from '../queries';
 
 type AuthProviderProps = {
   children: ReactNode;
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { isLoading, data: me } = useMe();
+  const { isLoading, data: me } = useMeQuery();
 
   const value = useMemo(
     () => ({

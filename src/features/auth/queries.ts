@@ -17,7 +17,7 @@ export function useLoginMutation() {
 }
 
 // TODO: match staleTime with session duration
-export function useMe() {
+export function useMeQuery() {
   return useQuery({
     queryKey: authKeys.me,
     queryFn: fetchMe,
