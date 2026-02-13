@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchMe, login } from './api';
 
 const authKeys = {
-  me: ['me'] as const,
+  currentUser: ['current-user'] as const,
 };
 
 export function useLoginMutation() {
@@ -10,8 +10,8 @@ export function useLoginMutation() {
 
   return useMutation({
     mutationFn: (token: string) => login(token),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: authKeys.me });
+    onSuccess: ({ user }) => {
+      queryClient.setQueryData(authKeys.currentUser, user);
     },
   });
 }
@@ -19,7 +19,7 @@ export function useLoginMutation() {
 // TODO: match staleTime with session duration
 export function useCurrentUserQuery() {
   return useQuery({
-    queryKey: authKeys.me,
+    queryKey: authKeys.currentUser,
     queryFn: fetchMe,
     staleTime: 5 * 60 * 1000,
     retry: false,

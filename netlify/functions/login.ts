@@ -53,7 +53,10 @@ export default async (req: Request, ctx: Context) => {
       sameSite: 'Lax',
     });
 
-    const data = { message: 'Logged in.' };
+    const data = {
+      message: 'Logged in.',
+      user,
+    };
     const payload: Success = {
       status: 'success',
       data,
