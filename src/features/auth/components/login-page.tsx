@@ -4,12 +4,10 @@ import { GalleryVerticalEnd } from 'lucide-react';
 import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
-import { useAuth } from '../hooks';
 import { useLoginMutation } from '../queries';
 import { LoginForm } from './login-form';
 
 export default function LoginPage() {
-  const { isLoading } = useAuth();
   const { isPending, mutate: login } = useLoginMutation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,7 +33,7 @@ export default function LoginPage() {
     toast.error('Login failed.');
   }, []);
 
-  if (isPending || isLoading) return <Loader />;
+  if (isPending) return <Loader />;
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">

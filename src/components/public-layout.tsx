@@ -1,11 +1,9 @@
 import { Navigate, Outlet } from 'react-router';
-import { useAuth } from '../features/auth/hooks';
-import Loader from './loader';
+import { useCurrentUser } from '../features/auth/hooks';
 
 export default function PublicLayout() {
-  const { user, isLoading } = useAuth();
+  const { user } = useCurrentUser();
 
-  if (isLoading) return <Loader />;
   if (user) return <Navigate to="/" replace />;
 
   return (

@@ -1,12 +1,9 @@
-import Loader from '@/components/loader';
 import { Navigate, Outlet, useLocation } from 'react-router';
-import { useAuth } from '../hooks';
+import { useCurrentUser } from '../hooks';
 
 export default function AuthGuard() {
-  const { isLoading, user } = useAuth();
+  const { user } = useCurrentUser();
   const { pathname } = useLocation();
-
-  if (isLoading) return <Loader />;
 
   if (!user) return <Navigate to="/login" replace state={{ from: pathname }} />;
 

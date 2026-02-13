@@ -7,7 +7,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { AuthProvider } from '../features/auth/components/auth-provider';
+
+import CurrentUserProvider from '../features/auth/components/current-user-provider';
 import DarkModeProvider from '../features/dark-mode/components/mode-provider';
 import Page from './page';
 import FallbackPage from './pages/fallback-page';
@@ -30,9 +31,9 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[initialRoute]}>
         <GoogleOAuthProvider clientId={import.meta.env.GOOGLE_CLIENT_ID}>
-          <AuthProvider>
+          <CurrentUserProvider>
             <DarkModeProvider>{children}</DarkModeProvider>
-          </AuthProvider>
+          </CurrentUserProvider>
         </GoogleOAuthProvider>
       </MemoryRouter>
     </QueryClientProvider>
