@@ -3,6 +3,7 @@ import type { User } from 'shared/schemas/user.schema';
 
 type UserContextValue = {
   user?: User;
+  isLoading: boolean;
 };
 
 export const UserContext = createContext<UserContextValue | undefined>(undefined);
