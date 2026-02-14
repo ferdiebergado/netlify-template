@@ -16,12 +16,11 @@ export function useLoginMutation() {
   });
 }
 
-// TODO: match staleTime with session duration
 export function useCurrentUserQuery() {
   return useQuery({
     queryKey: authKeys.currentUser,
     queryFn: fetchMe,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000,
     retry: false,
     throwOnError: false,
   });
