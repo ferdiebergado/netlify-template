@@ -1,9 +1,10 @@
-import Loader from '@/components/loader';
 import type { CredentialResponse } from '@react-oauth/google';
 import { GalleryVerticalEnd } from 'lucide-react';
 import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
+
+import Loader from '@/components/loader';
 import { useLoginMutation } from '../queries';
 import { LoginForm } from './login-form';
 
@@ -20,9 +21,6 @@ export default function LoginPage() {
           if (message) toast.success(message);
           const from = location.state?.from ?? '/';
           navigate(from, { replace: true });
-        },
-        onError: (error: Error) => {
-          toast.error(error.message);
         },
       });
     },
