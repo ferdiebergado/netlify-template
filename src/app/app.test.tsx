@@ -1,4 +1,3 @@
-import Loader from '@/components/loader';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
@@ -8,6 +7,7 @@ import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
+import FullPageLoader from '@/components/full-page-loader';
 import CurrentUserProvider from '../features/auth/components/current-user-provider';
 import DarkModeProvider from '../features/dark-mode/components/mode-provider';
 import Page from './page';
@@ -51,7 +51,7 @@ async function renderApp() {
             )}
             onReset={reset}
           >
-            <Suspense fallback={<Loader />}>
+            <Suspense fallback={<FullPageLoader />}>
               <Page />
             </Suspense>
           </ErrorBoundary>

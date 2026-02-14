@@ -4,7 +4,6 @@ import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
-import Loader from '@/components/loader';
 import { useLoginMutation } from '../queries';
 import { LoginForm } from './login-form';
 
@@ -31,8 +30,6 @@ export default function LoginPage() {
     toast.error('Login failed.');
   }, []);
 
-  if (isPending) return <Loader />;
-
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -42,7 +39,7 @@ export default function LoginPage() {
           </div>
           Acme Inc.
         </a>
-        <LoginForm onSuccess={handleSuccess} onError={handleError} />
+        <LoginForm onSuccess={handleSuccess} onError={handleError} isLoggingIn={isPending} />
       </div>
     </div>
   );

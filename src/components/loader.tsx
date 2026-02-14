@@ -1,10 +1,16 @@
+import { cn } from '@/lib/utils';
 import { LoaderIcon } from 'lucide-react';
+import type { ComponentProps } from 'react';
 
-export default function Loader() {
+type LoaderProps = ComponentProps<'div'> & {
+  text?: string;
+};
+
+export default function Loader({ className, text = 'Please wait', ...props }: LoaderProps) {
   return (
-    <div className="bg-muted flex h-screen w-full items-center justify-center">
+    <div className={cn('flex gap-3', className)} {...props}>
       <LoaderIcon className="mx-3 animate-spin" />
-      <span>Please wait...</span>
+      <span>{text}</span>
     </div>
   );
 }
