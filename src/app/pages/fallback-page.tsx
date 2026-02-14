@@ -23,7 +23,7 @@ export default function FallbackPage({ error, resetErrorBoundary }: FallbackPage
         <EmptyMedia variant="icon">
           <TriangleAlert />
         </EmptyMedia>
-        <EmptyTitle className="text-destructive text-2xl">CRITICAL ERROR</EmptyTitle>
+        <EmptyTitle className="text-destructive text-2xl">Something went wrong.</EmptyTitle>
         <EmptyDescription className="max-w-xs text-pretty">
           {error instanceof Error ? error.message : 'An unknown error occurred.'}
         </EmptyDescription>
