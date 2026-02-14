@@ -23,5 +23,6 @@ export function useCurrentUserQuery() {
     queryFn: fetchMe,
     staleTime: 5 * 60 * 1000,
     retry: false,
+    throwOnError: false,
   });
 }
