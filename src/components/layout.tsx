@@ -1,25 +1,26 @@
 import { Outlet } from 'react-router';
 
-import { ModeToggle } from '../features/dark-mode/components/mode-toggle';
 import { AppSidebar } from './app-sidebar';
-import { SidebarProvider, SidebarTrigger } from './ui/sidebar';
+import { SiteHeader } from './site-header';
+import { SidebarInset, SidebarProvider } from './ui/sidebar';
 import { TooltipProvider } from './ui/tooltip';
 
 export default function Layout() {
   return (
-    <div className="bg-muted h-screen">
-      <header className="p-5">
-        <ModeToggle />
-      </header>
-      <TooltipProvider>
-        <SidebarProvider>
-          <AppSidebar />
-          <main className="flex justify-center p-8">
-            <SidebarTrigger />
-            <Outlet />
-          </main>
-        </SidebarProvider>
-      </TooltipProvider>
-    </div>
+    <TooltipProvider>
+      <SidebarProvider>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+                <Outlet />
+              </div>
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </TooltipProvider>
   );
 }

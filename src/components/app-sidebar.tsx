@@ -1,20 +1,49 @@
+import type { ComponentProps } from 'react';
+import { Link } from 'react-router';
+
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { useCurrentUser } from '@/features/auth/hooks';
+import { LayoutDashboardIcon } from 'lucide-react';
+import NavMain from './nav-main';
+import NavUser from './nav-user';
 
-export function AppSidebar() {
+const data = {
+  navMain: [
+    {
+      title: 'Dashboard',
+      url: '/',
+      icon: LayoutDashboardIcon,
+    },
+  ],
+};
+
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const { user } = useCurrentUser();
+
   return (
-    <Sidebar>
-      <SidebarHeader />
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={<Link to="/">App</Link>}
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
+            ></SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup />
-        <SidebarGroup />
+        <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
     </Sidebar>
   );
 }
