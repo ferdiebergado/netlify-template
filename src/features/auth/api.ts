@@ -10,5 +10,5 @@ export async function login(token: string) {
 
 export async function fetchMe() {
   console.log('fetching current user...');
-  return await api.get<User>('/me');
+  return await api.get<User>(paths.me);
 }
