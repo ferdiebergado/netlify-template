@@ -8,8 +8,8 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 import FullPageLoader from '@/components/full-page-loader';
+import DarkModeProvider from '../components/dark-mode/mode-provider';
 import CurrentUserProvider from '../features/auth/components/current-user-provider';
-import DarkModeProvider from '../features/dark-mode/components/mode-provider';
 import Page from './page';
 import FallbackPage from './pages/fallback-page';
 

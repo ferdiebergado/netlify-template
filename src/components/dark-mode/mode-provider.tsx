@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ThemeProviderContext, type Theme, type ThemeProviderProps } from '../provider';
+import { ThemeProviderContext, type Theme, type ThemeProviderProps } from '.';
 
 export default function DarkModeProvider({
   children,

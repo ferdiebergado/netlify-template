@@ -5,9 +5,9 @@ import type { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router';
 import { toast } from 'sonner';
 
+import DarkModeProvider from '../components/dark-mode/mode-provider';
 import { env } from '../config';
 import CurrentUserProvider from '../features/auth/components/current-user-provider';
-import DarkModeProvider from '../features/dark-mode/components/mode-provider';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({

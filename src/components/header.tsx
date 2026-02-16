@@ -1,4 +1,4 @@
-import { ModeToggle } from '@/features/dark-mode/components/mode-toggle';
+import { ModeToggle } from '@/components/dark-mode/mode-toggle';
 import Breadcrumbs from './breadcrumbs';
 import { Separator } from './ui/separator';
 import { SidebarTrigger } from './ui/sidebar';
