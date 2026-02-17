@@ -1,3 +1,4 @@
+import { paths } from '@/app/routes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -14,11 +15,35 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useLogoutMutation } from '@/features/auth/queries';
 import { BadgeCheckIcon, ChevronsUpDownIcon, LogOutIcon } from 'lucide-react';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import type { User } from 'shared/schemas/user.schema';
+import { toast } from 'sonner';
+import Loader from './loader';
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
+  const { isPending: isLoggingOut, mutate: logout } = useLogoutMutation();
+  const navigate = useNavigate();
+
+  const redirectToLogin = useCallback(() => {
+    console.log('Redirecting to login page...');
+
+    navigate(paths.login, { replace: true });
+  }, [navigate]);
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: ({ message }) => {
+        toast.success(message);
+      },
+      onError: () => {
+        redirectToLogin();
+      },
+    });
+  };
 
   return (
     <SidebarMenu>
@@ -65,9 +90,9 @@ export function NavUser({ user }: { user: User }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
               <LogOutIcon />
-              Log out
+              {isLoggingOut ? <Loader text="Logging out..." /> : 'Log out'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

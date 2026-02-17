@@ -48,7 +48,11 @@ export async function checkSession(_req: Request, ctx: Context): Promise<number>
   const sessionId = ctx.cookies.get(SESSION_COOKIE_NAME);
   if (!sessionId) throw new UnauthorizedError('no session cookie');
 
-  return await touchSession(db, sessionId);
+  try {
+    return await touchSession(db, sessionId);
+  } catch {
+    throw new UnauthorizedError();
+  }
 }
 
 function generateSessionId(): string {

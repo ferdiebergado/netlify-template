@@ -43,7 +43,21 @@ RETURNING
   const { expiresAt } = setSessionDuration();
   const { rows } = await db.execute<TouchSessionRow>(sql, [expiresAt.toISOString(), sessionId]);
 
-  if (rows.length === 0) throw new Error(`session with id: ${sessionId} does not exists.`);
+  if (rows.length === 0) throw new Error(`session with id: ${sessionId} does not exist.`);
 
   return rows[0].user_id;
+}
+
+export async function softDeleteSession(db: Database, sessionId: string): Promise<void> {
+  const sql = `
+UPDATE
+  sessions
+SET 
+  deleted_at = CURRENT_TIMESTAMP
+WHERE 
+    session_id = ?`;
+
+  const { rowsAffected } = await db.execute(sql, [sessionId]);
+
+  if (rowsAffected === 0) throw new Error(`session with id: ${sessionId} does not exist.`);
 }
