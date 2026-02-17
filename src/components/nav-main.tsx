@@ -1,4 +1,5 @@
-'use client';
+import { ChevronRightIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
@@ -12,22 +13,23 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { ChevronRightIcon } from 'lucide-react';
 
-export function NavMain({
-  items,
-}: {
-  items: {
+type Item = {
+  title: string;
+  url: string;
+  icon: ReactNode;
+  isActive?: boolean;
+  items?: {
     title: string;
     url: string;
-    icon: React.ReactNode;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
   }[];
-}) {
+};
+
+type NavMainProps = {
+  items: Item[];
+};
+
+export function NavMain({ items }: NavMainProps) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
