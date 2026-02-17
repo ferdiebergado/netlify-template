@@ -1,5 +1,4 @@
 import { paths } from '@/app/routes';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,8 +21,13 @@ import { useNavigate } from 'react-router';
 import type { User } from 'shared/schemas/user.schema';
 import { toast } from 'sonner';
 import Loader from './loader';
+import UserProfile from './user-profile';
 
-export function NavUser({ user }: { user: User }) {
+type NavUserProps = {
+  user: User;
+};
+
+export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
   const { isPending: isLoggingOut, mutate: logout } = useLogoutMutation();
   const navigate = useNavigate();
@@ -52,14 +56,7 @@ export function NavUser({ user }: { user: User }) {
           <DropdownMenuTrigger
             render={<SidebarMenuButton size="lg" className="aria-expanded:bg-muted" />}
           >
-            <Avatar>
-              <AvatarImage src={user.picture} alt={user.name} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-xs">{user.email}</span>
-            </div>
+            <UserProfile user={user} />
             <ChevronsUpDownIcon className="ml-auto size-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -71,14 +68,7 @@ export function NavUser({ user }: { user: User }) {
             <DropdownMenuGroup>
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar>
-                    <AvatarImage src={user.picture} alt={user.name} />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
-                  </div>
+                  <UserProfile user={user} />
                 </div>
               </DropdownMenuLabel>
             </DropdownMenuGroup>
