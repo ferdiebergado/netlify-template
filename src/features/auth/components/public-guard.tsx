@@ -3,9 +3,9 @@ import { Navigate, Outlet } from 'react-router';
 import { useCurrentUser } from '../hooks';
 
 export default function PublicGuard() {
-  const { user } = useCurrentUser();
+  const { isAuthenticated } = useCurrentUser();
 
-  if (user) return <Navigate to="/" replace />;
+  if (isAuthenticated) return <Navigate to="/" replace />;
 
   return <Outlet />;
 }
