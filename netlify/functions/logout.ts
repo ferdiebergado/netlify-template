@@ -1,8 +1,10 @@
 import type { Config, Context } from '@netlify/functions';
+
 import type { Success } from '../../shared/types/api';
 import { SESSION_COOKIE_NAME } from '../_shared/constants';
 import { db } from '../_shared/db';
 import { respondWithError, UnauthorizedError } from '../_shared/errors';
+import { newSessionCookie } from '../_shared/session';
 import { softDeleteSession } from '../_shared/session.repo';
 
 export const config: Config = {
@@ -19,15 +21,8 @@ export default async (_req: Request, ctx: Context) => {
 
     await softDeleteSession(db, sessionId);
 
-    ctx.cookies.set({
-      name: sessionCookie,
-      value: '',
-      maxAge: 0,
-      path: '/',
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Lax',
-    });
+    const logoutCookie = newSessionCookie('', 0);
+    ctx.cookies.set(logoutCookie);
 
     const payload: Success = {
       status: 'success',

@@ -1,11 +1,11 @@
 import type { Config, Context } from '@netlify/functions';
 import { OAuth2Client, type TokenPayload } from 'google-auth-library';
 import * as z from 'zod';
+
 import type { Success } from '../../shared/types/api';
 import { env } from '../_shared/config';
-import { SESSION_COOKIE_NAME } from '../_shared/constants';
 import { respondWithError, UnauthorizedError } from '../_shared/errors';
-import { newSession } from '../_shared/session';
+import { newSession, newSessionCookie } from '../_shared/session';
 import { validateBody } from '../_shared/validate';
 
 const clientId = env.GOOGLE_CLIENT_ID;
@@ -43,15 +43,8 @@ export default async (req: Request, ctx: Context) => {
     const user = { googleId: sub, name, email, picture };
     const { sessionId, maxAge } = await newSession(user, req);
 
-    ctx.cookies.set({
-      name: SESSION_COOKIE_NAME,
-      value: sessionId,
-      path: '/',
-      maxAge,
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Lax',
-    });
+    const sessionCookie = newSessionCookie(sessionId, maxAge);
+    ctx.cookies.set(sessionCookie);
 
     const data = {
       message: 'Logged in.',

@@ -1,5 +1,6 @@
 import type { Context } from '@netlify/functions';
 import { randomBytes } from 'node:crypto';
+
 import type { NewUser } from '../../shared/schemas/user.schema';
 import { RANDOM_BYTES_SIZE, SESSION_COOKIE_NAME, SESSION_DURATION_HOURS } from './constants';
 import { db } from './db';
@@ -57,4 +58,16 @@ export async function checkSession(_req: Request, ctx: Context): Promise<number>
 
 function generateSessionId(): string {
   return randomBytes(RANDOM_BYTES_SIZE).toString('base64');
+}
+
+export function newSessionCookie(value: string, maxAge: number) {
+  return {
+    name: SESSION_COOKIE_NAME,
+    value,
+    path: '/',
+    maxAge,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Lax' as const,
+  };
 }
