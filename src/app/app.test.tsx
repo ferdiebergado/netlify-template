@@ -9,7 +9,7 @@ import { render } from 'vitest-browser-react';
 
 import FullPageLoader from '@/components/full-page-loader';
 import DarkModeProvider from '../components/dark-mode/mode-provider';
-import CurrentUserProvider from '../features/auth/components/current-user-provider';
+import UserProvider from '../features/auth/components/user-provider';
 import Page from './page';
 import FallbackPage from './pages/fallback-page';
 
@@ -31,9 +31,9 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[initialRoute]}>
         <GoogleOAuthProvider clientId={import.meta.env.GOOGLE_CLIENT_ID}>
-          <CurrentUserProvider>
+          <UserProvider>
             <DarkModeProvider>{children}</DarkModeProvider>
-          </CurrentUserProvider>
+          </UserProvider>
         </GoogleOAuthProvider>
       </MemoryRouter>
     </QueryClientProvider>

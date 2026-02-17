@@ -8,7 +8,7 @@ type CurrentUserProviderProps = {
   children: ReactNode;
 };
 
-export default function CurrentUserProvider({ children }: CurrentUserProviderProps) {
+export default function UserProvider({ children }: CurrentUserProviderProps) {
   const { isLoading, data: user } = useCurrentUserQuery();
 
   if (isLoading) return <FullPageLoader />;

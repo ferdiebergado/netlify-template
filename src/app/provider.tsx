@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 
 import DarkModeProvider from '../components/dark-mode/mode-provider';
 import { env } from '../config';
-import UserProvider from '../features/auth/components/current-user-provider';
+import UserProvider from '../features/auth/components/user-provider';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
