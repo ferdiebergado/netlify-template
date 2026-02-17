@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
+import FullPageLoader from '@/components/full-page-loader';
 import { useLoginMutation } from '../queries';
 import { LoginForm } from './login-form';
 
@@ -15,6 +16,7 @@ export default function LoginPage() {
   const handleSuccess = useCallback(
     ({ credential }: CredentialResponse) => {
       if (!credential) return;
+
       login(credential, {
         onSuccess: ({ message }) => {
           if (message) toast.success(message);
@@ -30,6 +32,8 @@ export default function LoginPage() {
     toast.error('Login failed.');
   }, []);
 
+  if (isPending) return <FullPageLoader text="Logging in..." />;
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -39,7 +43,7 @@ export default function LoginPage() {
           </div>
           Acme Inc.
         </a>
-        <LoginForm onSuccess={handleSuccess} onError={handleError} isLoggingIn={isPending} />
+        <LoginForm onSuccess={handleSuccess} onError={handleError} />
       </div>
     </div>
   );
