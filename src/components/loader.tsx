@@ -9,8 +9,8 @@ type LoaderProps = ComponentProps<'div'> & {
 
 export default function Loader({ className, text = 'Please wait...', ...props }: LoaderProps) {
   return (
-    <div className={cn('flex gap-3', className)} {...props}>
-      <LoaderIcon className="mx-3 animate-spin" />
+    <div className={cn('space-x-3', className)} {...props}>
+      <LoaderIcon className="animate-spin" />
       <span>{text}</span>
     </div>
   );
