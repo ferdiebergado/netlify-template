@@ -20,7 +20,6 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import type { User } from 'shared/schemas/user.schema';
 import { toast } from 'sonner';
-import Loader from './loader';
 import UserProfile from './user-profile';
 
 type NavUserProps = {
@@ -29,7 +28,7 @@ type NavUserProps = {
 
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
-  const { isPending: isLoggingOut, mutate: logout } = useLogoutMutation();
+  const { mutate: logout } = useLogoutMutation();
   const navigate = useNavigate();
 
   const redirectToLogin = useCallback(() => {
@@ -38,7 +37,7 @@ export function NavUser({ user }: NavUserProps) {
     navigate(paths.login, { replace: true });
   }, [navigate]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout(undefined, {
       onSuccess: ({ message }) => {
         toast.success(message);
@@ -47,7 +46,7 @@ export function NavUser({ user }: NavUserProps) {
         redirectToLogin();
       },
     });
-  };
+  }, [logout, redirectToLogin]);
 
   return (
     <SidebarMenu>
@@ -80,9 +79,8 @@ export function NavUser({ user }: NavUserProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
-              <LogOutIcon />
-              {isLoggingOut ? <Loader text="Logging out..." /> : 'Log out'}
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOutIcon /> Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
