@@ -5,5 +5,7 @@
 - [x] Reusable datatable components
 - [ ] browser tests
 - [x] google oauth
-- [ ] remove next-themes
-- [ ] suspend auth provider
+- [x] remove next-themes
+- [x] move dark-mode to components
+- [x] logout
+- [ ] extract session cookie
