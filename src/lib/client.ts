@@ -5,7 +5,10 @@ const BASE_URL = '/.netlify/functions';
 const headers = { 'Content-Type': 'application/json' };
 
 async function request<T extends UnknownRecord>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, options);
+  const res = await fetch(`${BASE_URL}${path}`, {
+    credentials: 'include',
+    ...options,
+  });
 
   const json = (await res.json()) as APIResponse<T>;
 
