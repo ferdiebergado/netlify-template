@@ -1,4 +1,5 @@
-import { paths } from '@/app/routes';
+import { BadgeCheckIcon, ChevronsUpDownIcon, LogOutIcon } from 'lucide-react';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,39 +15,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { useLogoutMutation } from '@/features/auth/queries';
-import { BadgeCheckIcon, ChevronsUpDownIcon, LogOutIcon } from 'lucide-react';
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
 import type { User } from 'shared/schemas/user.schema';
-import { toast } from 'sonner';
 import UserProfile from './user-profile';
 
 type NavUserProps = {
   user: User;
+  onLogout: () => void;
 };
 
-export function NavUser({ user }: NavUserProps) {
+export function NavUser({ user, onLogout }: NavUserProps) {
   const { isMobile } = useSidebar();
-  const { mutate: logout } = useLogoutMutation();
-  const navigate = useNavigate();
-
-  const redirectToLogin = useCallback(() => {
-    console.log('Redirecting to login page...');
-
-    navigate(paths.login, { replace: true });
-  }, [navigate]);
-
-  const handleLogout = useCallback(() => {
-    logout(undefined, {
-      onSuccess: ({ message }) => {
-        toast.success(message);
-      },
-      onError: () => {
-        redirectToLogin();
-      },
-    });
-  }, [logout, redirectToLogin]);
 
   return (
     <SidebarMenu>
@@ -79,7 +57,7 @@ export function NavUser({ user }: NavUserProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem onClick={onLogout}>
               <LogOutIcon /> Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
