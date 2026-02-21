@@ -10,7 +10,7 @@ import { LoginForm } from './login-form';
 
 export default function LoginPage() {
   const { isPending, mutate: login } = useLoginMutation();
-  const location = useLocation();
+  const { state } = useLocation();
   const navigate = useNavigate();
 
   const handleSuccess = useCallback(
@@ -20,12 +20,12 @@ export default function LoginPage() {
       login(credential, {
         onSuccess: ({ message }) => {
           if (message) toast.success(message);
-          const from = location.state?.from ?? '/';
+          const from = state?.from ?? '/';
           navigate(from, { replace: true });
         },
       });
     },
-    [location.state?.from, login, navigate]
+    [state?.from, login, navigate]
   );
 
   const handleError = useCallback(() => {
