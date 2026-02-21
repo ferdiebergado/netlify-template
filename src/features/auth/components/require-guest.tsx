@@ -17,7 +17,7 @@ export default function RequireGuest() {
       if (intendedDestination) {
         redirect(intendedDestination);
       } else if (globalThis.history.length > 2) {
-        redirect(-1);
+        redirect(-1 as never);
       } else {
         redirect('/');
       }
