@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "create-db": "sqlite3 local.db '.read init.sql'",
-    "db": "sqlite3 -init .sqliterc local.db"
+    "db": "sqlite3 -init .sqliterc local.db",
+    "init": "sh ./setup.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
