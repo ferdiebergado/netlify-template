@@ -3,7 +3,7 @@ import { type RouteObject } from 'react-router';
 
 import Layout from '@/components/layout';
 import PublicLayout from '@/components/public-layout';
-import RequireGuest from '@/features/auth/components/require-guest';
+import RequireGuest from '../features/auth/components/require-guest';
 import RequireUser from '../features/auth/components/require-user';
 
 const LoginPage = lazy(() => import('../features/auth/components/login-page'));
