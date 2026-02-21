@@ -1,8 +1,5 @@
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-
 import FullPageLoader from '@/components/full-page-loader';
+import QueryErrorBoundary from '@/components/query-error-boundary';
 import Page from './page';
 import FallbackPage from './pages/fallback-page';
 import Provider from './provider';
@@ -10,20 +7,14 @@ import Provider from './provider';
 export function App() {
   return (
     <Provider>
-      <QueryErrorResetBoundary>
-        {({ reset }) => (
-          <ErrorBoundary
-            fallbackRender={({ error, resetErrorBoundary }) => (
-              <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
-            )}
-            onReset={reset}
-          >
-            <Suspense fallback={<FullPageLoader />}>
-              <Page />
-            </Suspense>
-          </ErrorBoundary>
+      <QueryErrorBoundary
+        fallbackRender={({ error, resetErrorBoundary }) => (
+          <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
         )}
-      </QueryErrorResetBoundary>
+        suspenseFallback={<FullPageLoader />}
+      >
+        <Page />
+      </QueryErrorBoundary>
     </Provider>
   );
 }

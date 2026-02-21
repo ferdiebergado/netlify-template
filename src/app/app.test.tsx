@@ -1,13 +1,12 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 import FullPageLoader from '@/components/full-page-loader';
+import QueryErrorBoundary from '@/components/query-error-boundary';
 import DarkModeProvider from '../components/dark-mode/mode-provider';
 import UserProvider from '../features/auth/components/user-provider';
 import Page from './page';
@@ -43,20 +42,14 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
 async function renderApp() {
   return render(
     <TestingProvider>
-      <QueryErrorResetBoundary>
-        {({ reset }) => (
-          <ErrorBoundary
-            fallbackRender={({ error, resetErrorBoundary }) => (
-              <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
-            )}
-            onReset={reset}
-          >
-            <Suspense fallback={<FullPageLoader />}>
-              <Page />
-            </Suspense>
-          </ErrorBoundary>
+      <QueryErrorBoundary
+        fallbackRender={({ error, resetErrorBoundary }) => (
+          <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
         )}
-      </QueryErrorResetBoundary>
+        suspenseFallback={<FullPageLoader />}
+      >
+        <Page />
+      </QueryErrorBoundary>
     </TestingProvider>
   );
 }
@@ -68,7 +61,7 @@ describe('<App />', () => {
     const heading = page.getByRole('heading', { name: 'welcome back' });
     await expect.element(heading).toBeInTheDocument();
 
-    const desc = page.getByText(/Login with your Google account/i);
+    const desc = page.getByText(/login with your google account/i);
     await expect.element(desc).toBeInTheDocument();
   });
 });
