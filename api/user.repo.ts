@@ -1,4 +1,4 @@
-import type { NewUser, User } from '../../shared/schemas/user.schema';
+import type { NewUser, User } from '../shared/schemas/user.schema';
 import type { Database } from './db';
 
 type UpsertUserRow = {

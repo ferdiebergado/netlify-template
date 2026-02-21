@@ -48,7 +48,7 @@ export default defineConfig([
   // Backend / tooling
   // =====================
   {
-    files: ['netlify/**/*.{ts,js}', 'shared/**/*.{ts,js}'],
+    files: ['netlify/**/*.{ts,js}', 'shared/**/*.{ts,js}', 'api/**/*.{ts,js}'],
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, ...sharedExtends],
     languageOptions: {
       ecmaVersion: 2020,

@@ -1,7 +1,7 @@
 import type { Context } from '@netlify/functions';
 import { randomBytes } from 'node:crypto';
 
-import type { NewUser } from '../../shared/schemas/user.schema';
+import type { NewUser } from '../shared/schemas/user.schema';
 import { RANDOM_BYTES_SIZE, SESSION_COOKIE_NAME, SESSION_DURATION_HOURS } from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';

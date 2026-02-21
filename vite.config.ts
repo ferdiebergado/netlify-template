@@ -20,7 +20,7 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          include: ['netlify/**/*.{test,spec}.ts'],
+          include: ['api/**/*.{test,spec}.ts'],
           environment: 'node',
           setupFiles: ['setup.node.ts'],
         },

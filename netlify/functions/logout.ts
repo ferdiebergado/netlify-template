@@ -1,11 +1,11 @@
 import type { Config, Context } from '@netlify/functions';
 
+import { SESSION_COOKIE_NAME } from '../../api/constants';
+import { db } from '../../api/db';
+import { respondWithError, UnauthorizedError } from '../../api/errors';
+import { newSessionCookie } from '../../api/session';
+import { softDeleteSession } from '../../api/session.repo';
 import type { Success } from '../../shared/types/api';
-import { SESSION_COOKIE_NAME } from '../_shared/constants';
-import { db } from '../_shared/db';
-import { respondWithError, UnauthorizedError } from '../_shared/errors';
-import { newSessionCookie } from '../_shared/session';
-import { softDeleteSession } from '../_shared/session.repo';
 
 export const config: Config = {
   method: 'POST',

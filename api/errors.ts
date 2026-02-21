@@ -1,4 +1,4 @@
-import type { Failure } from '../../shared/types/api';
+import type { Failure } from '../shared/types/api';
 
 export class HttpError extends Error {
   public readonly statusCode: number;

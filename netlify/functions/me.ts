@@ -1,9 +1,10 @@
 import type { Context } from '@netlify/functions';
+
+import { db } from '../../api/db';
+import { respondWithError } from '../../api/errors';
+import { checkSession } from '../../api/session';
+import { getUser } from '../../api/user.repo';
 import type { Success } from '../../shared/types/api';
-import { db } from '../_shared/db';
-import { respondWithError } from '../_shared/errors';
-import { checkSession } from '../_shared/session';
-import { getUser } from '../_shared/user.repo';
 
 export default async (req: Request, ctx: Context) => {
   try {

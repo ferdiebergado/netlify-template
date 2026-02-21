@@ -2,11 +2,11 @@ import type { Config, Context } from '@netlify/functions';
 import { OAuth2Client, type TokenPayload } from 'google-auth-library';
 import * as z from 'zod';
 
+import { env } from '../../api/config';
+import { respondWithError, UnauthorizedError } from '../../api/errors';
+import { newSession, newSessionCookie } from '../../api/session';
+import { validateBody } from '../../api/validate';
 import type { Success } from '../../shared/types/api';
-import { env } from '../_shared/config';
-import { respondWithError, UnauthorizedError } from '../_shared/errors';
-import { newSession, newSessionCookie } from '../_shared/session';
-import { validateBody } from '../_shared/validate';
 
 const clientId = env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(clientId);
