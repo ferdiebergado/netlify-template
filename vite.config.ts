@@ -5,13 +5,15 @@ import { playwright } from '@vitest/browser-playwright';
 import path from 'path';
 import { defineConfig } from 'vite';
 
+const alias = {
+  '@': path.resolve(__dirname, './src'),
+};
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+    alias,
   },
   test: {
     projects: [
@@ -27,15 +29,14 @@ export default defineConfig({
         test: {
           include: ['src/**/*.{test,spec}.tsx'],
           name: 'browser',
-          alias: {
-            '@': path.resolve(__dirname, './src'),
-          },
+          alias,
           browser: {
             enabled: true,
             headless: true,
             provider: playwright(),
             instances: [{ browser: 'chromium' }],
           },
+          setupFiles: ['setup.browser.ts'],
         },
       },
     ],
