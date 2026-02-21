@@ -7,7 +7,7 @@ export default function RequireUser() {
   const { isAuthenticated } = useCurrentUser();
   const { pathname } = useLocation();
 
-  if (!isAuthenticated) return <Navigate to={paths.login} replace state={{ from: pathname }} />;
+  if (!isAuthenticated) return <Navigate to={paths.login} state={{ from: pathname }} replace />;
 
   return <Outlet />;
 }
