@@ -3,8 +3,8 @@ import { type RouteObject } from 'react-router';
 
 import Layout from '@/components/layout';
 import PublicLayout from '@/components/public-layout';
-import PublicGuard from '@/features/auth/components/public-guard';
-import AuthGuard from '../features/auth/components/auth-guard';
+import RequireGuest from '@/features/auth/components/require-guest';
+import RequireUser from '../features/auth/components/require-user';
 
 const LoginPage = lazy(() => import('../features/auth/components/login-page'));
 const Home = lazy(() => import('./pages/home'));
@@ -18,7 +18,7 @@ export const paths = {
 
 export const routes: RouteObject[] = [
   {
-    Component: PublicGuard,
+    Component: RequireGuest,
     children: [
       {
         Component: PublicLayout,
@@ -33,7 +33,7 @@ export const routes: RouteObject[] = [
   },
 
   {
-    Component: AuthGuard,
+    Component: RequireUser,
     children: [
       {
         Component: Layout,
