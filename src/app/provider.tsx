@@ -24,18 +24,18 @@ type ProviderProps = {
 
 export default function Provider({ children }: ProviderProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID} locale="en-US">
-          <UserProvider>
-            <DarkModeProvider>
+    <DarkModeProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID} locale="en-US">
+            <UserProvider>
               {children}
               <Toaster position="top-right" richColors />
               <ReactQueryDevtools initialIsOpen={false} />
-            </DarkModeProvider>
-          </UserProvider>
-        </GoogleOAuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+            </UserProvider>
+          </GoogleOAuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </DarkModeProvider>
   );
 }

@@ -5,7 +5,5 @@ type FullPageLoaderProps = {
 };
 
 export default function FullPageLoader({ text }: FullPageLoaderProps) {
-  return (
-    <Loader className="bg-muted flex h-screen w-full items-center justify-center" text={text} />
-  );
+  return <Loader className="flex h-screen w-full items-center justify-center" text={text} />;
 }
