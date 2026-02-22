@@ -33,7 +33,6 @@ export default async (req: Request, ctx: Context) => {
 
     if (!tokenPayload) throw new UnauthorizedError('Invalid token payload');
 
-    console.debug('payload:', tokenPayload);
     const { sub, name, email, picture, iss } = tokenPayload;
 
     if (!name || !email) throw new UnauthorizedError('Insufficient scope');
