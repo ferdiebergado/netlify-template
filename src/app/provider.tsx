@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router';
 import { toast } from 'sonner';
 
-import DarkModeProvider from '../components/dark-mode/mode-provider';
+import DarkModeProvider from '@/components/dark-mode/mode-provider';
 import { env } from '../config';
 import UserProvider from '../features/auth/components/user-provider';
 
@@ -24,8 +24,8 @@ type ProviderProps = {
 
 export default function Provider({ children }: ProviderProps) {
   return (
-    <DarkModeProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <DarkModeProvider>
         <BrowserRouter>
           <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID} locale="en-US">
             <UserProvider>
@@ -35,7 +35,7 @@ export default function Provider({ children }: ProviderProps) {
             </UserProvider>
           </GoogleOAuthProvider>
         </BrowserRouter>
-      </QueryClientProvider>
-    </DarkModeProvider>
+      </DarkModeProvider>
+    </QueryClientProvider>
   );
 }
