@@ -1,7 +1,7 @@
-import type { User } from 'shared/schemas/user.schema';
-import type { LoginData } from 'shared/types/api';
-import { paths } from '../../app/routes';
-import { api } from '../../lib/client';
+import { paths } from '@/app/routes';
+import { api } from '@/lib/client';
+import type { User } from '@shared/schemas/user.schema';
+import type { LoginData } from '@shared/types/api';
 
 export async function login(token: string) {
   console.log('logging in...');

@@ -1,4 +1,4 @@
-import type { User } from 'shared/schemas/user.schema';
+import type { User } from '@shared/schemas/user.schema';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 type UserAvatarProps = {

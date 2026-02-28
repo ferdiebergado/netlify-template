@@ -1,5 +1,5 @@
+import type { APIData, APIResponse } from '@shared/types/api';
 import type { UnknownRecord } from 'type-fest';
-import type { APIData, APIResponse } from '../../shared/types/api';
 
 const BASE_URL = '/.netlify/functions';
 const headers = { 'Content-Type': 'application/json' };

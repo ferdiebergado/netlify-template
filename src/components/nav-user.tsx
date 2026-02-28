@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import type { User } from 'shared/schemas/user.schema';
+import type { User } from '@shared/schemas/user.schema';
 import UserProfile from './user-profile';
 
 type NavUserProps = {

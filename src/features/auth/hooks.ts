@@ -1,5 +1,5 @@
+import type { User } from '@shared/schemas/user.schema';
 import { createContext, useContext } from 'react';
-import type { User } from 'shared/schemas/user.schema';
 
 type UserContextValue = {
   user?: User;

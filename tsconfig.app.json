@@ -23,9 +23,13 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+
+    /* Path aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@shared/*": ["./shared/*"],
+      "@testing/*": ["./testing/*"]
     }
   },
   "include": ["src", "setup.browser.ts", "testing/browser"]

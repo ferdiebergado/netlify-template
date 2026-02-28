@@ -20,7 +20,15 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": ["./api/*"],
+      "@shared/*": ["./shared/*"],
+      "@testing/*": ["./testing/*"]
+    }
   },
-  "include": ["vite.config.ts", "netlify", "shared", "setup.node.ts", "api"]
+  "include": ["vite.config.ts", "netlify", "shared", "setup.node.ts", "api", "testing"]
 }

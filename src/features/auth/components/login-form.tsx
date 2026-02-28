@@ -3,7 +3,7 @@ import { type ComponentProps } from 'react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldDescription } from '@/components/ui/field';
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 
 type LoginFormProps = ComponentProps<'div'> & {
   onSuccess: (creds: CredentialResponse) => void;

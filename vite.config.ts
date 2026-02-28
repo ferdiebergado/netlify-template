@@ -7,6 +7,9 @@ import { defineConfig } from 'vite';
 
 const alias = {
   '@': path.resolve(__dirname, './src'),
+  '@api': path.resolve(__dirname, './api'),
+  '@shared': path.resolve(__dirname, './shared'),
+  '@testing': path.resolve(__dirname, './testing'),
 };
 
 // https://vite.dev/config/
@@ -27,8 +30,8 @@ export default defineConfig({
       },
       {
         test: {
-          include: ['src/**/*.{test,spec}.tsx'],
           name: 'browser',
+          include: ['src/**/*.{test,spec}.tsx'],
           alias,
           browser: {
             enabled: true,
