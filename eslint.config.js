@@ -26,7 +26,7 @@ export default defineConfig([
   // Frontend (React)
   // =====================
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'testing/browser/**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
