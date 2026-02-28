@@ -5,12 +5,8 @@ import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
-import DarkModeProvider from '@/components/dark-mode/mode-provider';
-import FullPageLoader from '@/components/full-page-loader';
-import QueryErrorBoundary from '@/components/query-error-boundary';
 import UserProvider from '../features/auth/components/user-provider';
-import Page from './page';
-import FallbackPage from './pages/fallback-page';
+import App from './app';
 
 const googleClientID = Math.random().toString(36).slice(2, 7);
 
@@ -32,9 +28,7 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[initialRoute]}>
         <GoogleOAuthProvider clientId={googleClientID}>
-          <UserProvider>
-            <DarkModeProvider>{children}</DarkModeProvider>
-          </UserProvider>
+          <UserProvider>{children}</UserProvider>
         </GoogleOAuthProvider>
       </MemoryRouter>
     </QueryClientProvider>
@@ -44,14 +38,7 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
 async function renderApp() {
   return render(
     <TestingProvider>
-      <QueryErrorBoundary
-        fallbackRender={({ error, resetErrorBoundary }) => (
-          <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
-        )}
-        suspenseFallback={<FullPageLoader />}
-      >
-        <Page />
-      </QueryErrorBoundary>
+      <App />
     </TestingProvider>
   );
 }

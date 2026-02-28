@@ -1,22 +1,20 @@
 import FullPageLoader from '@/components/full-page-loader';
 import QueryErrorBoundary from '@/components/query-error-boundary';
-import Page from './page';
+import { useRoutes } from 'react-router';
 import FallbackPage from './pages/fallback-page';
-import Provider from './provider';
+import { routes } from './routes';
 
-export function App() {
+export default function App() {
+  const page = useRoutes(routes);
+
   return (
-    <Provider>
-      <QueryErrorBoundary
-        fallbackRender={({ error, resetErrorBoundary }) => (
-          <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
-        )}
-        suspenseFallback={<FullPageLoader />}
-      >
-        <Page />
-      </QueryErrorBoundary>
-    </Provider>
+    <QueryErrorBoundary
+      fallbackRender={({ error, resetErrorBoundary }) => (
+        <FallbackPage error={error} resetErrorBoundary={resetErrorBoundary} />
+      )}
+      suspenseFallback={<FullPageLoader />}
+    >
+      {page}
+    </QueryErrorBoundary>
   );
 }
-
-export default App;
