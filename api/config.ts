@@ -36,8 +36,9 @@ const libsqlUrlSchema = z
 const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: libsqlUrlSchema,
-  GOOGLE_CLIENT_ID: z.string(),
   TURSO_AUTH_TOKEN: z.string().optional(),
+  CLERK_PUBLISHABLE_KEY: z.string(),
+  CLERK_SECRET_KEY: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

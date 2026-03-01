@@ -12,28 +12,17 @@ export async function upsertUser(db: Database, user: NewUser): Promise<number> {
 INSERT INTO
   users
     (
-      google_id,
-      name,
+      user_id,
       email,
-      picture
     )
 VALUES
-  (?, ?, ?, ?)
+  (?, ?)
 ON CONFLICT
-    (google_id)
-  DO
-  UPDATE
-  SET
-    last_login_at = CURRENT_TIMESTAMP
+DO NOTHING
 RETURNING
   id`;
 
-  const { rows } = await db.execute<UpsertUserRow>(sql, [
-    user.googleId,
-    user.name,
-    user.email,
-    user.picture ?? '',
-  ]);
+  const { rows } = await db.execute<UpsertUserRow>(sql, [user.userId, user.email]);
 
   if (rows.length === 0) throw new Error('Failed to upsert user: no data returned.');
 
@@ -41,17 +30,13 @@ RETURNING
 }
 
 type UserRow = {
-  name: string;
   email: string;
-  picture: string;
 };
 
-export async function getUser(db: Database, id: number): Promise<Omit<User, 'id' | 'googleId'>> {
+export async function getUser(db: Database, id: number): Promise<Omit<User, 'id' | 'userId'>> {
   const sql = `
 SELECT
-  name,
-  email,
-  picture
+  email
 FROM
   users
 WHERE

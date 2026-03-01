@@ -1,12 +1,12 @@
+import { SignIn } from '@clerk/clerk-react';
 import { lazy } from 'react';
 import { type RouteObject } from 'react-router';
 
-import Layout from '@/components/layout';
 import PublicLayout from '@/components/public-layout';
 import RequireGuest from '@/features/auth/components/require-guest';
-import RequireUser from '@/features/auth/components/require-user';
 
-const LoginPage = lazy(() => import('@/features/auth/components/login-page'));
+const Layout = lazy(() => import('@/components/layout'));
+const RequireUser = lazy(() => import('@/features/auth/components/require-user'));
 const Home = lazy(() => import('./pages/home'));
 const NotFoundPage = lazy(() => import('./pages/not-found-page'));
 
@@ -25,13 +25,12 @@ export const routes: RouteObject[] = [
         children: [
           {
             path: paths.login,
-            Component: LoginPage,
+            Component: SignIn,
           },
         ],
       },
     ],
   },
-
   {
     Component: RequireUser,
     children: [

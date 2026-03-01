@@ -1,6 +1,7 @@
+import { useRoutes } from 'react-router';
+
 import FullPageLoader from '@/components/full-page-loader';
 import QueryErrorBoundary from '@/components/query-error-boundary';
-import { useRoutes } from 'react-router';
 import FallbackPage from './pages/fallback-page';
 import { routes } from './routes';
 

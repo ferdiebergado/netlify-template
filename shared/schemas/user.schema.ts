@@ -2,10 +2,8 @@ import * as z from 'zod';
 
 export const userSchema = z.object({
   id: z.number(),
-  googleId: z.string(),
-  name: z.string().min(1, 'Name is required.'),
+  userId: z.string(),
   email: z.email(),
-  picture: z.url().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;

@@ -1,50 +1,9 @@
-import type { CredentialResponse } from '@react-oauth/google';
-import { GalleryVerticalEnd } from 'lucide-react';
-import { useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { toast } from 'sonner';
-
-import FullPageLoader from '@/components/full-page-loader';
-import { useLoginMutation } from '../queries';
-import { LoginForm } from './login-form';
+import { SignIn } from '@clerk/clerk-react';
 
 export default function LoginPage() {
-  const { isPending, mutate: login } = useLoginMutation();
-  const { state } = useLocation();
-  const navigate = useNavigate();
-
-  const handleSuccess = useCallback(
-    ({ credential }: CredentialResponse) => {
-      if (!credential) return;
-
-      login(credential, {
-        onSuccess: ({ message }) => {
-          if (message) toast.success(message);
-          const from = state?.from ?? '/';
-          navigate(from, { replace: true });
-        },
-      });
-    },
-    [state?.from, login, navigate]
-  );
-
-  const handleError = useCallback(() => {
-    toast.error('Login failed.');
-  }, []);
-
-  if (isPending) return <FullPageLoader text="Logging in..." />;
-
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <a href="#" className="flex items-center gap-2 self-center font-medium">
-          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
-          Acme Inc.
-        </a>
-        <LoginForm onSuccess={handleSuccess} onError={handleError} />
-      </div>
+    <div className="bg-muted min-h-svh p-6 md:p-10">
+      <SignIn />
     </div>
   );
 }

@@ -1,11 +1,6 @@
 import { LayoutDashboardIcon, TerminalIcon } from 'lucide-react';
-import * as React from 'react';
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
-import { toast } from 'sonner';
 
 import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -15,10 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { paths } from '../app/routes';
-import { useCurrentUser } from '../features/auth/hooks';
-import { useLogoutMutation } from '../features/auth/queries';
-import Loader from './loader';
+import { UserMenu } from '@/features/auth/components/user-menu';
 
 const items = [
   {
@@ -44,21 +36,6 @@ const items = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useCurrentUser();
-  const { isPending: isLoggingOut, mutate: logout } = useLogoutMutation();
-  const navigate = useNavigate();
-
-  const handleLogout = useCallback(() => {
-    logout(undefined, {
-      onSuccess: ({ message }) => {
-        toast.success(message);
-      },
-      onError: () => {
-        navigate(paths.login, { replace: true });
-      },
-    });
-  }, [logout, navigate]);
-
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -80,11 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={items} />
       </SidebarContent>
       <SidebarFooter>
-        {isLoggingOut ? (
-          <Loader text="Logging out..." />
-        ) : (
-          user && <NavUser user={user} onLogout={handleLogout} />
-        )}
+        <UserMenu />
       </SidebarFooter>
     </Sidebar>
   );
