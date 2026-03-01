@@ -1,3 +1,5 @@
+import { UserButton } from '@clerk/clerk-react';
+
 import { ModeToggle } from '@/components/dark-mode/mode-toggle';
 import Breadcrumbs from './breadcrumbs';
 import { Separator } from './ui/separator';
@@ -11,8 +13,9 @@ export default function Header() {
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
         <Breadcrumbs />
       </div>
-      <div className="ml-auto flex items-center gap-2 px-4">
+      <div className="ml-auto flex items-center gap-6 px-4">
         <ModeToggle />
+        <UserButton />
       </div>
     </header>
   );

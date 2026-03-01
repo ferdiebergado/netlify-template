@@ -4,13 +4,11 @@ import { NavMain } from '@/components/nav-main';
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { UserMenu } from '@/features/auth/components/user-menu';
 
 const items = [
   {
@@ -56,9 +54,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={items} />
       </SidebarContent>
-      <SidebarFooter>
-        <UserMenu />
-      </SidebarFooter>
     </Sidebar>
   );
 }
