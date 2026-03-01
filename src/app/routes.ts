@@ -12,8 +12,6 @@ const NotFoundPage = lazy(() => import('./pages/not-found-page'));
 
 export const paths = {
   login: '/login' as const,
-  me: '/me' as const,
-  logout: '/logout' as const,
 };
 
 export const routes: RouteObject[] = [
