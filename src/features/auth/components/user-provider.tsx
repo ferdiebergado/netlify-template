@@ -1,24 +1,26 @@
-import { useMemo, type ReactNode } from 'react';
-
 import FullPageLoader from '@/components/full-page-loader';
+import { useUser } from '@clerk/clerk-react';
+import type { User } from '@shared/schemas/user.schema';
+import { type ReactNode } from 'react';
 import { UserContext } from '../hooks';
-import { useCurrentUserQuery } from '../queries';
 
 type CurrentUserProviderProps = {
   children: ReactNode;
 };
 
 export default function UserProvider({ children }: CurrentUserProviderProps) {
-  const { isLoading, data: user } = useCurrentUserQuery();
-  const value = useMemo(
-    () => ({
-      user,
-      isAuthenticated: !!user,
-    }),
-    [user]
-  );
+  const { isLoaded, isSignedIn, user } = useUser();
 
-  if (isLoading) return <FullPageLoader />;
+  if (!isLoaded) return <FullPageLoader />;
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  const value = {
+    user: {
+      userId: user?.id,
+      name: user?.fullName,
+      email: user?.primaryEmailAddress?.emailAddress,
+    } as User,
+    isAuthenticated: isSignedIn,
+  };
+
+  return <UserContext value={value}>{children}</UserContext>;
 }

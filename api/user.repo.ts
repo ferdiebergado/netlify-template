@@ -1,11 +1,11 @@
-import type { NewUser, User } from '@shared/schemas/user.schema';
+import type { User } from '@shared/schemas/user.schema';
 import type { Database } from './db';
 
 type UpsertUserRow = {
   id: number;
 };
 
-export async function upsertUser(db: Database, user: NewUser): Promise<number> {
+export async function upsertUser(db: Database, user: User): Promise<number> {
   console.log('Creating user...');
 
   const sql = `
@@ -22,7 +22,7 @@ DO NOTHING
 RETURNING
   id`;
 
-  const { rows } = await db.execute<UpsertUserRow>(sql, [user.userId, user.email]);
+  const { rows } = await db.execute<UpsertUserRow>(sql, [user.userId, user.email ?? '']);
 
   if (rows.length === 0) throw new Error('Failed to upsert user: no data returned.');
 

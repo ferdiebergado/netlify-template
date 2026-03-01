@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
+import UserProvider from '@/features/auth/components/user-provider';
 import { ClerkProvider } from '@clerk/clerk-react';
 import App from './app';
 
@@ -24,7 +25,9 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-        <MemoryRouter initialEntries={[initialRoute]}>{children}</MemoryRouter>
+        <UserProvider>
+          <MemoryRouter initialEntries={[initialRoute]}>{children}</MemoryRouter>
+        </UserProvider>
       </ClerkProvider>
     </QueryClientProvider>
   );

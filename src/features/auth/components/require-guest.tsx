@@ -1,11 +1,12 @@
-import { useAuth } from '@clerk/clerk-react';
 import { Navigate, Outlet, useLocation } from 'react-router';
 
+import { useCurrentUser } from '../hooks';
+
 export default function RequireGuest() {
-  const { isSignedIn } = useAuth();
+  const { isAuthenticated } = useCurrentUser();
   const { state } = useLocation();
 
-  if (isSignedIn) {
+  if (isAuthenticated) {
     const to = state?.from;
     if (to) return <Navigate to={to} replace />;
     return <Navigate to="/" replace />;
