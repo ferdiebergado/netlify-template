@@ -1,4 +1,5 @@
 import { ClerkProvider } from '@clerk/clerk-react';
+import { shadcn } from '@clerk/themes';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StrictMode } from 'react';
@@ -29,7 +30,7 @@ createRoot(root!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <DarkModeProvider>
-        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} appearance={{ theme: shadcn }}>
           <UserProvider>
             <BrowserRouter>
               <App />
