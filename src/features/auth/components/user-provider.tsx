@@ -1,7 +1,8 @@
-import FullPageLoader from '@/components/full-page-loader';
 import { useUser } from '@clerk/clerk-react';
-import type { User } from '@shared/schemas/user.schema';
 import { type ReactNode } from 'react';
+
+import FullPageLoader from '@/components/full-page-loader';
+import type { User } from '@shared/schemas/user.schema';
 import { UserContext } from '../hooks';
 
 type CurrentUserProviderProps = {
