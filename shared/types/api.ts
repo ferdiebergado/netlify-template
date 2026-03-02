@@ -22,3 +22,11 @@ export type APIResponse<T extends UnknownRecord, E = string, M = unknown> =
   | Failure<E, M>;
 
 export type LoginData = APIData & { user: User };
+
+export type AppEnv = APIData & {
+  node: string;
+  memAvail: string;
+  memUsage: string;
+  uptime: string;
+  release: string;
+};
