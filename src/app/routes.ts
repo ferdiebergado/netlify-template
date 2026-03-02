@@ -9,11 +9,15 @@ const Layout = lazy(() => import('@/components/layout'));
 const SignupPage = lazy(() => import('@/features/auth/components/signup-page'));
 const RequireUser = lazy(() => import('@/features/auth/components/require-user'));
 const Home = lazy(() => import('./pages/home'));
+const About = lazy(() => import('./pages/about'));
+const Settings = lazy(() => import('./pages/settings'));
 const NotFoundPage = lazy(() => import('./pages/not-found-page'));
 
 export const paths = {
   signin: '/signin' as const,
   signup: '/signup' as const,
+  about: '/about' as const,
+  settings: '/settings' as const,
 };
 
 export const routes: RouteObject[] = [
@@ -44,6 +48,14 @@ export const routes: RouteObject[] = [
           {
             index: true,
             Component: Home,
+          },
+          {
+            path: paths.about,
+            Component: About,
+          },
+          {
+            path: paths.settings,
+            Component: Settings,
           },
         ],
       },

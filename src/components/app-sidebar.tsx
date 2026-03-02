@@ -1,5 +1,6 @@
 import { LayoutDashboardIcon, TerminalIcon } from 'lucide-react';
 
+import { paths } from '@/app/routes';
 import { NavMain } from '@/components/nav-main';
 import {
   Sidebar,
@@ -18,16 +19,16 @@ const items = [
     isActive: true,
     items: [
       {
-        title: 'History',
-        url: '#',
-      },
-      {
-        title: 'Starred',
-        url: '#',
+        title: 'Home',
+        url: '/',
       },
       {
         title: 'Settings',
-        url: '#',
+        url: paths.settings,
+      },
+      {
+        title: 'About',
+        url: paths.about,
       },
     ],
   },
