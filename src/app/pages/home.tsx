@@ -1,23 +1,24 @@
-import Loader from '@/components/loader';
+import SuspenseQueryErrorBoundary from '@/components/suspense-query-error-boundary';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useWelcome } from '../home';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useWelcomeQuery } from '../queries';
+
+function Message() {
+  const { data } = useWelcomeQuery();
+
+  return <p>{data.message}</p>;
+}
 
 export default function Home() {
-  const { isPending, isError, error, data } = useWelcome();
-
-  if (isPending) return <Loader />;
-
-  if (isError) return <p className="text-destructive">{error.message}</p>;
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Home</CardTitle>
+        <CardTitle className="text-2xl font-semibold">Home</CardTitle>
       </CardHeader>
       <CardContent>
-        <h1 className="text-lg font-bold">
-          <span>{data.message}</span>
-        </h1>
+        <SuspenseQueryErrorBoundary suspenseFallback={<Skeleton className="h-6 w-20" />}>
+          <Message />
+        </SuspenseQueryErrorBoundary>
       </CardContent>
     </Card>
   );
