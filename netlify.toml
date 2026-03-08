@@ -13,7 +13,7 @@ for = "/*"
 [headers.values]
 Referrer-Policy = "strict-origin-when-cross-origin"
 X-Content-Type-Options = "nosniff"
-Content-Security-Policy-Report-Only = "default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://amazed-grouper-45.clerk.accounts.dev https://challenges.cloudflare.com; connect-src 'self' https://amazed-grouper-45.clerk.accounts.dev; img-src 'self' https://img.clerk.com; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'; manifest-src 'self'; worker-src 'self' blob:; font-src 'self'; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; require-trusted-types-for 'script'"
+Content-Security-Policy-Report-Only = "default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://amazed-grouper-45.clerk.accounts.dev https://challenges.cloudflare.com; connect-src 'self' https://amazed-grouper-45.clerk.accounts.dev; img-src 'self' https://img.clerk.com; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'; manifest-src 'self'; worker-src 'self' blob:; font-src 'self'; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'"
 Permissions-Policy = "geolocation=(), midi=(),  payment=(), camera=(), microphone=(), usb=(), fullscreen=(self)"
 
 [dev]
