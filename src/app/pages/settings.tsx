@@ -59,14 +59,27 @@ function Env() {
   );
 }
 
+function EnvSkeleton() {
+  return (
+    <div className="max-w-xs space-y-2 rounded-md border p-3">
+      <div className="flex gap-3">
+        <Skeleton className="h-5 w-6" />
+        <Skeleton className="h-5 w-32" />
+      </div>
+      <div className="flex gap-3">
+        <div className="h-5 w-6"></div>
+        <Skeleton className="h-5 w-40" />
+      </div>
+    </div>
+  );
+}
+
 function Fallback() {
   return (
     <div className="space-y-5">
-      <Skeleton className="h-[74.25px] max-w-xs" />
-      <Skeleton className="h-[74.25px] max-w-xs" />
-      <Skeleton className="h-[74.25px] max-w-xs" />
-      <Skeleton className="h-[74.25px] max-w-xs" />
-      <Skeleton className="h-[74.25px] max-w-xs" />
+      {Array.from({ length: 5 }).map((_, i) => (
+        <EnvSkeleton key={i} />
+      ))}
     </div>
   );
 }
