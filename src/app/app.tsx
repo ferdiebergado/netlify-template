@@ -2,7 +2,7 @@ import { useRoutes } from 'react-router';
 
 import FullPageLoader from '@/components/full-page-loader';
 import SuspenseQueryErrorBoundary from '@/components/suspense-query-error-boundary';
-import FallbackPage from './pages/fallback-page';
+import ErrorPage from './pages/error-page';
 import { routes } from './routes';
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
 
   return (
     <SuspenseQueryErrorBoundary
-      ErrorFallbackComponent={FallbackPage}
+      ErrorFallbackComponent={ErrorPage}
       suspenseFallback={<FullPageLoader />}
     >
       {page}

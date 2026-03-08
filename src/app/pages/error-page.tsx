@@ -1,3 +1,6 @@
+import { RefreshCcwIcon, TriangleAlert } from 'lucide-react';
+import type { FallbackProps } from 'react-error-boundary';
+
 import { Button } from '@/components/ui/button';
 import {
   Empty,
@@ -7,14 +10,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
-import { RefreshCcwIcon, TriangleAlert } from 'lucide-react';
 
-type FallbackPageProps = {
-  error: unknown;
-  resetErrorBoundary: (...args: unknown[]) => void;
-};
-
-export default function FallbackPage({ error, resetErrorBoundary }: FallbackPageProps) {
+export default function ErrorPage({ error, resetErrorBoundary }: FallbackProps) {
   const handleClick = () => resetErrorBoundary();
 
   return (
