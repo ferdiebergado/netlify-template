@@ -1,7 +1,7 @@
 import { useUser } from '@clerk/react-router';
 import { type ReactNode } from 'react';
 
-import FullPageLoader from '@/components/full-page-loader';
+import Loading from '@/components/loading';
 import type { User } from '@shared/schemas/user.schema';
 import { UserContext } from '../hooks';
 
@@ -12,8 +12,6 @@ type CurrentUserProviderProps = {
 export default function UserProvider({ children }: CurrentUserProviderProps) {
   const { isLoaded, isSignedIn, user } = useUser();
 
-  if (!isLoaded) return <FullPageLoader />;
-
   const value = {
     user: {
       userId: user?.id,
@@ -23,5 +21,10 @@ export default function UserProvider({ children }: CurrentUserProviderProps) {
     isAuthenticated: isSignedIn,
   };
 
-  return <UserContext value={value}>{children}</UserContext>;
+  return (
+    <UserContext value={value}>
+      {children}
+      {!isLoaded && <Loading />}
+    </UserContext>
+  );
 }

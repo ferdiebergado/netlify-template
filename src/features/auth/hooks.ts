@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 
 type UserContextValue = {
   user?: User;
-  isAuthenticated: boolean;
+  isAuthenticated?: boolean;
 };
 
 export const UserContext = createContext<UserContextValue | undefined>(undefined);
