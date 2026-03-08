@@ -1,4 +1,21 @@
+[build]
+command = "npm run build"
+publish = "dist"
+environment = { NODE_VERSION = "22" }
+
 [[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
+
+[[headers]]
+for = "/*"
+[headers.values]
+Referrer-Policy = "strict-origin-when-cross-origin"
+X-Content-Type-Options = "nosniff"
+Content-Security-Policy-Report-Only = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'unsafe-inline' 'self'; base-uri 'self'; form-action 'self'; manifest-src 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'"
+Permissions-Policy = "geolocation=(), midi=(),  payment=(), camera=(), microphone=(), usb=(), fullscreen=(self)"
+
+[dev]
+command = "vite"
+port = 8888
