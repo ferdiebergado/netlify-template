@@ -1,4 +1,4 @@
-import { UserButton } from '@clerk/clerk-react';
+import { UserButton } from '@clerk/react-router';
 
 import { ModeToggle } from '@/components/dark-mode/mode-toggle';
 import Breadcrumbs from './breadcrumbs';

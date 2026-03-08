@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@clerk/react-router';
 import { type ReactNode } from 'react';
 
 import FullPageLoader from '@/components/full-page-loader';

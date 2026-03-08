@@ -1,7 +1,5 @@
-import { SignUp } from '@clerk/clerk-react';
-
-import { paths } from '@/app/routes';
+import { SignUp } from '@clerk/react-router';
 
 export default function SignupPage() {
-  return <SignUp signInUrl={paths.signin} />;
+  return <SignUp />;
 }
