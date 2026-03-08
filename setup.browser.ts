@@ -20,6 +20,6 @@ const restHandlers = [
 ];
 
 const worker = setupWorker(...restHandlers);
-beforeAll(async () => await worker.start({ onUnhandledRequest: 'bypass' }));
+beforeAll(async () => await worker.start());
 afterAll(() => worker.stop());
 afterEach(() => worker.resetHandlers());
