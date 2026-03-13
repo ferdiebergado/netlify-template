@@ -1,5 +1,4 @@
 import type { Database } from './db';
-import { NotFoundError } from './errors';
 import type { Session } from './session';
 
 export async function createSession(db: Database, session: Session): Promise<void> {
@@ -31,33 +30,30 @@ type SessionRow = {
   ip: string;
 };
 
-export async function findSession(db: Database, id: string): Promise<Session> {
+export async function findSession(db: Database, id: string): Promise<Session | undefined> {
   console.log('[DB]: Retrieving session...');
 
   const sql = `
-SELECT 
-    session_id,
-    user_id,
-    expires_at,
-    user_agent,
-    ip
-FROM
-    sessions
-WHERE
-    session_id = ?
-    `;
+SELECT session_id, user_id, expires_at, user_agent, ip
+FROM sessions
+WHERE session_id = ?
+LIMIT 1
+`;
 
   const { rows } = await db.execute<SessionRow>(sql, [id]);
 
-  if (rows.length === 0) throw new NotFoundError(`session with id: ${id} does not exist.`);
+  if (rows.length === 0) {
+    console.warn(`Session not found for ID: ${id}`);
+    return;
+  }
 
-  const { session_id, user_agent, user_id, ip, expires_at } = rows[0];
+  const row = rows[0];
   const session: Session = {
-    sessionId: session_id,
-    userId: user_id,
-    userAgent: user_agent,
-    ip,
-    expiresAt: new Date(expires_at),
+    sessionId: row.session_id,
+    userId: row.user_id,
+    userAgent: row.user_agent,
+    ip: row.ip,
+    expiresAt: new Date(row.expires_at),
   };
 
   return session;

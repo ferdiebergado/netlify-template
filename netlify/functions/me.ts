@@ -1,5 +1,5 @@
 import { db } from '@api/db';
-import { respondWithError } from '@api/errors';
+import { respondWithError, UnauthorizedError } from '@api/errors';
 import { verifySession } from '@api/session';
 import findUser from '@api/user.repo';
 import type { Config, Context } from '@netlify/functions';
@@ -12,11 +12,13 @@ export const config: Config = {
 export default async (_req: Request, ctx: Context) => {
   try {
     const userId = await verifySession(ctx);
-    const data = await findUser(db, userId);
+    const user = await findUser(db, userId);
 
-    const payload: Success<typeof data> = {
+    if (!user) throw new UnauthorizedError('user not found');
+
+    const payload: Success<typeof user> = {
       status: 'success',
-      data,
+      data: user,
     };
 
     return Response.json(payload);

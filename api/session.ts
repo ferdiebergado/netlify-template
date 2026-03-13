@@ -66,12 +66,12 @@ export function buildSessionCookie(
 
 export async function verifySession(context: Context): Promise<string> {
   const sessionId = context.cookies.get(SESSION_COOKIE_NAME);
-
   if (!sessionId) throw new UnauthorizedError('no session cookie');
 
-  const { userId } = await findSession(db, sessionId);
+  const session = await findSession(db, sessionId);
+  if (!session) throw new UnauthorizedError('no saved session');
 
-  return userId;
+  return session.userId;
 }
 
 function generateSessionId(length: number): string {
