@@ -9,14 +9,14 @@ type CurrentUserProviderProps = {
 };
 
 export default function UserProvider({ children }: CurrentUserProviderProps) {
-  const { isLoading, data: profile } = useMeQuery();
+  const { isLoading, data: user } = useMeQuery();
 
   const value = useMemo(
     () => ({
-      user: profile,
-      isAuthenticated: !!profile,
+      user,
+      isAuthenticated: !!user,
     }),
-    [profile]
+    [user]
   );
 
   if (isLoading) return <Loading />;
