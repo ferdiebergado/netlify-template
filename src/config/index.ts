@@ -1,7 +1,10 @@
 import * as z from 'zod';
 
-const EnvSchema = z.object({
-  VITE_GOOGLE_CLIENT_ID: z.string().min(1, 'VITE_GOOGLE_CLIENT_ID is not set.'),
+const envSchema = z.object({
+  VITE_GOOGLE_CLIENT_ID: z.string({ error: 'VITE_GOOGLE_CLIENT_ID is not set.' }),
 });
 
-export const env = EnvSchema.parse(import.meta.env);
+const { success, error, data } = envSchema.safeParse(import.meta.env);
+if (!success) throw new Error(z.prettifyError(error));
+
+export const env = data;

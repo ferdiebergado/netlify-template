@@ -37,7 +37,10 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   DATABASE_URL: libsqlUrlSchema,
   TURSO_AUTH_TOKEN: z.string().optional(),
-  GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is not set.'),
+  GOOGLE_CLIENT_ID: z.string({ error: 'GOOGLE_CLIENT_ID is not set.' }),
 });
 
-export const env = envSchema.parse(process.env);
+const { success, error, data } = envSchema.safeParse(process.env);
+if (!success) throw new Error(z.prettifyError(error));
+
+export const env = data;
