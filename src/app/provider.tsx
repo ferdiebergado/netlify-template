@@ -6,11 +6,9 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { ReactNode } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { BrowserRouter } from 'react-router';
 import { Toaster } from 'sonner';
 import ErrorPage from './pages/error-page';
-import FatalErrorPage from './pages/fatal-error-page';
 
 type ProviderProps = {
   queryClient: QueryClient;
@@ -20,7 +18,7 @@ type ProviderProps = {
 
 export default function Provider({ queryClient, googleClientId, children }: ProviderProps) {
   return (
-    <ErrorBoundary FallbackComponent={FatalErrorPage}>
+    <>
       <QueryClientProvider client={queryClient}>
         <QueryErrorBoundary ErrorFallbackComponent={ErrorPage} suspenseFallback={<Loading />}>
           <DarkModeProvider>
@@ -34,6 +32,6 @@ export default function Provider({ queryClient, googleClientId, children }: Prov
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
       <Toaster position="top-right" richColors />
-    </ErrorBoundary>
+    </>
   );
 }
