@@ -14,7 +14,7 @@ type SuspenseQueryErrorBoundaryProps = {
  * A reusable wrapper that synchronizes TanStack Query reset logic
  * with React Error Boundaries and Suspense.
  */
-export default function SuspenseQueryErrorBoundary({
+export default function QueryErrorBoundary({
   children,
   suspenseFallback,
   ErrorFallbackComponent = DefaultErrorFallback,

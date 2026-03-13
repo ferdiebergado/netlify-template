@@ -6,7 +6,6 @@ import RequireGuest from '@/features/auth/components/require-guest';
 import SigninPage from '@/features/auth/components/signin-page';
 
 const Layout = lazy(() => import('@/components/layout'));
-const SignupPage = lazy(() => import('@/features/auth/components/signup-page'));
 const RequireUser = lazy(() => import('@/features/auth/components/require-user'));
 const Home = lazy(() => import('./pages/home'));
 const About = lazy(() => import('./pages/about'));
@@ -16,6 +15,7 @@ const NotFoundPage = lazy(() => import('./pages/not-found-page'));
 export const paths = {
   signin: '/signin' as const,
   signup: '/signup' as const,
+  me: '/me' as const,
   about: '/about' as const,
   settings: '/settings' as const,
 };
@@ -30,10 +30,6 @@ export const routes: RouteObject[] = [
           {
             path: paths.signin,
             Component: SigninPage,
-          },
-          {
-            path: paths.signup,
-            Component: SignupPage,
           },
         ],
       },

@@ -1,25 +1,25 @@
-import { createClerkClient } from '@clerk/backend';
+import { OAuth2Client } from 'google-auth-library';
 
+import type { User } from '@shared/schemas/user.schema';
 import { env } from './config';
-import { ALLOWED_ORIGINS } from './constants';
 import { UnauthorizedError } from './errors';
 
-const clerkClient = createClerkClient({
-  secretKey: env.CLERK_SECRET_KEY,
-  publishableKey: env.CLERK_PUBLISHABLE_KEY,
-});
+const { GOOGLE_CLIENT_ID } = env;
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-export async function authenticate(req: Request): Promise<string> {
-  const { isAuthenticated, status, reason, message, toAuth } =
-    await clerkClient.authenticateRequest(req, {
-      authorizedParties: ALLOWED_ORIGINS,
-    });
+export async function validateToken(token: string): Promise<User> {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: GOOGLE_CLIENT_ID,
+  });
 
-  console.debug({ status, message, reason });
+  const tokenPayload = ticket.getPayload();
 
-  if (!isAuthenticated) throw new UnauthorizedError();
+  if (tokenPayload === undefined) throw new UnauthorizedError('Invalid token payload');
 
-  const { userId } = toAuth();
+  const { sub, name, email, picture, iss } = tokenPayload;
 
-  return userId;
+  if (iss !== 'https://accounts.google.com') throw new UnauthorizedError('Invalid issuer');
+
+  return { googleId: sub, name, email, picture };
 }

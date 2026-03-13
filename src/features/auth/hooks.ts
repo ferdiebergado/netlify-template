@@ -1,9 +1,9 @@
-import type { User } from '@shared/schemas/user.schema';
+import type { Profile } from '@shared/schemas/user.schema';
 import { createContext, useContext } from 'react';
 
 type UserContextValue = {
-  user?: User;
-  isAuthenticated?: boolean;
+  user?: Profile;
+  isAuthenticated: boolean;
 };
 
 export const UserContext = createContext<UserContextValue | undefined>(undefined);

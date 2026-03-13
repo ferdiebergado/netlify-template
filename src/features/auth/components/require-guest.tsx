@@ -7,9 +7,8 @@ export default function RequireGuest() {
   const { state } = useLocation();
 
   if (isAuthenticated) {
-    const to = state?.from;
-    if (to) return <Navigate to={to} replace />;
-    return <Navigate to="/" replace />;
+    const to = state?.from ?? '/';
+    return <Navigate to={to} replace />;
   }
 
   return <Outlet />;

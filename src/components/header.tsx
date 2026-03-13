@@ -1,5 +1,3 @@
-import { UserButton } from '@clerk/react-router';
-
 import { ModeToggle } from '@/components/dark-mode/mode-toggle';
 import Breadcrumbs from './breadcrumbs';
 import { Separator } from './ui/separator';
@@ -15,7 +13,6 @@ export default function Header() {
       </div>
       <div className="ml-auto flex items-center gap-6 px-4">
         <ModeToggle />
-        <UserButton />
       </div>
     </header>
   );

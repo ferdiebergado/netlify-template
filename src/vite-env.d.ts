@@ -6,7 +6,7 @@ interface ViteTypeOptions {
 
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string;
-  readonly VITE_CLERK_PUBLISHABLE_KEY: string;
+  readonly VITE_GOOGLE_CLIENT_ID: string;
 }
 
 interface ImportMeta {

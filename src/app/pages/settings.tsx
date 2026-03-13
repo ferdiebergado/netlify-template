@@ -1,4 +1,4 @@
-import SuspenseQueryErrorBoundary from '@/components/suspense-query-error-boundary';
+import QueryErrorBoundary from '@/components/query-error-boundary';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -94,9 +94,9 @@ export default function Settings() {
       </CardHeader>
       <CardContent>
         <h2 className="mb-6 text-lg font-semibold">Application Environment</h2>
-        <SuspenseQueryErrorBoundary suspenseFallback={<Fallback />}>
+        <QueryErrorBoundary suspenseFallback={<Fallback />}>
           <Env />
-        </SuspenseQueryErrorBoundary>
+        </QueryErrorBoundary>
       </CardContent>
     </Card>
   );

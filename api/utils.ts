@@ -1,11 +1,11 @@
-export function getClientIP(request: Request) {
-  const xForwardedFor = request.headers.get('x-forwarded-for');
+export function getClientIP(req: Request): string {
+  const netlifyIp = req.headers.get('x-nf-client-connection-ip');
+  if (netlifyIp) return netlifyIp;
 
-  if (xForwardedFor) {
-    return xForwardedFor.split(',')[0].trim();
-  }
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) return forwarded.split(',')[0].trim();
 
-  return request.headers.get('cf-connecting-ip') || request.headers.get('x-real-ip') || '127.0.0.1';
+  return '127.0.0.1';
 }
 
 /**

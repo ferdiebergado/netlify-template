@@ -21,7 +21,7 @@ export type APIResponse<T extends UnknownRecord, E = string, M = unknown> =
   | Success<T, M>
   | Failure<E, M>;
 
-export type LoginData = APIData & { user: User };
+export type SigninData = APIData & { user: User };
 
 export type AppEnv = APIData & {
   node: string;

@@ -1,4 +1,3 @@
-import { ClerkProvider } from '@clerk/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
@@ -6,7 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 import UserProvider from '@/features/auth/components/user-provider';
-import App from './app';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import Page from './page';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,9 +25,9 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[initialRoute]}>
-        <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID} locale="en-US">
           <UserProvider>{children}</UserProvider>
-        </ClerkProvider>
+        </GoogleOAuthProvider>
       </MemoryRouter>
     </QueryClientProvider>
   );
@@ -36,7 +36,7 @@ function TestingProvider({ initialRoute = '/', children }: ProviderProps) {
 async function renderApp() {
   return render(
     <TestingProvider>
-      <App />
+      <Page />
     </TestingProvider>
   );
 }
@@ -45,10 +45,10 @@ describe('App Component', () => {
   it('loads and displays login page', async () => {
     const page = await renderApp();
 
-    const heading = page.getByRole('heading', { name: 'sign in to' });
+    const heading = page.getByText(/welcome back/i);
     await expect.element(heading).toBeInTheDocument();
 
-    const desc = page.getByText(/continue with google/i);
+    const desc = page.getByText(/signin with your google account/i);
     await expect.element(desc).toBeInTheDocument();
   });
 });
