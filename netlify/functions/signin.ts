@@ -1,6 +1,6 @@
 import type { Config, Context } from '@netlify/functions';
 
-import { validateToken } from '@api/auth';
+import { verifyToken } from '@api/auth';
 import { respondWithError } from '@api/errors';
 import { buildSessionCookie, initializeSession } from '@api/session';
 import { validateBody } from '@api/validate';
@@ -16,7 +16,7 @@ export default async (req: Request, ctx: Context) => {
     const body = await req.json();
     const { token } = validateBody(body, signinSchema);
 
-    const user = await validateToken(token);
+    const user = await verifyToken(token);
 
     const { sessionId, expiresAt } = await initializeSession(user, req);
     const sessionCookie = buildSessionCookie(sessionId, expiresAt);

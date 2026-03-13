@@ -7,7 +7,7 @@ import { UnauthorizedError } from './errors';
 const { GOOGLE_CLIENT_ID } = env;
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-export async function validateToken(token: string): Promise<User> {
+export async function verifyToken(token: string): Promise<User> {
   const ticket = await client.verifyIdToken({
     idToken: token,
     audience: GOOGLE_CLIENT_ID,
