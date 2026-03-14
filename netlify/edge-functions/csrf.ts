@@ -22,7 +22,7 @@ export default (req: Request) => {
   if (unsafeMethods.includes(req.method)) {
     const fetchSite = req.headers.get('Sec-Fetch-Site');
 
-    if (fetchSite !== 'same-origin') {
+    if (!fetchSite || fetchSite !== 'same-origin') {
       const payload: Failure = {
         status: 'failed',
         error: 'cross-origin requests are not allowed',
