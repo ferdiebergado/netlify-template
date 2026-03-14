@@ -7,17 +7,9 @@ export async function createSession(db: Database, session: Session): Promise<voi
   const { userId, sessionId, expiresAt, userAgent, ip } = session;
 
   const sql = `
-INSERT INTO
-  sessions
-    (
-      session_id,
-      user_id,
-      ip,
-      user_agent,
-      expires_at
-    )
-VALUES
-  (?, ?, ?, ?, ?)`;
+INSERT INTO sessions (session_id, user_id, ip, user_agent, expires_at)
+VALUES (?, ?, ?, ?, ?)
+`;
 
   await db.execute(sql, [sessionId, userId, ip, userAgent, expiresAt.toISOString()]);
 }
@@ -36,7 +28,7 @@ export async function findSession(db: Database, id: string): Promise<Session | u
   const sql = `
 SELECT session_id, user_id, expires_at, user_agent, ip
 FROM sessions
-WHERE session_id = ?
+WHERE session_id = ? AND deleted_at IS NULL AND is_revoked = 0
 LIMIT 1
 `;
 
@@ -57,4 +49,30 @@ LIMIT 1
   };
 
   return session;
+}
+
+export async function touchSession(db: Database, id: string): Promise<boolean> {
+  console.log('[DB]: Updating session...');
+
+  const sql = `
+UPDATE sessions
+SET last_active_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+WHERE session_id = ? AND deleted_at IS NULL
+    `;
+
+  const { rowsAffected } = await db.execute(sql, [id]);
+
+  return rowsAffected === 1;
+}
+
+export async function softDeleteSession(db: Database, id: string): Promise<boolean> {
+  const sql = `
+UPDATE sessions
+SET deleted_at = CURRENT_TIMESTAMP
+WHERE session_id = ? AND deleted_at IS NULL
+    `;
+
+  const { rowsAffected } = await db.execute(sql, [id]);
+
+  return rowsAffected === 1;
 }
