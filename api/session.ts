@@ -60,7 +60,6 @@ export function buildSessionCookie(
     maxAge,
     httpOnly: true,
     secure: true,
-    sameSite: 'Lax',
   };
 }
 
@@ -72,7 +71,6 @@ export function clearSessionCookie(name = SESSION_COOKIE_NAME): Cookie {
     maxAge: 0,
     httpOnly: true,
     secure: true,
-    sameSite: 'Lax',
   };
 }
 
