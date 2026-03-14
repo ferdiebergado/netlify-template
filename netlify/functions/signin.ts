@@ -26,7 +26,7 @@ export default async (req: Request, ctx: Context) => {
       message: 'Logged in.',
       user,
     };
-    const payload: Success = {
+    const payload: Success<typeof data> = {
       status: 'success',
       data,
     };
