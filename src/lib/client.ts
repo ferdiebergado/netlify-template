@@ -18,21 +18,25 @@ async function request<T extends UnknownRecord>(path: string, options?: RequestI
 }
 
 export const api = {
-  get: <T extends UnknownRecord = APIData>(path: string) => request<T>(path),
-  post: <T extends UnknownRecord = APIData>(path: string, body: unknown) =>
+  get: <T extends UnknownRecord = APIData>(path: string, options?: RequestInit) =>
+    request<T>(path, options),
+  post: <T extends UnknownRecord = APIData>(path: string, body: unknown, options?: RequestInit) =>
     request<T>(path, {
+      ...options,
       method: 'POST',
       headers,
       body: JSON.stringify(body),
     }),
-  put: <T extends UnknownRecord = APIData>(path: string, body: unknown) =>
+  put: <T extends UnknownRecord = APIData>(path: string, body: unknown, options?: RequestInit) =>
     request<T>(path, {
+      ...options,
       method: 'PUT',
       headers,
       body: JSON.stringify(body),
     }),
-  delete: <T extends UnknownRecord = APIData>(path: string) =>
+  delete: <T extends UnknownRecord = APIData>(path: string, options?: RequestInit) =>
     request<T>(path, {
+      ...options,
       method: 'DELETE',
     }),
 };
