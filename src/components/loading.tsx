@@ -11,11 +11,11 @@ export default function Loading({ className, message = 'Please wait...' }: Loadi
     <div
       className={cn(
         'fixed inset-0 z-50 flex flex-col items-center justify-center',
-        'bg-background/60 backdrop-blur-sm transition-all duration-300',
+        'bg-muted-foreground/40 backdrop-blur-xs transition-all duration-300',
         className
       )}
     >
-      <div className="flex flex-col items-center gap-4">
+      <div className="bg-background flex flex-col items-center gap-4 rounded-lg p-5">
         <Loader2 className="text-primary h-10 w-10 animate-spin" />
         <p className="text-muted-foreground animate-pulse text-sm font-medium">{message}</p>
       </div>
