@@ -1,6 +1,6 @@
 import DarkModeProvider from '@/components/dark-mode/mode-provider';
-import Loading from '@/components/loading';
 import QueryErrorBoundary from '@/components/query-error-boundary';
+import Splash from '@/components/splash';
 import UserProvider from '@/features/auth/components/user-provider';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -20,7 +20,7 @@ export default function Provider({ queryClient, googleClientId, children }: Prov
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <QueryErrorBoundary ErrorFallbackComponent={ErrorPage} suspenseFallback={<Loading />}>
+        <QueryErrorBoundary ErrorFallbackComponent={ErrorPage} suspenseFallback={<Splash />}>
           <DarkModeProvider>
             <BrowserRouter>
               <GoogleOAuthProvider clientId={googleClientId} locale="en-US">
