@@ -9,7 +9,7 @@ export async function upsertUser(db: Database, user: User): Promise<void> {
 INSERT INTO users (user_id, name, email, picture)
 VALUES (?, ?, ?, ?)
 ON CONFLICT (user_id)
-DO UPDATE SET last_login_at = CURRENT_TIMESTAMP
+DO UPDATE SET last_login_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
 `;
 
   await db.execute(sql, [
@@ -32,7 +32,7 @@ export default async function findUser(db: Database, id: string): Promise<Profil
   const sql = `
 SELECT name, email, picture
 FROM users
-WHERE user_id = ?
+WHERE user_id = ? AND deleted_at IS NULL
 LIMIT 1
 `;
 
