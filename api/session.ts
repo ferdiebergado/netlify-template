@@ -64,6 +64,18 @@ export function buildSessionCookie(
   };
 }
 
+export function clearSessionCookie(name = SESSION_COOKIE_NAME): Cookie {
+  return {
+    name,
+    value: '',
+    path: '/',
+    maxAge: 0,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Lax',
+  };
+}
+
 export async function verifySession(context: Context): Promise<string> {
   const sessionId = context.cookies.get(SESSION_COOKIE_NAME);
   if (!sessionId) throw new UnauthorizedError('no session cookie');

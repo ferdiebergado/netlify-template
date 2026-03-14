@@ -10,10 +10,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useCurrentUser } from '@/features/auth/hooks';
+import { useSignoutMutation } from '@/features/auth/mutations';
+import { useCallback } from 'react';
+import { toast } from 'sonner';
 import UserAvatar from './user-avatar';
 
 export default function UserMenu() {
   const { user } = useCurrentUser();
+  const { mutate: signout } = useSignoutMutation();
+
+  const handleLogout = useCallback(() => {
+    signout(undefined, {
+      onSuccess: ({ message }) => toast.success(message),
+    });
+  }, [signout]);
 
   if (!user) return;
 
@@ -40,7 +50,7 @@ export default function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut />
           Log out
         </DropdownMenuItem>

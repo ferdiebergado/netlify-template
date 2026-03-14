@@ -15,6 +15,7 @@ const NotFoundPage = lazy(() => import('./pages/not-found-page'));
 export const paths = {
   signin: '/signin' as const,
   signup: '/signup' as const,
+  signout: '/signout' as const,
   me: '/me' as const,
   about: '/about' as const,
   settings: '/settings' as const,
