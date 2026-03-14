@@ -7,9 +7,7 @@ export function useSigninMutation() {
 
   return useMutation({
     mutationFn: signin,
-    onSuccess: ({ user }) => {
-      queryClient.setQueryData(queryKeys.me, user);
-    },
+    onSuccess: ({ user }) => queryClient.setQueryData(queryKeys.me, user),
   });
 }
 
