@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { fetchMe } from './api';
 
 export const queryKeys = {
@@ -6,11 +6,10 @@ export const queryKeys = {
 };
 
 export function useMeQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: queryKeys.me,
     queryFn: fetchMe,
     retry: false,
     staleTime: Infinity,
-    throwOnError: false,
   });
 }
