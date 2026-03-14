@@ -1,7 +1,11 @@
 import { respondWithError } from '@api/errors';
 import { clearSessionCookie, verifySession } from '@api/session';
-import type { Context } from '@netlify/functions';
+import type { Config, Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
+
+export const config: Config = {
+  method: 'POST',
+};
 
 export default async (_req: Request, ctx: Context) => {
   try {
