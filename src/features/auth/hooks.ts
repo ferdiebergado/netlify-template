@@ -2,7 +2,7 @@ import type { Profile } from '@shared/schemas/user.schema';
 import { createContext, useContext } from 'react';
 
 type UserContextValue = {
-  user?: Profile;
+  user: Profile | null;
   isAuthenticated: boolean;
 };
 
