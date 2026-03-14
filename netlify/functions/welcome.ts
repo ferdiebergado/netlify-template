@@ -1,11 +1,11 @@
 import { respondWithError } from '@api/errors';
-import { verifySession } from '@api/session';
+import { getSession } from '@api/session';
 import type { Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
 
 export default async (_req: Request, ctx: Context) => {
   try {
-    await verifySession(ctx);
+    await getSession(ctx);
 
     const payload: Success = {
       status: 'success',

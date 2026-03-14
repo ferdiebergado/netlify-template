@@ -1,5 +1,7 @@
+import { db } from '@api/db';
 import { respondWithError } from '@api/errors';
-import { clearSessionCookie, verifySession } from '@api/session';
+import { clearSessionCookie, getSession } from '@api/session';
+import { softDeleteSession } from '@api/session.repo';
 import type { Config, Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
 
@@ -9,7 +11,8 @@ export const config: Config = {
 
 export default async (_req: Request, ctx: Context) => {
   try {
-    await verifySession(ctx);
+    const { sessionId } = await getSession(ctx);
+    await softDeleteSession(db, sessionId);
 
     const payload: Success = {
       status: 'success',

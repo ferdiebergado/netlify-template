@@ -5,7 +5,7 @@ import type { User } from '@shared/schemas/user.schema';
 import { SESSIONID_LENGTH, SESSION_COOKIE_NAME, SESSION_DURATION_MINUTES } from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';
-import { createSession, findSession } from './session.repo';
+import { createSession, findSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
 import { getClientIP } from './utils';
 
@@ -74,14 +74,16 @@ export function clearSessionCookie(name = SESSION_COOKIE_NAME): Cookie {
   };
 }
 
-export async function verifySession(context: Context): Promise<string> {
+export async function getSession(context: Context): Promise<Session> {
   const sessionId = context.cookies.get(SESSION_COOKIE_NAME);
   if (!sessionId) throw new UnauthorizedError('no session cookie');
 
   const session = await findSession(db, sessionId);
   if (!session) throw new UnauthorizedError('no saved session');
 
-  return session.userId;
+  await touchSession(db, sessionId);
+
+  return session;
 }
 
 function generateSessionId(length: number): string {
