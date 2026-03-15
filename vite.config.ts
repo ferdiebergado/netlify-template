@@ -24,6 +24,7 @@ export default defineConfig({
         test: {
           name: 'unit',
           include: ['api/**/*.{test,spec}.ts'],
+          alias,
           environment: 'node',
           setupFiles: ['setup.node.ts'],
         },
