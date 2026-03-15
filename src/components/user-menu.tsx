@@ -17,15 +17,18 @@ import UserAvatar from './user-avatar';
 
 export default function UserMenu() {
   const { user } = useCurrentUser();
-  const { mutate: signout } = useSignoutMutation();
+  const { mutateAsync: signout } = useSignoutMutation();
 
   const handleLogout = useCallback(() => {
-    signout(undefined, {
-      onSuccess: ({ message }) => toast.success(message),
+    toast.promise(signout(), {
+      loading: 'Signing out...',
+      success: ({ message }) => message,
+      error: error => error.message ?? 'Failed to sign out.',
     });
   }, [signout]);
 
-  if (!user) return;
+  // eslint-disable-next-line unicorn/no-null
+  if (!user) return null;
 
   return (
     <DropdownMenu>
@@ -52,7 +55,7 @@ export default function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut />
-          Log out
+          Signout
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
