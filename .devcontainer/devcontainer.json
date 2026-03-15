@@ -60,7 +60,21 @@
 
         "terminal.integrated.cursorBlinking": true,
         "terminal.integrated.cursorStyle": "block"
-      }
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "warrenbuckley.sqlite",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense",
+        "sleistner.vscode-fileutils",
+        "tamasfe.even-better-toml",
+        "wix.vscode-import-cost",
+        "yoavbls.pretty-ts-errors",
+        "bradlc.vscode-tailwindcss",
+        "vitest.explorer",
+        "editorconfig.editorconfig"
+      ]
     }
   }
 
