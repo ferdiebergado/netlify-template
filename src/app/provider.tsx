@@ -20,16 +20,16 @@ export default function Provider({ queryClient, googleClientId, children }: Prov
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <QueryErrorBoundary ErrorFallbackComponent={ErrorPage} suspenseFallback={<Splash />}>
-          <DarkModeProvider>
+        <DarkModeProvider>
+          <QueryErrorBoundary ErrorFallbackComponent={ErrorPage} suspenseFallback={<Splash />}>
             <BrowserRouter>
               <GoogleOAuthProvider clientId={googleClientId} locale="en-US">
                 <UserProvider>{children}</UserProvider>
               </GoogleOAuthProvider>
             </BrowserRouter>
-          </DarkModeProvider>
-        </QueryErrorBoundary>
-        <ReactQueryDevtools initialIsOpen={false} />
+          </QueryErrorBoundary>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </DarkModeProvider>
       </QueryClientProvider>
       <Toaster position="top-right" richColors />
     </>
