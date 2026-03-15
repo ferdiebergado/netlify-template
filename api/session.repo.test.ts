@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { User } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
 import { afterEach } from 'node:test';
 import type { Database } from './db';
 import type { Session } from './session';
-import { createSession, findSession } from './session.repo';
+import { createSession, findSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
 
 describe('session repo', () => {
@@ -21,6 +21,7 @@ describe('session repo', () => {
     userAgent: 'vitest',
     ip: '127.0.0.1',
     expiresAt: new Date(),
+    lastActiveAt: new Date(),
   };
 
   let db: Database;
@@ -40,7 +41,7 @@ describe('session repo', () => {
 
       const session = await findSession(db, mockSession.sessionId);
 
-      expect(session).toStrictEqual(mockSession);
+      expect(session).toEqual(mockSession);
     });
   });
 
@@ -50,7 +51,27 @@ describe('session repo', () => {
 
       const foundSession = await findSession(db, mockSession.sessionId);
 
-      expect(foundSession).toStrictEqual(mockSession);
+      expect(foundSession).toEqual(mockSession);
+    });
+  });
+
+  describe('touchSession', () => {
+    it("should update the session's last active time", async () => {
+      vi.useFakeTimers();
+      await createSession(db, mockSession);
+      const mockSessionId = mockSession.sessionId;
+      const beforeTouch = await findSession(db, mockSessionId);
+      const beforeLastActiveAt = beforeTouch?.lastActiveAt;
+
+      vi.advanceTimersByTime(1000 * 60);
+      await touchSession(db, mockSessionId);
+
+      const afterTouch = await findSession(db, mockSessionId);
+      const afterLastActiveAt = afterTouch?.lastActiveAt;
+
+      expect(afterLastActiveAt).toBeDefined();
+      expect(beforeLastActiveAt).toBeDefined();
+      expect(afterLastActiveAt?.getTime()).toBeGreaterThan(beforeLastActiveAt?.getTime() as number);
     });
   });
 });
