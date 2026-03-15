@@ -4,14 +4,21 @@ import type { Session } from './session';
 export async function createSession(db: Database, session: Session): Promise<void> {
   console.log('[DB]: Creating session...');
 
-  const { userId, sessionId, expiresAt, userAgent, ip } = session;
+  const { userId, sessionId, expiresAt, userAgent, ip, lastActiveAt } = session;
 
   const sql = `
-INSERT INTO sessions (session_id, user_id, ip, user_agent, expires_at)
-VALUES (?, ?, ?, ?, ?)
+INSERT INTO sessions (session_id, user_id, ip, user_agent, expires_at, last_active_at)
+VALUES (?, ?, ?, ?, ?, ?)
 `;
 
-  await db.execute(sql, [sessionId, userId, ip, userAgent, expiresAt.toISOString()]);
+  await db.execute(sql, [
+    sessionId,
+    userId,
+    ip,
+    userAgent,
+    expiresAt.toISOString(),
+    lastActiveAt.toISOString(),
+  ]);
 }
 
 type SessionRow = {
@@ -20,13 +27,14 @@ type SessionRow = {
   expires_at: string;
   user_agent: string;
   ip: string;
+  last_active_at: string;
 };
 
 export async function findSession(db: Database, id: string): Promise<Session | undefined> {
   console.log('[DB]: Retrieving session...');
 
   const sql = `
-SELECT session_id, user_id, expires_at, user_agent, ip
+SELECT session_id, user_id, expires_at, user_agent, ip, last_active_at
 FROM sessions
 WHERE session_id = ? AND deleted_at IS NULL AND is_revoked = 0
 LIMIT 1
@@ -46,6 +54,7 @@ LIMIT 1
     userAgent: row.user_agent,
     ip: row.ip,
     expiresAt: new Date(row.expires_at),
+    lastActiveAt: new Date(row.last_active_at),
   };
 
   return session;
@@ -56,11 +65,13 @@ export async function touchSession(db: Database, id: string): Promise<boolean> {
 
   const sql = `
 UPDATE sessions
-SET last_active_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+SET last_active_at = ?, updated_at = ?
 WHERE session_id = ? AND deleted_at IS NULL
     `;
 
-  const { rowsAffected } = await db.execute(sql, [id]);
+  const now = new Date().toISOString();
+
+  const { rowsAffected } = await db.execute(sql, [now, now, id]);
 
   return rowsAffected === 1;
 }

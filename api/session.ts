@@ -15,6 +15,7 @@ export type Session = {
   userAgent: string;
   ip: string;
   expiresAt: Date;
+  lastActiveAt: Date;
 };
 
 // TODO: unique session per ip and useragent
@@ -25,8 +26,16 @@ export async function initializeSession(user: User, req: Request): Promise<Sessi
   const userAgent = req.headers.get('User-Agent') ?? 'unknown';
   const ip = getClientIP(req);
   const expiresAt = setSessionTimeout(SESSION_DURATION_MINUTES);
+  const lastActiveAt = new Date();
 
-  const session: Session = { sessionId, userId: user.googleId, userAgent, ip, expiresAt };
+  const session: Session = {
+    sessionId,
+    userId: user.googleId,
+    userAgent,
+    ip,
+    expiresAt,
+    lastActiveAt,
+  };
   await createSession(db, session);
 
   return session;
