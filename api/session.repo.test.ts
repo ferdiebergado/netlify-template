@@ -5,7 +5,7 @@ import { createTestDB } from '@testing/node/db';
 import { afterEach } from 'node:test';
 import type { Database } from './db';
 import type { Session } from './session';
-import { createSession, findSession, touchSession } from './session.repo';
+import { createSession, findSession, softDeleteSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
 
 describe('session repo', () => {
@@ -72,6 +72,16 @@ describe('session repo', () => {
       expect(afterLastActiveAt).toBeDefined();
       expect(beforeLastActiveAt).toBeDefined();
       expect(afterLastActiveAt?.getTime()).toBeGreaterThan(beforeLastActiveAt?.getTime() as number);
+    });
+  });
+
+  describe('softDeleteSession', () => {
+    it("should set the session's deleted_at field", async () => {
+      await createSession(db, mockSession);
+
+      const isSoftDeleted = await softDeleteSession(db, mockSession.sessionId);
+
+      expect(isSoftDeleted).toBe(true);
     });
   });
 });
