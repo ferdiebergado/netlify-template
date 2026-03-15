@@ -2,30 +2,21 @@ import { RefreshCcwIcon, TriangleAlert } from 'lucide-react';
 import type { FallbackProps } from 'react-error-boundary';
 
 import { Button } from '@/components/ui/button';
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty';
+import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
-export default function ErrorPage({ error, resetErrorBoundary }: FallbackProps) {
+export default function ErrorPage({ resetErrorBoundary }: FallbackProps) {
   const handleClick = () => resetErrorBoundary();
 
   return (
-    <Empty className="h-screen">
+    <Empty className="bg-muted/30 h-dvh">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <TriangleAlert />
         </EmptyMedia>
         <EmptyTitle className="text-destructive text-2xl">Something went wrong.</EmptyTitle>
-        <EmptyDescription className="max-w-xs text-pretty">
-          {error instanceof Error ? error.message : 'An unknown error occurred.'}
-        </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
+        <p>Click Retry or reload the page.</p>
         <Button variant="outline" onClick={handleClick}>
           <RefreshCcwIcon data-icon="inline-start" />
           Retry
