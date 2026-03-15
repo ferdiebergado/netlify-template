@@ -1,4 +1,4 @@
-import { RefreshCcwIcon, TriangleAlert } from 'lucide-react';
+import { RefreshCcwIcon, TriangleAlertIcon } from 'lucide-react';
 import type { FallbackProps } from 'react-error-boundary';
 
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ export default function ErrorPage({ resetErrorBoundary }: FallbackProps) {
     <Empty className="bg-muted/30 h-dvh">
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <TriangleAlert />
+          <TriangleAlertIcon />
         </EmptyMedia>
         <EmptyTitle className="text-destructive text-2xl">Something went wrong.</EmptyTitle>
       </EmptyHeader>
