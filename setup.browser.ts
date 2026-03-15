@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll } from 'vitest';
 
 import { API_BASE_URL } from '@shared/constants';
 import type { Failure } from '@shared/types/api';
+import '@testing/browser/mocks';
 
 const baseUrl = API_BASE_URL;
 
