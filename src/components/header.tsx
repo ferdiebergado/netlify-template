@@ -2,7 +2,7 @@ import { ModeToggle } from '@/components/dark-mode/mode-toggle';
 import Breadcrumbs from './breadcrumbs';
 import { Separator } from './ui/separator';
 import { SidebarTrigger } from './ui/sidebar';
-import UserMenu from './user-menu';
+import UserProfile from './user-profile';
 
 export default function Header() {
   return (
@@ -14,7 +14,7 @@ export default function Header() {
       </div>
       <div className="ml-auto flex items-center gap-6 px-4">
         <ModeToggle />
-        <UserMenu />
+        <UserProfile />
       </div>
     </header>
   );
