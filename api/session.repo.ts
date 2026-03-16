@@ -1,5 +1,5 @@
+import type { Session } from '@shared/schemas/user.schema';
 import type { Database } from './db';
-import type { Session } from './session';
 
 export async function createSession(db: Database, session: Session): Promise<void> {
   console.log('[DB]: Creating session...');
