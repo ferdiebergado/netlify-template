@@ -1,11 +1,6 @@
 import { paths } from '@/app/routes';
 import { api } from '@/lib/client';
 import { type Profile } from '@shared/schemas/user.schema';
-import type { SigninData } from '@shared/types/api';
-
-export async function signin(token: string) {
-  return await api.post<SigninData>(paths.signin, { token });
-}
 
 export async function fetchMe() {
   try {

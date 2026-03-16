@@ -1,11 +1,9 @@
 import type { Config, Context } from '@netlify/functions';
+import * as z from 'zod';
 
 import { verifyToken } from '@api/auth';
-import { respondWithError } from '@api/errors';
+import { BadRequestError, respondWithError } from '@api/errors';
 import { buildSessionCookie, initializeSession } from '@api/session';
-import { validateBody } from '@api/validate';
-import { signinSchema } from '@shared/schemas/auth.schema';
-import type { Success } from '@shared/types/api';
 
 export const config: Config = {
   method: 'POST',
@@ -13,26 +11,37 @@ export const config: Config = {
 
 export default async (req: Request, ctx: Context) => {
   try {
-    const body = await req.json();
-    const { token } = validateBody(body, signinSchema);
+    const bodyText = await req.text();
 
-    const user = await verifyToken(token);
+    const params = new URLSearchParams(bodyText);
+    const payload = Object.fromEntries(params);
+
+    const { success, error, data } = GoogleAuthSchema.safeParse(payload);
+    if (!success) throw new BadRequestError(z.prettifyError(error));
+
+    const csrfTokenInCookie = ctx.cookies.get('g_csrf_token');
+    const { g_csrf_token, credential } = data;
+    if (!csrfTokenInCookie || g_csrf_token !== csrfTokenInCookie)
+      throw new BadRequestError('invalid csrf token');
+
+    const user = await verifyToken(credential);
 
     const { sessionId, expiresAt } = await initializeSession(user, req);
     const sessionCookie = buildSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
 
-    const data = {
-      message: 'Logged in.',
-      user,
-    };
-    const payload: Success<typeof data> = {
-      status: 'success',
-      data,
-    };
-
-    return Response.json(payload);
+    return new Response(undefined, {
+      headers: {
+        Location: '/',
+      },
+      status: 302,
+    });
   } catch (error) {
     return respondWithError(error);
   }
 };
+
+const GoogleAuthSchema = z.object({
+  credential: z.string().min(1, 'Google credential is required'),
+  g_csrf_token: z.string().min(1, 'CSRF token is required'),
+});
