@@ -1,15 +1,19 @@
 # Project Architecture
 
-This is a React application with:
+This is a React single-page application with:
 
 - Components in `/src/components`
 - API routes in `/.netlify/functions`
+- backend in `/api`
+- database schea is in `/init.sql`
 - Server state management using react-query
 - Components are based on shadcn-ui with base-ui
 - Form management using react-hook-form with zod-resolver
-- Validation using zod
-- React-router in declarative mode
-- Project scaffolded by vite
+- validation using zod
+- react-router in declarative mode for page navigation
+- react-query for server state management
+- project scaffolded with vite
+- vitest as testing framework with playwright as driver in browser mode
 
 ## Coding Standards
 
@@ -28,6 +32,6 @@ The database is based on:
 - sqlite
 - libsql provided by turso
 
-Backend server and deployment is on:
+Backend server and deployment is in:
 
 - Netlify with serverless and edge functions
