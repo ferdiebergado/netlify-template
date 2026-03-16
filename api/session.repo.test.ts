@@ -1,10 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { User } from '@shared/schemas/user.schema';
+import type { Session, User } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
 import { afterEach } from 'node:test';
 import type { Database } from './db';
-import type { Session } from './session';
 import { createSession, findSession, softDeleteSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
 
