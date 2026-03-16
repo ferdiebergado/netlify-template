@@ -1,0 +1,1 @@
+/home/ferdiebergado/Projects/typescript/netlify-template/.agents/rules/project.md
