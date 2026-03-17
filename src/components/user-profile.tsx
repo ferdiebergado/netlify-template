@@ -24,7 +24,7 @@ export default function UserProfile() {
 
   const handleSignout = () => {
     signout(undefined, {
-      onSuccess: ({ message }) => toast.success(message ?? 'Signed out successfully'),
+      onSuccess: data => toast.success(data?.message ?? 'Signed out successfully.'),
     });
   };
 

@@ -4,11 +4,17 @@ import type { UnknownRecord } from 'type-fest';
 const BASE_URL = '/.netlify/functions';
 const headers = { 'Content-Type': 'application/json' };
 
-async function request<T extends UnknownRecord>(path: string, options?: RequestInit): Promise<T> {
+async function request<T extends UnknownRecord>(
+  path: string,
+  options?: RequestInit
+): Promise<T | null> {
   const res = await fetch(`${BASE_URL}${path}`, {
     credentials: 'include',
     ...options,
   });
+
+  // eslint-disable-next-line unicorn/no-null
+  if (!res.ok && res.status === 401) return null;
 
   const json = (await res.json()) as APIResponse<T>;
 
