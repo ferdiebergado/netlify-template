@@ -9,6 +9,9 @@ import { useWelcomeQuery } from '../queries';
 function Message() {
   const { data } = useWelcomeQuery();
 
+  // eslint-disable-next-line unicorn/no-null
+  if (!data) return null;
+
   return <p>{data.message}</p>;
 }
 

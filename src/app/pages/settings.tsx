@@ -8,6 +8,9 @@ import { useEnvQuery } from '../queries';
 function Env() {
   const { data } = useEnvQuery();
 
+  // eslint-disable-next-line unicorn/no-null
+  if (!data) return null;
+
   return (
     <div className="space-y-5">
       <Item variant="outline" className="max-w-xs">
