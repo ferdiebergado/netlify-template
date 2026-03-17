@@ -1,6 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Profile } from '@shared/schemas/user.schema';
 import { UserCircle } from 'lucide-react';
+import { buttonVariants } from './ui/button';
 
 interface UserInfoCardProps {
   user: Profile;
@@ -14,6 +15,15 @@ export function UserInfoCard({ user }: UserInfoCardProps) {
           <UserCircle className="h-5 w-5" />
           User Information
         </CardTitle>
+        <CardAction>
+          <a
+            href="https://myaccount.google.com"
+            target="_blank"
+            className={buttonVariants({ variant: 'link', size: 'sm' })}
+          >
+            Manage
+          </a>
+        </CardAction>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-center">
