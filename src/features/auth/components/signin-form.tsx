@@ -4,7 +4,10 @@ import type { ComponentProps } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { env } from '@/config';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+
+const signUri = `${env.VITE_APP_HOST}/.netlify/functions/signin`;
+
+const noop = () => {};
 
 export function SigninForm({ className, ...props }: ComponentProps<'div'>) {
   return (
@@ -17,12 +20,12 @@ export function SigninForm({ className, ...props }: ComponentProps<'div'>) {
         <CardContent>
           <GoogleLogin
             ux_mode="redirect"
-            login_uri={`${env.VITE_APP_HOST}/.netlify/functions/signin`}
+            login_uri={signUri}
             theme="filled_blue"
             size="large"
             text="continue_with"
-            onSuccess={() => toast.success('Signed in.')}
-            onError={() => toast.error('Signin failed.')}
+            onSuccess={noop}
+            onError={noop}
           />
         </CardContent>
       </Card>

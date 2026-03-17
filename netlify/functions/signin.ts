@@ -32,7 +32,7 @@ export default async (req: Request, ctx: Context) => {
 
     return new Response(undefined, {
       headers: {
-        Location: '/',
+        Location: '/?signin=success',
       },
       status: 302,
     });

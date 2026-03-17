@@ -1,6 +1,9 @@
 import QueryErrorBoundary from '@/components/query-error-boundary';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router';
+import { toast } from 'sonner';
 import { useWelcomeQuery } from '../queries';
 
 function Message() {
@@ -10,6 +13,17 @@ function Message() {
 }
 
 export default function Home() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('signin') === 'success') {
+      toast.success('Welcome back! You have successfully signed in.');
+
+      searchParams.delete('signin');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   return (
     <Card>
       <CardHeader>
