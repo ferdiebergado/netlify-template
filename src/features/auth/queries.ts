@@ -28,8 +28,6 @@ export function useRevokeSessionMutation() {
 
   return useMutation({
     mutationFn: revokeSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.sessions });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.sessions }),
   });
 }
