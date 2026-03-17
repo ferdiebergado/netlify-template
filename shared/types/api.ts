@@ -1,5 +1,5 @@
 import type { UnknownRecord } from 'type-fest';
-import type { User } from '../schemas/user.schema';
+import type { Session, User } from '../schemas/user.schema';
 
 export type APIData = UnknownRecord & {
   message?: string;
@@ -29,4 +29,9 @@ export type AppEnv = APIData & {
   memUsage: string;
   uptime: string;
   release: string;
+};
+
+export type SessionsData = {
+  sessions: Session[];
+  currentSessionId: string;
 };

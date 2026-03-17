@@ -87,3 +87,43 @@ WHERE session_id = ? AND deleted_at IS NULL
 
   return rowsAffected === 1;
 }
+
+export async function revokeSession(
+  db: Database,
+  sessionId: string,
+  userId: string
+): Promise<boolean> {
+  console.log('[DB]: Revoking session...');
+
+  const sql = `
+UPDATE sessions
+SET is_revoked = 1, deleted_at = CURRENT_TIMESTAMP
+WHERE session_id = ? AND user_id = ? AND deleted_at IS NULL
+`;
+
+  const { rowsAffected } = await db.execute(sql, [sessionId, userId]);
+
+  return rowsAffected === 1;
+}
+
+export async function findSessionsByUserId(db: Database, userId: string): Promise<Session[]> {
+  console.log('[DB]: Retrieving sessions for user...');
+
+  const sql = `
+SELECT session_id, user_id, expires_at, user_agent, ip, last_active_at
+FROM sessions
+WHERE user_id = ? AND deleted_at IS NULL AND is_revoked = 0
+ORDER BY last_active_at DESC
+`;
+
+  const { rows } = await db.execute<SessionRow>(sql, [userId]);
+
+  return rows.map(row => ({
+    sessionId: row.session_id,
+    userId: row.user_id,
+    userAgent: row.user_agent,
+    ip: row.ip,
+    expiresAt: new Date(row.expires_at),
+    lastActiveAt: new Date(row.last_active_at),
+  }));
+}
