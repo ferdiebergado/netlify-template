@@ -2,31 +2,49 @@ import type { Context } from '@netlify/functions';
 import { randomBytes } from 'node:crypto';
 
 import type { Session, User } from '@shared/schemas/user.schema';
+import { UAParser } from 'ua-parser-js';
 import { SESSIONID_LENGTH, SESSION_COOKIE_NAME, SESSION_DURATION_MINUTES } from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';
 import { createSession, findSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
-import { getClientIP } from './utils';
+
+type SessionData = {
+  userAgent: string;
+  ip: string;
+  city?: string;
+  country?: string;
+};
 
 // TODO: unique session per ip and useragent
-export async function initializeSession(user: User, req: Request): Promise<Session> {
+export async function initializeSession(user: User, data: SessionData): Promise<Session> {
   await upsertUser(db, user);
 
   const sessionId = generateSessionId(SESSIONID_LENGTH);
-  const userAgent = req.headers.get('User-Agent') ?? 'unknown';
-  const ip = getClientIP(req);
   const expiresAt = setSessionTimeout(SESSION_DURATION_MINUTES);
   const lastActiveAt = new Date();
+
+  const { userAgent, ip, city, country } = data;
+
+  const { device, browser, os } = UAParser(userAgent);
+  console.log({ device, browser, os });
 
   const session: Session = {
     sessionId,
     userId: user.googleId,
     userAgent,
+    device: device.model,
+    deviceType: device.type,
+    deviceVendor: device.vendor,
+    browser: browser.name,
+    os: os.name,
     ip,
+    city,
+    country,
     expiresAt,
     lastActiveAt,
   };
+
   await createSession(db, session);
 
   return session;

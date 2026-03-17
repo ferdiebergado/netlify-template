@@ -1,23 +1,29 @@
+/* eslint-disable unicorn/no-null */
 import type { Session } from '@shared/schemas/user.schema';
 import type { Database } from './db';
 
 export async function createSession(db: Database, session: Session): Promise<void> {
   console.log('[DB]: Creating session...');
 
-  const { userId, sessionId, expiresAt, userAgent, ip, lastActiveAt } = session;
-
   const sql = `
-INSERT INTO sessions (session_id, user_id, ip, user_agent, expires_at, last_active_at)
-VALUES (?, ?, ?, ?, ?, ?)
+INSERT INTO sessions (session_id, user_id, ip, user_agent, device, device_type, device_vendor, browser, os, city, country, expires_at, last_active_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 
   await db.execute(sql, [
-    sessionId,
-    userId,
-    ip,
-    userAgent,
-    expiresAt.toISOString(),
-    lastActiveAt.toISOString(),
+    session.sessionId,
+    session.userId,
+    session.ip,
+    session.userAgent,
+    session.device ?? null,
+    session.deviceType ?? null,
+    session.deviceVendor ?? null,
+    session.browser ?? null,
+    session.os ?? null,
+    session.city ?? null,
+    session.country ?? null,
+    session.expiresAt.toISOString(),
+    session.lastActiveAt.toISOString(),
   ]);
 }
 
@@ -28,13 +34,20 @@ type SessionRow = {
   user_agent: string;
   ip: string;
   last_active_at: string;
+  device: string;
+  device_type: string;
+  device_vendor: string;
+  browser: string;
+  os: string;
+  city?: string;
+  country?: string;
 };
 
 export async function findSession(db: Database, id: string): Promise<Session | undefined> {
   console.log('[DB]: Retrieving session...');
 
   const sql = `
-SELECT session_id, user_id, expires_at, user_agent, ip, last_active_at
+SELECT session_id, user_id, expires_at, user_agent, ip, device, device_type, device_vendor, browser, os, city, country, last_active_at
 FROM sessions
 WHERE session_id = ? AND deleted_at IS NULL AND is_revoked = 0
 LIMIT 1
@@ -55,6 +68,13 @@ LIMIT 1
     ip: row.ip,
     expiresAt: new Date(row.expires_at),
     lastActiveAt: new Date(row.last_active_at),
+    device: row.device,
+    deviceType: row.device_type,
+    deviceVendor: row.device_vendor,
+    browser: row.browser,
+    os: row.os,
+    city: row.city,
+    country: row.country,
   };
 
   return session;
@@ -110,7 +130,7 @@ export async function findSessionsByUserId(db: Database, userId: string): Promis
   console.log('[DB]: Retrieving sessions for user...');
 
   const sql = `
-SELECT session_id, user_id, expires_at, user_agent, ip, last_active_at
+SELECT session_id, user_id, expires_at, user_agent, device, device_type, device_vendor, browser, os, ip, city, country, last_active_at
 FROM sessions
 WHERE user_id = ? AND deleted_at IS NULL AND is_revoked = 0
 ORDER BY last_active_at DESC
@@ -125,5 +145,12 @@ ORDER BY last_active_at DESC
     ip: row.ip,
     expiresAt: new Date(row.expires_at),
     lastActiveAt: new Date(row.last_active_at),
+    device: row.device,
+    deviceType: row.device_type,
+    deviceVendor: row.device_vendor,
+    browser: row.browser,
+    os: row.os,
+    city: row.city,
+    country: row.country,
   }));
 }

@@ -26,7 +26,16 @@ export default async (req: Request, ctx: Context) => {
 
     const user = await verifyToken(credential);
 
-    const { sessionId, expiresAt } = await initializeSession(user, req);
+    const sessionData = {
+      userAgent: req.headers.get('User-Agent') ?? 'unknown',
+      ip: ctx.ip,
+      city: ctx.geo.city,
+      country: ctx.geo.country?.name,
+    };
+
+    console.log('session data:', sessionData);
+
+    const { sessionId, expiresAt } = await initializeSession(user, sessionData);
     const sessionCookie = buildSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
 

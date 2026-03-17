@@ -21,6 +21,13 @@ describe('session repo', () => {
     ip: '127.0.0.1',
     expiresAt: new Date(),
     lastActiveAt: new Date(),
+    device: 'Vivobook 16',
+    deviceType: 'desktop',
+    deviceVendor: 'Asus',
+    browser: 'Chrome',
+    os: 'linux',
+    city: 'Binan',
+    country: 'Philippines',
   };
 
   let db: Database;

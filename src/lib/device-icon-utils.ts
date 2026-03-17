@@ -1,8 +1,7 @@
-import type { DeviceType } from '@/lib/device-detection';
 import type { LucideIcon } from 'lucide-react';
 import { Globe, Monitor, Smartphone, Tablet } from 'lucide-react';
 
-export function getDeviceIcon(deviceType: DeviceType): LucideIcon {
+export function getDeviceIcon(deviceType?: string): LucideIcon {
   switch (deviceType) {
     case 'desktop': {
       return Monitor;

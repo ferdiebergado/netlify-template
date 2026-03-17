@@ -1,25 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRevokeSessionMutation } from '@/features/auth/queries';
-import type { DeviceType } from '@/lib/device-detection';
+import type { DeviceSession } from '@/features/auth/types';
 import { getDeviceIcon } from '@/lib/device-icon-utils';
 import { Loader, XIcon } from 'lucide-react';
 import { createElement, useState } from 'react';
+import { toast } from 'sonner';
 
-interface DeviceSession {
-  id: string;
-  deviceType: DeviceType;
-  browser: string;
-  location: string;
-  lastActive: string;
-  current: boolean;
-}
-
-interface SessionListProps {
+type SessionListProps = {
   sessions: DeviceSession[];
   isLoading: boolean;
   isError: boolean;
-}
+};
 
 export function SessionList({ sessions, isLoading, isError }: SessionListProps) {
   const [revokingSessions, setRevokingSessions] = useState<Set<string>>(new Set());
@@ -54,11 +46,16 @@ export function SessionList({ sessions, isLoading, isError }: SessionListProps) 
                     {createElement(getDeviceIcon(session.deviceType), { className: 'h-4 w-4' })}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{session.browser}</p>
-                    <p className="text-muted-foreground text-xs">
-                      {session.location} • {session.lastActive}
-                      {session.current && <span className="text-primary ml-1">(Current)</span>}
+                    <p className="text-sm font-medium">
+                      {session.browser} on {session.os}
                     </p>
+                    <div className="text-muted-foreground text-xs">
+                      <p>{session.location}</p>
+                      <p>
+                        {session.lastActive}
+                        {session.current && <span className="text-primary ml-1">(Current)</span>}
+                      </p>
+                    </div>
                   </div>
                   {!session.current && (
                     <Button
@@ -68,6 +65,7 @@ export function SessionList({ sessions, isLoading, isError }: SessionListProps) 
                       onClick={() => {
                         setRevokingSessions(prev => new Set(prev).add(session.id));
                         revokeSession(session.id, {
+                          onSuccess: data => toast.success(data?.message ?? 'Session revoked.'),
                           onSettled: () => {
                             setRevokingSessions(prev => {
                               const next = new Set(prev);
