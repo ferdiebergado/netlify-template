@@ -1,8 +1,8 @@
 import type { Context } from '@netlify/functions';
 import { randomBytes } from 'node:crypto';
+import { UAParser } from 'ua-parser-js';
 
 import type { Session, User } from '@shared/schemas/user.schema';
-import { UAParser } from 'ua-parser-js';
 import { SESSIONID_LENGTH, SESSION_COOKIE_NAME, SESSION_DURATION_MINUTES } from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';
@@ -16,7 +16,6 @@ type SessionData = {
   country?: string;
 };
 
-// TODO: unique session per ip and useragent
 export async function initializeSession(user: User, data: SessionData): Promise<Session> {
   await upsertUser(db, user);
 
@@ -63,32 +62,31 @@ type Cookie = {
   partitioned?: boolean;
 };
 
-export function buildSessionCookie(
-  sessionId: string,
-  expiresAt: Date,
-  name = SESSION_COOKIE_NAME
-): Cookie {
+const getCookieOptions = (): Cookie => ({
+  name: SESSION_COOKIE_NAME,
+  value: '',
+  path: '/',
+  httpOnly: true,
+  secure: true,
+});
+
+export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
   const deltaMs = expiresAt.getTime() - Date.now();
   const maxAge = Math.floor(deltaMs / 1000);
 
   return {
-    name,
+    ...getCookieOptions(),
     value: sessionId,
-    path: '/',
     maxAge,
-    httpOnly: true,
-    secure: true,
+    expires: expiresAt,
   };
 }
 
-export function clearSessionCookie(name = SESSION_COOKIE_NAME): Cookie {
+export function clearSessionCookie(): Cookie {
   return {
-    name,
+    ...getCookieOptions(),
     value: '',
-    path: '/',
     maxAge: 0,
-    httpOnly: true,
-    secure: true,
   };
 }
 
