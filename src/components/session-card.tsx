@@ -4,6 +4,7 @@ import QueryErrorBoundary from './query-error-boundary';
 import SessionList from './session-list';
 import { Button } from './ui/button';
 import { Item, ItemMedia } from './ui/item';
+import { ScrollArea } from './ui/scroll-area';
 import { Skeleton } from './ui/skeleton';
 
 function SessionListErrorFallback({ resetErrorBoundary }: FallbackProps) {
@@ -43,11 +44,9 @@ export default function SessionCard() {
           ErrorFallbackComponent={SessionListErrorFallback}
           suspenseFallback={<SessionSkeleton />}
         >
-          <div className="flex max-h-64 flex-col">
-            <div className="scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 flex-1 overflow-y-auto pr-2">
-              <SessionList />
-            </div>
-          </div>
+          <ScrollArea className="h-72 w-full rounded-md border p-4">
+            <SessionList />
+          </ScrollArea>
         </QueryErrorBoundary>
       </CardContent>
     </Card>
