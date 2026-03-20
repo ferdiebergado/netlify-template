@@ -11,15 +11,13 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useCurrentUser } from '@/features/auth/hooks';
-import { useDeviceSessions } from '@/features/auth/hooks/use-device-sessions';
 import { useSignoutMutation } from '@/features/auth/mutations';
-import { SessionList } from './session-list';
+import SessionCard from './session-card';
 import UserAvatar from './user-avatar';
 import { UserInfoCard } from './user-info-card';
 
 export default function UserProfile() {
   const { user } = useCurrentUser();
-  const { isLoading, isError, deviceSessions } = useDeviceSessions();
   const { isPending, mutate: signout } = useSignoutMutation();
 
   const handleSignout = () => {
@@ -54,7 +52,7 @@ export default function UserProfile() {
           <UserInfoCard user={user} />
 
           {/* Devices Section */}
-          <SessionList sessions={deviceSessions} isLoading={isLoading} isError={isError} />
+          <SessionCard />
         </div>
 
         <div className="mt-6">

@@ -4,7 +4,7 @@ import type { Session } from '@shared/schemas/user.schema';
 import type { DeviceSession } from '../types';
 
 export function useDeviceSessions() {
-  const { data, isLoading, isError } = useSessionsQuery();
+  const { data } = useSessionsQuery();
 
   const deviceSessions: DeviceSession[] =
     data?.sessions?.map((session: Session) => ({
@@ -17,11 +17,7 @@ export function useDeviceSessions() {
       location: `${session.city}, ${session.country}`,
       lastActive: formatLastActive(new Date(session.lastActiveAt)),
       current: session.sessionId === data.currentSessionId,
-    })) || [];
+    })) ?? [];
 
-  return {
-    deviceSessions,
-    isLoading,
-    isError,
-  };
+  return deviceSessions;
 }
