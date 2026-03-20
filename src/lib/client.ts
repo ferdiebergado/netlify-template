@@ -4,23 +4,42 @@ import type { UnknownRecord } from 'type-fest';
 const BASE_URL = '/.netlify/functions';
 const headers = { 'Content-Type': 'application/json' };
 
+class ApiError extends Error {
+  status = 500;
+  code?: string;
+
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.status = status;
+    this.code = code;
+    this.name = 'ApiError';
+  }
+}
+
 async function request<T extends UnknownRecord>(
   path: string,
   options?: RequestInit
 ): Promise<T | null> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    credentials: 'include',
-    ...options,
-  });
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, {
+      credentials: 'include',
+      ...options,
+    });
 
-  // eslint-disable-next-line unicorn/no-null
-  if (!res.ok && res.status === 401) return null;
+    // eslint-disable-next-line unicorn/no-null
+    if (res.status === 401) return null;
 
-  const json = (await res.json()) as APIResponse<T>;
+    const json = (await res.json()) as APIResponse<T>;
 
-  if (json.status === 'failed') throw new Error(json.error);
+    if (json.status === 'failed') throw new ApiError(json.error, res.status);
 
-  return json.data;
+    return json.data;
+  } catch (error) {
+    console.error('Request failed error:', error);
+    if (error instanceof ApiError) throw error;
+
+    throw new Error('Network error.', { cause: error });
+  }
 }
 
 export const api = {
