@@ -1,7 +1,8 @@
-import type { DeviceSession } from '@/features/auth/types';
-import { getDeviceIcon } from '@/lib/device-icon-utils';
 import { XIcon } from 'lucide-react';
 import { createElement } from 'react';
+
+import type { DeviceSession } from '@/features/auth/types';
+import { getDeviceIcon } from '@/lib/device-icon-utils';
 import Loader from './loader';
 import { Button } from './ui/button';
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from './ui/item';
@@ -20,26 +21,27 @@ export default function Session({ session, revokingSessions: sessions, onRevoke 
         <ItemTitle>
           {session.browser} on {session.os}
         </ItemTitle>
-        <ItemDescription className="text-muted-foreground text-xs">
-          <p>{session.location}</p>
-          <p>
+        <ItemDescription className="text-xs">
+          <span className="block">{session.location}</span>
+          <span className="block">
             {session.lastActive}{' '}
-            {session.current && <span className="text-primary text-xs">(Current)</span>}
-          </p>
+            {session.current && <span className="text-primary">(Current)</span>}
+          </span>
         </ItemDescription>
       </ItemContent>
       {!session.current && (
         <ItemActions>
           <Button
-            variant="ghost"
-            size="icon"
+            variant="outline"
+            size="icon-sm"
             className="rounded-full"
             onClick={() => onRevoke(session)}
             disabled={sessions.has(session.id)}
+            title="Signout from this device"
           >
             <span className="sr-only">Sign out from this device</span>
             <span>
-              {sessions.has(session.id) ? <Loader className="animate-spin" /> : <XIcon />}
+              {sessions.has(session.id) ? <Loader className="animate-spin" /> : <XIcon size="sm" />}
             </span>
           </Button>
         </ItemActions>
