@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/no-null */
 import type { Session } from '@shared/schemas/user.schema';
+import { SESSION_DURATION_MINUTES } from './constants';
 import type { Database } from './db';
 
 export async function createSession(db: Database, session: Session): Promise<void> {
@@ -85,13 +86,14 @@ export async function touchSession(db: Database, id: string): Promise<boolean> {
 
   const sql = `
 UPDATE sessions
-SET last_active_at = ?, updated_at = ?
+SET last_active_at = ?, expires_at = ?, updated_at = ?
 WHERE session_id = ? AND deleted_at IS NULL
     `;
 
   const now = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + SESSION_DURATION_MINUTES * 60_000).toISOString();
 
-  const { rowsAffected } = await db.execute(sql, [now, now, id]);
+  const { rowsAffected } = await db.execute(sql, [now, expiresAt, now, id]);
 
   return rowsAffected === 1;
 }
