@@ -56,17 +56,25 @@ export default function UserProfile() {
         </div>
 
         <div className="mt-6">
-          {isPending ? (
-            <Button variant="outline" size="lg" disabled className="w-full">
-              <LoaderIcon className="animate-spin" data-icon="inline-start" />
-              Signing out...
-            </Button>
-          ) : (
-            <Button variant="outline" size="lg" onClick={handleSignout} className="w-full">
-              <LogOutIcon data-icon="inline-start" />
-              Signout
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full"
+            onClick={handleSignout}
+            disabled={isPending}
+          >
+            {isPending ? (
+              <>
+                <LoaderIcon className="animate-spin" data-icon="inline-start" />
+                Signing out...
+              </>
+            ) : (
+              <>
+                <LogOutIcon data-icon="inline-start" />
+                Signout
+              </>
+            )}
+          </Button>
         </div>
       </SheetContent>
     </Sheet>
