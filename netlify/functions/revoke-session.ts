@@ -1,8 +1,9 @@
 import { db } from '@api/db';
 import { BadRequestError, respondWithError } from '@api/errors';
+import { checkMethod } from '@api/http';
 import { getSession } from '@api/session';
 import { revokeSession } from '@api/session.repo';
-import type { Config, Context } from '@netlify/functions';
+import type { Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
 import { z } from 'zod';
 
@@ -10,12 +11,9 @@ const revokeSessionSchema = z.object({
   sessionId: z.string().min(1),
 });
 
-export const config: Config = {
-  method: 'POST',
-};
-
 export default async (req: Request, ctx: Context) => {
   try {
+    checkMethod(req, ['POST']);
     const { userId } = await getSession(ctx);
 
     const body = await req.json();

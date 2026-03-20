@@ -1,23 +1,15 @@
-import type { Config, Context } from '@netlify/functions';
+import type { Context } from '@netlify/functions';
 import * as z from 'zod';
 
 import { verifyToken } from '@api/auth';
 import { BadRequestError, HttpError } from '@api/errors';
+import { checkMethod } from '@api/http';
 import { buildSessionCookie, initializeSession } from '@api/session';
 
-export const config: Config = {
-  method: 'POST',
-};
-
 export default async (req: Request, ctx: Context) => {
-  const res = new Response(undefined, {
-    headers: {
-      Location: '/?success=' + encodeURIComponent('Signed in successfully!'),
-    },
-    status: 302,
-  });
-
   try {
+    checkMethod(req, ['POST']);
+
     const bodyText = await req.text();
 
     const params = new URLSearchParams(bodyText);
@@ -45,6 +37,12 @@ export default async (req: Request, ctx: Context) => {
     const { sessionId, expiresAt } = await initializeSession(user, sessionData);
     const sessionCookie = buildSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
+    return new Response(undefined, {
+      headers: {
+        Location: '/?success=' + encodeURIComponent('Signed in successfully!'),
+      },
+      status: 302,
+    });
   } catch (error) {
     console.error('Signin Error:', error);
 
@@ -52,10 +50,13 @@ export default async (req: Request, ctx: Context) => {
 
     if (error instanceof HttpError) message = error.message;
 
-    res.headers.set('Location', '/signin?error=' + encodeURIComponent(message));
+    return new Response(undefined, {
+      headers: {
+        Location: '/signin?error=' + encodeURIComponent(message),
+      },
+      status: 302,
+    });
   }
-
-  return res;
 };
 
 const GoogleAuthSchema = z.object({

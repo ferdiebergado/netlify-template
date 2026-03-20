@@ -1,4 +1,5 @@
 import type { Failure } from '@shared/types/api';
+import type { HttpMethod } from './http';
 
 export class HttpError extends Error {
   public readonly statusCode: number;
@@ -29,6 +30,15 @@ export class UnauthorizedError extends HttpError {
   }
 }
 
+export class MethodNotAllowedError extends HttpError {
+  allowedmethods: HttpMethod[] = [];
+
+  constructor(message = 'Method Not Allowed', allowedMethods: HttpMethod[] = []) {
+    super(405, message);
+    this.allowedmethods = allowedMethods;
+  }
+}
+
 export function respondWithError(error: unknown) {
   console.error(error);
 
@@ -40,6 +50,14 @@ export function respondWithError(error: unknown) {
   let statusCode = 500;
 
   if (error instanceof HttpError) {
+    if (error instanceof MethodNotAllowedError) {
+      return new Response(error.message, {
+        status: error.statusCode,
+        headers: {
+          Allow: error.allowedmethods.join(', '),
+        },
+      });
+    }
     failure.error = error.message;
     statusCode = error.statusCode;
   }

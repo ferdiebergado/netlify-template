@@ -1,16 +1,14 @@
 import { db } from '@api/db';
 import { respondWithError, UnauthorizedError } from '@api/errors';
+import { checkMethod } from '@api/http';
 import { getSession } from '@api/session';
 import findUser from '@api/user.repo';
-import type { Config, Context } from '@netlify/functions';
+import type { Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
 
-export const config: Config = {
-  method: 'GET',
-};
-
-export default async (_req: Request, ctx: Context) => {
+export default async (req: Request, ctx: Context) => {
   try {
+    checkMethod(req, ['GET']);
     const { userId } = await getSession(ctx);
     const user = await findUser(db, userId);
 
