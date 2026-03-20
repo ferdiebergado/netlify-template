@@ -32,8 +32,8 @@ export default function Session({ session, revokingSessions: sessions, onRevoke 
       {!session.current && (
         <ItemActions>
           <Button
-            variant="outline"
-            size="icon-sm"
+            variant="destructive"
+            size="icon-xs"
             className="rounded-full"
             onClick={() => onRevoke(session)}
             disabled={sessions.has(session.id)}
@@ -41,7 +41,7 @@ export default function Session({ session, revokingSessions: sessions, onRevoke 
           >
             <span className="sr-only">Sign out from this device</span>
             <span>
-              {sessions.has(session.id) ? <Loader className="animate-spin" /> : <XIcon size="sm" />}
+              {sessions.has(session.id) ? <Loader className="animate-spin" /> : <XIcon />}
             </span>
           </Button>
         </ItemActions>
