@@ -15,7 +15,7 @@ type SessionProps = {
 
 export default function Session({ session, revokingSessions: sessions, onRevoke }: SessionProps) {
   return (
-    <Item key={session.id} variant={session.current ? 'outline' : 'muted'} role="listitem">
+    <Item key={session.id} variant="outline" role="listitem">
       <ItemMedia variant="icon">{createElement(getDeviceIcon(session.deviceType))}</ItemMedia>
       <ItemContent>
         <ItemTitle>
