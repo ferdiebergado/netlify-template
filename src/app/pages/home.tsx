@@ -9,22 +9,22 @@ import { useWelcomeQuery } from '../queries';
 function Message() {
   const { data } = useWelcomeQuery();
 
-  // eslint-disable-next-line unicorn/no-null
-  if (!data) return null;
-
-  return <p>{data.message}</p>;
+  return <p>{data?.message}</p>;
 }
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get('signin') === 'success') {
-      toast.success('Welcome back! You have successfully signed in.');
+    const search = 'success';
+    const success = searchParams.get(search);
 
-      searchParams.delete('signin');
+    if (success) {
+      toast.success(success);
+      searchParams.delete(search);
       setSearchParams(searchParams, { replace: true });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

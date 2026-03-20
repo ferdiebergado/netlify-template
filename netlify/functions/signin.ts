@@ -2,7 +2,7 @@ import type { Config, Context } from '@netlify/functions';
 import * as z from 'zod';
 
 import { verifyToken } from '@api/auth';
-import { BadRequestError, respondWithError } from '@api/errors';
+import { BadRequestError, HttpError } from '@api/errors';
 import { buildSessionCookie, initializeSession } from '@api/session';
 
 export const config: Config = {
@@ -10,6 +10,13 @@ export const config: Config = {
 };
 
 export default async (req: Request, ctx: Context) => {
+  const res = new Response(undefined, {
+    headers: {
+      Location: '/?success=' + encodeURIComponent('Signed in successfully!'),
+    },
+    status: 302,
+  });
+
   try {
     const bodyText = await req.text();
 
@@ -38,16 +45,17 @@ export default async (req: Request, ctx: Context) => {
     const { sessionId, expiresAt } = await initializeSession(user, sessionData);
     const sessionCookie = buildSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
-
-    return new Response(undefined, {
-      headers: {
-        Location: '/?signin=success',
-      },
-      status: 302,
-    });
   } catch (error) {
-    return respondWithError(error);
+    console.error('Signin Error:', error);
+
+    let message = 'Something went wrong during sign-in.';
+
+    if (error instanceof HttpError) message = error.message;
+
+    res.headers.set('Location', '/signin?error=' + encodeURIComponent(message));
   }
+
+  return res;
 };
 
 const GoogleAuthSchema = z.object({
