@@ -31,7 +31,7 @@ export default function Provider({ queryClient, googleClientId, children }: Prov
           <ReactQueryDevtools initialIsOpen={false} />
         </DarkModeProvider>
       </QueryClientProvider>
-      <Toaster position="top-right" richColors />
+      <Toaster position="top-right" richColors closeButton />
     </>
   );
 }
