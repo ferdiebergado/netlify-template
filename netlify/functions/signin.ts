@@ -2,6 +2,7 @@ import type { Context } from '@netlify/functions';
 import * as z from 'zod';
 
 import { verifyToken } from '@api/auth';
+import { env } from '@api/config';
 import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
 import { buildSessionCookie, initializeSession } from '@api/session';
@@ -10,7 +11,14 @@ export default async (req: Request, ctx: Context) => {
   try {
     checkMethod(req, ['POST']);
 
-    const bodyText = await req.text();
+    let bodyText: string;
+
+    try {
+      bodyText = await req.text();
+    } catch (error) {
+      console.error('Error reading request body:', error);
+      throw new BadRequestError('Invalid request body');
+    }
 
     const params = new URLSearchParams(bodyText);
     const payload = Object.fromEntries(params);
@@ -37,12 +45,11 @@ export default async (req: Request, ctx: Context) => {
     const { sessionId, expiresAt } = await initializeSession(user, sessionData);
     const sessionCookie = buildSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
-    return new Response(undefined, {
-      headers: {
-        Location: '/?success=' + encodeURIComponent('Signed in successfully!'),
-      },
-      status: 302,
-    });
+
+    return Response.redirect(
+      `${env.HOST}/?success=${encodeURIComponent('Signed in successfully.')}`,
+      302
+    );
   } catch (error) {
     console.error('Signin Error:', error);
 
@@ -50,12 +57,7 @@ export default async (req: Request, ctx: Context) => {
 
     if (error instanceof HttpError) message = error.message;
 
-    return new Response(undefined, {
-      headers: {
-        Location: '/signin?error=' + encodeURIComponent(message),
-      },
-      status: 302,
-    });
+    return Response.redirect(`${env.HOST}/signin?error=${encodeURIComponent(message)}`, 302);
   }
 };
 
