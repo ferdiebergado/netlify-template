@@ -6,11 +6,12 @@ type UserContextValue = {
   isAuthenticated: boolean;
 };
 
-export const UserContext = createContext<UserContextValue | undefined>(undefined);
+// eslint-disable-next-line unicorn/no-null
+export const UserContext = createContext<UserContextValue | null>(null);
 
 export function useCurrentUser() {
   const ctx = useContext(UserContext);
-  if (ctx === undefined) throw new Error('useCurrentUser must be used within UserProvider');
+  if (ctx === null) throw new Error('useCurrentUser must be used within UserProvider');
 
   return ctx;
 }
