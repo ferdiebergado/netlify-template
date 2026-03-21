@@ -62,9 +62,10 @@ type Cookie = {
   partitioned?: boolean;
 };
 
-const getCookieOptions = (): Cookie => ({
+export const initCookie = (): Cookie => ({
   name: SESSION_COOKIE_NAME,
   value: '',
+  maxAge: 0,
   path: '/',
   httpOnly: true,
   secure: true,
@@ -75,18 +76,10 @@ export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
   const maxAge = Math.floor(deltaMs / 1000);
 
   return {
-    ...getCookieOptions(),
+    ...initCookie(),
     value: sessionId,
     maxAge,
     expires: expiresAt,
-  };
-}
-
-export function clearSessionCookie(): Cookie {
-  return {
-    ...getCookieOptions(),
-    value: '',
-    maxAge: 0,
   };
 }
 

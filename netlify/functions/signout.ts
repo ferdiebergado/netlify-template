@@ -1,7 +1,7 @@
 import { db } from '@api/db';
 import { respondWithError } from '@api/errors';
 import { checkMethod } from '@api/http';
-import { clearSessionCookie, getSession } from '@api/session';
+import { getSession, initCookie } from '@api/session';
 import { softDeleteSession } from '@api/session.repo';
 import type { Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
@@ -19,7 +19,7 @@ export default async (req: Request, ctx: Context) => {
       },
     };
 
-    const sessionCookie = clearSessionCookie();
+    const sessionCookie = initCookie();
     ctx.cookies.set(sessionCookie);
     return Response.json(payload);
   } catch (error) {
