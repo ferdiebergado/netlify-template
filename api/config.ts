@@ -34,7 +34,7 @@ const libsqlUrlSchema = z
   );
 
 const envSchema = z.object({
-  PORT: z.coerce.number().default(3000),
+  HOST: z.url({ error: 'HOST must be a valid URL' }),
   DATABASE_URL: libsqlUrlSchema,
   TURSO_AUTH_TOKEN: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string({ error: 'GOOGLE_CLIENT_ID is not set.' }),
