@@ -38,7 +38,7 @@ async function request<T extends UnknownRecord>(
     console.error('Request failed error:', error);
     if (error instanceof ApiError) throw error;
 
-    throw new Error('Network error.', { cause: error });
+    throw new Error('Network error.');
   }
 }
 
