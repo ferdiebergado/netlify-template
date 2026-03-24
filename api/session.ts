@@ -1,12 +1,16 @@
-import type { Context } from '@netlify/functions';
 import { randomBytes } from 'node:crypto';
 import { UAParser } from 'ua-parser-js';
 
 import type { Session, User } from '@shared/schemas/user.schema';
-import { SESSIONID_LENGTH, SESSION_COOKIE_NAME, SESSION_DURATION_MINUTES } from './constants';
+import {
+  SESSIONID_LENGTH,
+  SESSION_COOKIE_NAME,
+  SESSION_DURATION_MINUTES,
+  SESSION_HEADER_NAME,
+} from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';
-import { createSession, findSession, touchSession } from './session.repo';
+import { createSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
 
 type SessionData = {
@@ -83,16 +87,11 @@ export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
   };
 }
 
-export async function getSession(context: Context): Promise<Session> {
-  const sessionId = context.cookies.get(SESSION_COOKIE_NAME);
-  if (!sessionId) throw new UnauthorizedError('no session cookie');
+export async function getSession(req: Request): Promise<Session> {
+  const sessionId = req.headers.get(SESSION_HEADER_NAME);
+  if (!sessionId) throw new UnauthorizedError('no session ID provided');
 
-  const session = await findSession(db, sessionId);
-  if (!session) throw new UnauthorizedError('no saved session');
-
-  await touchSession(db, sessionId);
-
-  return session;
+  return await touchSession(db, sessionId);
 }
 
 function generateSessionId(length: number): string {
