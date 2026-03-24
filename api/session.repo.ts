@@ -61,41 +61,29 @@ LIMIT 1
     return;
   }
 
-  const row = rows[0];
-  const session: Session = {
-    sessionId: row.session_id,
-    userId: row.user_id,
-    userAgent: row.user_agent,
-    ip: row.ip,
-    expiresAt: new Date(row.expires_at),
-    lastActiveAt: new Date(row.last_active_at),
-    device: row.device,
-    deviceType: row.device_type,
-    deviceVendor: row.device_vendor,
-    browser: row.browser,
-    os: row.os,
-    city: row.city,
-    country: row.country,
-  };
-
-  return session;
+  return mapSessionRowToSession(rows[0]);
 }
 
-export async function touchSession(db: Database, id: string): Promise<boolean> {
+export async function touchSession(db: Database, id: string): Promise<Session> {
   console.log('[DB]: Updating session...');
 
   const sql = `
 UPDATE sessions
 SET last_active_at = ?, expires_at = ?, updated_at = ?
 WHERE session_id = ? AND deleted_at IS NULL
+RETURNING *
     `;
 
   const now = new Date().toISOString();
   const expiresAt = new Date(Date.now() + SESSION_DURATION_MINUTES * 60_000).toISOString();
 
-  const { rowsAffected } = await db.execute(sql, [now, expiresAt, now, id]);
+  const { rows } = await db.execute<SessionRow>(sql, [now, expiresAt, now, id]);
 
-  return rowsAffected === 1;
+  if (rows.length === 0) {
+    throw new Error(`Session not found for ID: ${id}`);
+  }
+
+  return mapSessionRowToSession(rows[0]);
 }
 
 export async function softDeleteSession(db: Database, id: string): Promise<boolean> {
@@ -140,7 +128,11 @@ ORDER BY last_active_at DESC
 
   const { rows } = await db.execute<SessionRow>(sql, [userId]);
 
-  return rows.map(row => ({
+  return rows.map(row => mapSessionRowToSession(row));
+}
+
+function mapSessionRowToSession(row: SessionRow): Session {
+  return {
     sessionId: row.session_id,
     userId: row.user_id,
     userAgent: row.user_agent,
@@ -154,5 +146,5 @@ ORDER BY last_active_at DESC
     os: row.os,
     city: row.city,
     country: row.country,
-  }));
+  };
 }
