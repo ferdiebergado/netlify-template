@@ -9,7 +9,7 @@ import type { Success } from '@shared/types/api';
 export default async (req: Request, ctx: Context) => {
   try {
     checkMethod(req, ['POST']);
-    const { sessionId } = await getSession(ctx);
+    const { sessionId } = await getSession(req);
     await softDeleteSession(db, sessionId);
 
     const payload: Success = {

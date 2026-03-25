@@ -1,15 +1,15 @@
+import { release } from 'node:os';
+
 import { respondWithError } from '@api/errors';
 import { checkMethod } from '@api/http';
 import { getSession } from '@api/session';
 import { formatBytes, formatDuration } from '@api/utils';
-import type { Context } from '@netlify/functions';
 import type { AppEnv, Success } from '@shared/types/api';
-import { release } from 'node:os';
 
-export default async (req: Request, ctx: Context) => {
+export default async (req: Request) => {
   try {
     checkMethod(req, ['GET']);
-    await getSession(ctx);
+    await getSession(req);
 
     const data: AppEnv = {
       node: process.version,
