@@ -1,9 +1,10 @@
 import type { Config } from '@netlify/edge-functions';
+import { API_BASE_URL } from '@shared/constants';
 import type { Failure } from '@shared/types/api';
 
 export const config: Config = {
-  path: '/.netlify/functions/*',
-  excludedPath: '/.netlify/functions/signin',
+  path: `${API_BASE_URL}/*`,
+  excludedPath: `${API_BASE_URL}/signin`,
   method: ['POST', 'PUT', 'PATCH'],
 };
 
