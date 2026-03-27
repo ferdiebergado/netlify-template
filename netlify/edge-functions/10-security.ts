@@ -1,7 +1,7 @@
 import type { Config, Context } from '@netlify/edge-functions';
-import { randomBytes } from 'node:crypto';
 
 import { CSP_NONCE_PLACEHOLDER, GOOGLE_ACCOUNTS_ORIGIN } from '@shared/constants';
+import { generateRandomBytes } from '@shared/lib/crypto';
 
 // Security headers configuration
 const SECURITY_HEADERS = {
@@ -105,14 +105,6 @@ export const config: Config = {
 };
 
 /**
- * Generates a cryptographically secure nonce
- * @returns Base64 encoded 128-bit nonce
- */
-function generateNonce(): string {
-  return randomBytes(16).toString('base64');
-}
-
-/**
  * Builds a Content Security Policy string from directives
  * @param directives Object mapping directive names to their values
  * @param nonce Optional nonce to include in script/style-src
@@ -163,7 +155,7 @@ export default async (req: Request, ctx: Context) => {
   console.log('Injecting CSP nonce...');
 
   // Generate a secure nonce for this request
-  const nonce = generateNonce();
+  const nonce = generateRandomBytes(16);
 
   // Build security headers
   const csp = buildCSP(SECURITY_HEADERS.CSP_DIRECTIVES, nonce);

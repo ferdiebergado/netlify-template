@@ -1,6 +1,6 @@
-import { randomBytes } from 'node:crypto';
 import { UAParser } from 'ua-parser-js';
 
+import { generateRandomBytes } from '@shared/lib/crypto';
 import type { Session, User } from '@shared/schemas/user.schema';
 import {
   SESSIONID_LENGTH,
@@ -23,7 +23,7 @@ type SessionData = {
 export async function initializeSession(user: User, data: SessionData): Promise<Session> {
   await upsertUser(db, user);
 
-  const sessionId = generateSessionId(SESSIONID_LENGTH);
+  const sessionId = generateRandomBytes(SESSIONID_LENGTH);
   const expiresAt = setSessionTimeout(SESSION_DURATION_MINUTES);
   const lastActiveAt = new Date();
 
@@ -92,10 +92,6 @@ export async function getSession(req: Request): Promise<Session> {
   if (!sessionId) throw new UnauthorizedError('no session ID provided');
 
   return await touchSession(db, sessionId);
-}
-
-function generateSessionId(length: number): string {
-  return randomBytes(length).toString('base64');
 }
 
 function setSessionTimeout(minutes: number) {
