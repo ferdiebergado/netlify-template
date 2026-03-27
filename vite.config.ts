@@ -5,6 +5,8 @@ import { playwright } from '@vitest/browser-playwright';
 import path from 'path';
 import { defineConfig } from 'vite';
 
+import { CSP_NONCE_PLACEHOLDER } from './shared/constants';
+
 const alias = {
   '@': path.resolve(__dirname, './src'),
   '@api': path.resolve(__dirname, './api'),
@@ -44,5 +46,8 @@ export default defineConfig({
         },
       },
     ],
+  },
+  html: {
+    cspNonce: CSP_NONCE_PLACEHOLDER,
   },
 });
