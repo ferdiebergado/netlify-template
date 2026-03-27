@@ -1,7 +1,9 @@
 import type { Config, Context } from '@netlify/edge-functions';
 
-import { CSP_NONCE_PLACEHOLDER, GOOGLE_ACCOUNTS_ORIGIN } from '../../shared/constants';
-import { generateRandomBytes } from '../../shared/lib/crypto';
+import { generateRandomBytes } from '../../shared/lib/crypto.ts';
+
+export const GOOGLE_ACCOUNTS_ORIGIN = 'https://accounts.google.com';
+export const CSP_NONCE_PLACEHOLDER = '__CSP_NONCE__';
 
 // Security headers configuration
 const SECURITY_HEADERS = {

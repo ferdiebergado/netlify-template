@@ -1,6 +1,7 @@
 import type { Config } from '@netlify/edge-functions';
-import { API_BASE_URL } from '../../shared/constants';
-import type { Failure } from '../../shared/types/api';
+
+import { API_BASE_URL } from '../../shared/constants.ts';
+import type { Failure } from '../../shared/types/api.ts';
 
 export const config: Config = {
   path: `${API_BASE_URL}/*`,

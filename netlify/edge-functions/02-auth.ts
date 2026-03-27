@@ -1,7 +1,7 @@
 import type { Config, Context } from '@netlify/edge-functions';
 
-import { SESSION_COOKIE_NAME, SESSION_HEADER_NAME } from '../../api/constants';
-import { API_BASE_URL } from '../../shared/constants';
+import { SESSION_COOKIE_NAME, SESSION_HEADER_NAME } from '../../api/constants.ts';
+import { API_BASE_URL } from '../../shared/constants.ts';
 
 export const config: Config = {
   path: `${API_BASE_URL}/*`,
