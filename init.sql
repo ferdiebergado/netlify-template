@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     name TEXT,
     email TEXT,
     picture TEXT,
-    last_login_at TEXT,
+    last_login_at TEXT DEFAULT (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW')),
     created_at TEXT DEFAULT (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW')),
     updated_at TEXT DEFAULT (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW')),
     deleted_at TEXT
