@@ -1,13 +1,3 @@
-export function getClientIP(req: Request): string {
-  const netlifyIp = req.headers.get('x-nf-client-connection-ip');
-  if (netlifyIp) return netlifyIp;
-
-  const forwarded = req.headers.get('x-forwarded-for');
-  if (forwarded) return forwarded.split(',')[0].trim();
-
-  return '127.0.0.1';
-}
-
 /**
  * Formats bytes into a human-readable string (e.g., "2.05 MB").
  * @param bytes The size in bytes.
