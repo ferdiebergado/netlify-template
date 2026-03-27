@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { db } from '@api/db';
 import { BadRequestError, respondWithError } from '@api/errors';
