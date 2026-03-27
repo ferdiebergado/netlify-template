@@ -8,13 +8,6 @@ from = "/*"
 to = "/index.html"
 status = 200
 
-[[headers]]
-for = "/*"
-[headers.values]
-Referrer-Policy = "strict-origin-when-cross-origin"
-X-Content-Type-Options = "nosniff"
-Permissions-Policy = "geolocation=(), midi=(),  payment=(), camera=(), microphone=(), usb=(), fullscreen=(self)"
-
 [dev]
 command = "vite"
 port = 8888

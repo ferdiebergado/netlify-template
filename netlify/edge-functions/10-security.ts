@@ -26,7 +26,8 @@ export default async (req: Request, ctx: Context) => {
   if (!contentType?.includes('text/html')) return res;
   console.log('Injecting csp nonce...');
 
-  const nonce = btoa(String.fromCodePoint(...crypto.getRandomValues(new Uint8Array(16))));
+  const randomBytes = crypto.getRandomValues(new Uint8Array(16));
+  const nonce = Buffer.from(randomBytes).toString('base64');
 
   const csp = [
     `default-src 'none'`,
@@ -38,13 +39,26 @@ export default async (req: Request, ctx: Context) => {
     `frame-src ${GOOGLE_ACCOUNTS_ORIGIN}`,
     `worker-src 'self' blob:`,
     `frame-ancestors ${GOOGLE_ACCOUNTS_ORIGIN}`,
-  ].join('; ');
+  ];
+
+  const permissions = [
+    'geolocation=()',
+    'midi=()',
+    'payment=()',
+    'camera=()',
+    'microphone=()',
+    'usb=()',
+    'fullscreen=(self)',
+  ];
 
   const html = await res.text();
   const htmlWithNonce = html.replaceAll(CSP_NONCE_PLACEHOLDER, nonce);
 
   const headers = new Headers(res.headers);
-  headers.set('Content-Security-Policy-Report-Only', csp);
+  headers.set('Content-Security-Policy-Report-Only', csp.join('; '));
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  headers.set('X-Content-Type-Options', 'nosniff');
+  headers.set('Permissions-Policy', permissions.join(', '));
 
   return new Response(htmlWithNonce, {
     status: res.status,
