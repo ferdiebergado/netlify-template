@@ -87,13 +87,15 @@ RETURNING *
 }
 
 export async function softDeleteSession(db: Database, id: string): Promise<boolean> {
+  const now = new Date().toISOString();
+
   const sql = `
 UPDATE sessions
-SET deleted_at = CURRENT_TIMESTAMP
+SET deleted_at = ?
 WHERE session_id = ? AND deleted_at IS NULL
     `;
 
-  const { rowsAffected } = await db.execute(sql, [id]);
+  const { rowsAffected } = await db.execute(sql, [now, id]);
 
   return rowsAffected === 1;
 }
@@ -105,13 +107,15 @@ export async function revokeSession(
 ): Promise<boolean> {
   console.log('[DB]: Revoking session...');
 
+  const now = new Date().toISOString();
+
   const sql = `
 UPDATE sessions
-SET is_revoked = 1, deleted_at = CURRENT_TIMESTAMP
+SET is_revoked = 1, deleted_at = ?
 WHERE session_id = ? AND user_id = ? AND deleted_at IS NULL
 `;
 
-  const { rowsAffected } = await db.execute(sql, [sessionId, userId]);
+  const { rowsAffected } = await db.execute(sql, [now, sessionId, userId]);
 
   return rowsAffected === 1;
 }

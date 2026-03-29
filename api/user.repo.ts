@@ -5,11 +5,13 @@ import type { Database } from './db';
 export async function upsertUser(db: Database, user: User): Promise<void> {
   console.log('[DB]: Upserting user...');
 
+  const now = new Date().toISOString();
+
   const sql = `
 INSERT INTO users (user_id, name, email, picture)
 VALUES (?, ?, ?, ?)
 ON CONFLICT (user_id)
-DO UPDATE SET last_login_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+DO UPDATE SET last_login_at = ?, updated_at = ?
 `;
 
   await db.execute(sql, [
@@ -17,6 +19,8 @@ DO UPDATE SET last_login_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
     user.name ?? null,
     user.email ?? null,
     user.picture ?? null,
+    now,
+    now,
   ]);
 }
 

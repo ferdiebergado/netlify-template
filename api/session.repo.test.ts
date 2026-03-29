@@ -14,13 +14,15 @@ describe('session repo', () => {
     email: 'tatayoyo@gmail.com',
   };
 
+  const now = new Date();
+
   const mockSession: Session = {
     sessionId: '123',
     userId: mockUser.googleId,
     userAgent: 'vitest',
     ip: '127.0.0.1',
-    expiresAt: new Date(),
-    lastActiveAt: new Date(),
+    expiresAt: now,
+    lastActiveAt: now,
     device: 'Vivobook 16',
     deviceType: 'desktop',
     deviceVendor: 'Asus',
