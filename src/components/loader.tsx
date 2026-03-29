@@ -10,8 +10,8 @@ type LoaderProps = ComponentProps<'div'> & {
 export default function Loader({ className, text = 'Please wait...', ...props }: LoaderProps) {
   return (
     <p className={cn('space-x-3', className)} {...props}>
-      <LoaderIcon className="animate-spin" />
-      <span>{text}</span>
+      <LoaderIcon className="animate-spin" data-icon="inline-start" />
+      {text}
     </p>
   );
 }
