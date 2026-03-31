@@ -95,7 +95,5 @@ export async function getSession(req: Request): Promise<Session> {
 }
 
 function setSessionTimeout(minutes: number) {
-  const expiry = new Date();
-  expiry.setMinutes(expiry.getMinutes() + minutes);
-  return expiry;
+  return new Date(Date.now() + minutes * 60_000);
 }
