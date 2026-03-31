@@ -92,7 +92,7 @@ export async function getSession(req: Request): Promise<Session> {
   const sessionId = req.headers.get(SESSION_HEADER_NAME);
   if (!sessionId) throw new UnauthorizedError('no session ID provided');
 
-  return await touchSession(db, sessionId);
+  return touchSession(db, sessionId);
 }
 
 function setSessionTimeout(minutes: number) {
