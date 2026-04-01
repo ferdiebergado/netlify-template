@@ -24,13 +24,11 @@ export async function initializeSession(user: User, data: SessionData): Promise<
   await upsertUser(db, user);
 
   const sessionId = generateRandomBytes(SESSIONID_LENGTH);
-  const expiresAt = setSessionTimeout(SESSION_DURATION_MINUTES);
+  const expiresAt = setExpiryDate();
   const lastActiveAt = new Date();
 
   const { userAgent, ip, city, country } = data;
-
   const { device, browser, os } = UAParser(userAgent);
-  console.log({ device, browser, os });
 
   const session: Session = {
     sessionId,
@@ -95,6 +93,5 @@ export async function getSession(req: Request): Promise<Session> {
   return touchSession(db, sessionId);
 }
 
-function setSessionTimeout(minutes: number) {
-  return new Date(Date.now() + minutes * 60_000);
-}
+export const setExpiryDate = (minutes = SESSION_DURATION_MINUTES): Date =>
+  new Date(Date.now() + minutes * 60_000);
