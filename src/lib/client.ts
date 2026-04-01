@@ -1,7 +1,7 @@
+import { API_BASE_URL } from '@shared/constants';
 import type { APIData, APIResponse } from '@shared/types/api';
 import type { UnknownRecord } from 'type-fest';
 
-const BASE_URL = '/.netlify/functions';
 const headers = { 'Content-Type': 'application/json' };
 
 class ApiError extends Error {
@@ -21,7 +21,7 @@ async function request<T extends UnknownRecord>(
   options?: RequestInit
 ): Promise<T | null> {
   try {
-    const res = await fetch(`${BASE_URL}${path}`, {
+    const res = await fetch(`${API_BASE_URL}${path}`, {
       credentials: 'include',
       ...options,
     });
