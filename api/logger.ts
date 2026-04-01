@@ -1,10 +1,11 @@
 import winston from 'winston';
-import { env } from './config.ts';
+
+const logLevel = process.env.LOG_LEVEL ?? 'info';
 
 const { combine, timestamp, errors, json } = winston.format;
 const logger = winston.createLogger({
   levels: winston.config.syslog.levels,
-  level: env.LOG_LEVEL || 'info',
+  level: logLevel,
   format: combine(
     timestamp({
       format: 'YYYY-MM-DD hh:mm:ss.SSS A',
