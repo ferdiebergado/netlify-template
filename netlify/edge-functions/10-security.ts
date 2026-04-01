@@ -1,5 +1,6 @@
 import type { Config, Context } from '@netlify/edge-functions';
 
+import logger from '../../api/logger.ts';
 import { generateRandomBytes } from '../../shared/lib/crypto.ts';
 
 export const GOOGLE_ACCOUNTS_ORIGIN = 'https://accounts.google.com';
@@ -146,7 +147,7 @@ function buildPermissionsPolicy(directives: Record<string, string>): string {
 }
 
 export default async (req: Request, ctx: Context) => {
-  console.log(`Processing security headers for: ${req.url}`);
+  logger.info(`Processing security headers for: ${req.url}`);
 
   const res = await ctx.next();
   const contentType = res.headers.get('content-type');
@@ -154,7 +155,7 @@ export default async (req: Request, ctx: Context) => {
   // Only process HTML responses
   if (!contentType?.includes('text/html')) return res;
 
-  console.log('Injecting CSP nonce...');
+  logger.info('Injecting CSP nonce...');
 
   // Generate a secure nonce for this request
   const nonce = generateRandomBytes(16);

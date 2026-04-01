@@ -1,9 +1,10 @@
 /* eslint-disable unicorn/no-null */
 import type { Profile, User } from '@shared/schemas/user.schema';
 import type { Database } from './db';
+import logger from './logger';
 
 export async function upsertUser(db: Database, user: User): Promise<void> {
-  console.log('[DB]: Upserting user...');
+  logger.info('[DB]: Upserting user...');
 
   const now = new Date().toISOString();
 
@@ -31,7 +32,7 @@ type UserRow = {
 };
 
 export default async function findUser(db: Database, id: string): Promise<Profile | undefined> {
-  console.log('[DB]: Finding user...');
+  logger.info('[DB]: Finding user...');
 
   const sql = `
 SELECT name, email, picture
@@ -43,7 +44,7 @@ LIMIT 1
   const { rows } = await db.execute<UserRow>(sql, [id]);
 
   if (rows.length === 0) {
-    console.warn(`user with id: ${id} does not exist.`);
+    logger.warn(`user not found`, { userId: id });
     return;
   }
 

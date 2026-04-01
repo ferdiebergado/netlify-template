@@ -1,5 +1,6 @@
 import type { Config } from '@netlify/edge-functions';
 
+import logger from '../../api/logger.ts';
 import { API_BASE_URL } from '../../shared/constants.ts';
 import type { Failure } from '../../shared/types/api.ts';
 
@@ -10,7 +11,7 @@ export const config: Config = {
 };
 
 export default (req: Request) => {
-  console.log('Checking fetch metadata...');
+  logger.info('Checking fetch metadata...');
 
   const fetchSite = req.headers.get('Sec-Fetch-Site');
 

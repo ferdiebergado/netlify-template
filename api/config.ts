@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import logger from './logger';
 
 const libsqlUrlSchema = z
   .string()
@@ -38,9 +39,14 @@ const envSchema = z.object({
   DATABASE_URL: libsqlUrlSchema,
   TURSO_AUTH_TOKEN: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string({ error: 'GOOGLE_CLIENT_ID is not set.' }),
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).optional(),
 });
 
 const { success, error, data } = envSchema.safeParse(process.env);
-if (!success) throw new Error(z.prettifyError(error));
+if (!success) {
+  const msg = 'Invalid environment variable/s';
+  logger.error(msg, { errors: z.flattenError(error).fieldErrors });
+  throw new Error(msg);
+}
 
 export const env = data;

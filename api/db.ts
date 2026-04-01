@@ -7,6 +7,7 @@ import {
   type Row,
 } from '@libsql/client';
 import { env } from './config';
+import logger from './logger';
 
 export type TResultSet<T> = Omit<ResultSet, 'rows'> & {
   rows: T[];
@@ -28,22 +29,22 @@ export async function runInTransaction<TArgs extends unknown[], TReturn>(
   fn: (tx: Database, ...args: TArgs) => Promise<TReturn>,
   args: TArgs
 ): Promise<TReturn> {
-  console.log('Beginning transaction...');
+  logger.info('Beginning transaction...');
 
   const tx = await db.transaction();
 
   try {
     const res = await fn(tx, ...args);
-    console.log('Committing transaction...');
+    logger.info('Committing transaction...');
     await tx.commit();
     return res;
   } catch (error) {
-    console.error('Transaction failed:', error);
-    console.log('Rolling back transaction...');
+    logger.error('Transaction failed:', error);
+    logger.info('Rolling back transaction...');
     await tx.rollback();
     throw error;
   } finally {
-    console.log('Closing transaction...');
+    logger.info('Closing transaction...');
     tx.close();
   }
 }

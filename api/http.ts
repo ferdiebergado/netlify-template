@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { BadRequestError, MethodNotAllowedError } from './errors';
+import logger from './logger';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
 
@@ -19,7 +20,7 @@ export async function parseJson<T extends z.ZodType>(
     const parsedData = schema.parse(jsonData);
     return parsedData;
   } catch (error) {
-    console.error('Error parsing JSON:', error);
+    logger.error('Failed to parse JSON body', { error });
     throw new BadRequestError('Invalid JSON body');
   }
 }

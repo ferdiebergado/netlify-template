@@ -1,10 +1,11 @@
 /* eslint-disable unicorn/no-null */
 import type { Session } from '@shared/schemas/user.schema';
-import { SESSION_DURATION_MINUTES } from './constants';
 import type { Database } from './db';
+import logger from './logger';
+import { setExpiryDate } from './session';
 
 export async function createSession(db: Database, session: Session): Promise<void> {
-  console.log('[DB]: Creating session...');
+  logger.info('[DB]: Creating session...');
 
   const sql = `
 INSERT INTO sessions (session_id, user_id, ip, user_agent, device, device_type, device_vendor, browser, os, city, country, expires_at, last_active_at)
@@ -45,7 +46,7 @@ type SessionRow = {
 };
 
 export async function findSession(db: Database, id: string): Promise<Session | undefined> {
-  console.log('[DB]: Retrieving session...');
+  logger.info('[DB]: Retrieving session...');
 
   const sql = `
 SELECT session_id, user_id, expires_at, user_agent, ip, device, device_type, device_vendor, browser, os, city, country, last_active_at
@@ -57,7 +58,7 @@ LIMIT 1
   const { rows } = await db.execute<SessionRow>(sql, [id]);
 
   if (rows.length === 0) {
-    console.warn(`Session not found for ID: ${id}`);
+    logger.warn(`Session not found`, { sessionId: id });
     return;
   }
 
@@ -65,7 +66,7 @@ LIMIT 1
 }
 
 export async function touchSession(db: Database, id: string): Promise<Session> {
-  console.log('[DB]: Updating session...');
+  logger.info('Updating session...', { layer: 'db' });
 
   const sql = `
 UPDATE sessions
@@ -75,13 +76,11 @@ RETURNING *
     `;
 
   const now = new Date().toISOString();
-  const expiresAt = new Date(Date.now() + SESSION_DURATION_MINUTES * 60_000).toISOString();
+  const expiresAt = setExpiryDate().toISOString();
 
   const { rows } = await db.execute<SessionRow>(sql, [now, expiresAt, now, id]);
 
-  if (rows.length === 0) {
-    throw new Error(`Session not found for ID: ${id}`);
-  }
+  if (rows.length === 0) throw new Error(`Session not found for ID: ${id}`);
 
   return mapSessionRowToSession(rows[0]);
 }
@@ -105,7 +104,7 @@ export async function revokeSession(
   sessionId: string,
   userId: string
 ): Promise<boolean> {
-  console.log('[DB]: Revoking session...');
+  logger.info('[DB]: Revoking session...');
 
   const now = new Date().toISOString();
 
@@ -121,7 +120,7 @@ WHERE session_id = ? AND user_id = ? AND deleted_at IS NULL
 }
 
 export async function findSessionsByUserId(db: Database, userId: string): Promise<Session[]> {
-  console.log('[DB]: Retrieving sessions for user...');
+  logger.info('[DB]: Retrieving sessions for user...');
 
   const sql = `
 SELECT session_id, user_id, expires_at, user_agent, device, device_type, device_vendor, browser, os, ip, city, country, last_active_at

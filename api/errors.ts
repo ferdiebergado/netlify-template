@@ -1,5 +1,6 @@
 import type { Failure } from '@shared/types/api';
 import type { HttpMethod } from './http';
+import logger from './logger';
 
 export class HttpError extends Error {
   public readonly statusCode: number;
@@ -40,7 +41,7 @@ export class MethodNotAllowedError extends HttpError {
 }
 
 export function respondWithError(error: unknown) {
-  console.error(error);
+  logger.error('request failed', { error });
 
   const failure: Failure = {
     status: 'failed',

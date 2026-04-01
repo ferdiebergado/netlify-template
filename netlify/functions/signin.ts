@@ -5,6 +5,7 @@ import { verifyToken } from '@api/auth';
 import { env } from '@api/config';
 import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
+import logger from '@api/logger';
 import { buildSessionCookie, initializeSession } from '@api/session';
 
 export default async (req: Request, ctx: Context) => {
@@ -16,7 +17,7 @@ export default async (req: Request, ctx: Context) => {
     try {
       bodyText = await req.text();
     } catch (error) {
-      console.error('Error reading request body:', error);
+      logger.error('Error reading request body:', { error });
       throw new BadRequestError('Invalid request body');
     }
 
@@ -40,8 +41,6 @@ export default async (req: Request, ctx: Context) => {
       country: ctx.geo.country?.name,
     };
 
-    console.log('session data:', sessionData);
-
     const { sessionId, expiresAt } = await initializeSession(user, sessionData);
     const sessionCookie = buildSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
@@ -51,7 +50,7 @@ export default async (req: Request, ctx: Context) => {
       302
     );
   } catch (error) {
-    console.error('Signin Error:', error);
+    logger.error('Signin failed', { error });
 
     let message = 'Something went wrong during sign-in.';
 
