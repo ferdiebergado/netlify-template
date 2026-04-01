@@ -2,8 +2,8 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
-import path from 'path';
-import { defineConfig } from 'vite';
+import path from 'node:path';
+import { defineConfig, loadEnv } from 'vite';
 
 import { CSP_NONCE_PLACEHOLDER } from './shared/constants';
 
@@ -29,6 +29,7 @@ export default defineConfig({
           alias,
           environment: 'node',
           setupFiles: ['setup.node.ts'],
+          env: loadEnv('', process.cwd(), ''),
         },
       },
       {
