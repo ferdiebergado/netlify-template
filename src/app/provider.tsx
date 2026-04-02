@@ -12,8 +12,6 @@ import UserProvider from '@/features/auth/components/user-provider';
 import { getCSPNonce } from '@/lib/csp';
 import ErrorPage from './pages/error-page';
 
-const nonce = getCSPNonce();
-
 type ProviderProps = {
   queryClient: QueryClient;
   googleClientId: string;
@@ -21,6 +19,8 @@ type ProviderProps = {
 };
 
 export default function Provider({ queryClient, googleClientId, children }: ProviderProps) {
+  const nonce = getCSPNonce();
+
   return (
     <>
       <QueryClientProvider client={queryClient}>
@@ -32,7 +32,7 @@ export default function Provider({ queryClient, googleClientId, children }: Prov
               </GoogleOAuthProvider>
             </BrowserRouter>
           </QueryErrorBoundary>
-          <ReactQueryDevtools initialIsOpen={false} styleNonce={nonce} />
+          <ReactQueryDevtools styleNonce={nonce} />
         </DarkModeProvider>
       </QueryClientProvider>
       <Toaster position="top-right" richColors closeButton />
