@@ -1,5 +1,6 @@
 import type { Config, Context } from '@netlify/edge-functions';
 
+import { env } from '../../api/config.ts';
 import logger from '../../api/logger.ts';
 import { generateRandomBytes } from '../../shared/lib/crypto.ts';
 
@@ -100,6 +101,8 @@ const EXCLUDED_EXTENSIONS = [
   '.ogg',
   '.mp3',
   '.wav',
+  '.ts',
+  '.tsx',
 ];
 
 export const config: Config = {
@@ -116,10 +119,15 @@ export const config: Config = {
 function buildCSP(directives: Record<string, string[]>, nonce?: string): string {
   return Object.entries(directives)
     .map(([directive, values]) => {
-      // Add nonce to script-src and style-src if provided
-      if ((directive === 'script-src' || directive === 'style-src') && nonce) {
-        values = [...values, `'nonce-${nonce}'`];
+      let value = '';
+      if (directive === 'style-src' && env.ENV === 'development') {
+        value = `'unsafe-inline'`;
+      } else if ((directive === 'script-src' || directive === 'style-src') && nonce) {
+        value = `'nonce-${nonce}'`;
       }
+
+      values = [...values, value];
+
       return `${directive} ${values.join(' ')}`;
     })
     .join('; ');
@@ -134,13 +142,11 @@ function buildPermissionsPolicy(directives: Record<string, string>): string {
   return Object.entries(directives)
     .map(([feature, allowlist]) => {
       // For empty allowlists, use empty parentheses to deny all
-      if (allowlist === '()') {
-        return `${feature}=()`;
-      }
+      if (allowlist === '()') return `${feature}=()`;
+
       // For self allowlists, use self without parentheses
-      if (allowlist === 'self') {
-        return `${feature}=self`;
-      }
+      if (allowlist === 'self') return `${feature}=self`;
+
       return `${feature}=${allowlist}`;
     })
     .join(', ');
