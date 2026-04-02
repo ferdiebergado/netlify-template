@@ -1,7 +1,7 @@
 import type { Context } from '@netlify/functions';
 import * as z from 'zod';
 
-import { verifyToken } from '@api/auth';
+import { oauthClient, verifyToken } from '@api/auth';
 import { env } from '@api/config';
 import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
@@ -32,7 +32,7 @@ export default async (req: Request, ctx: Context) => {
     if (!csrfTokenInCookie || g_csrf_token !== csrfTokenInCookie)
       throw new BadRequestError('invalid csrf token');
 
-    const user = await verifyToken(credential);
+    const user = await verifyToken(oauthClient, credential);
 
     const sessionData = {
       userAgent: req.headers.get('User-Agent') ?? 'unknown',
