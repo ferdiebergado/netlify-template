@@ -2,7 +2,7 @@ import type { Config, Context } from '@netlify/edge-functions';
 
 import { env } from '../../api/config.ts';
 import logger from '../../api/logger.ts';
-import { generateRandomBytes } from '../../shared/lib/crypto.ts';
+import { genRandStr } from '../../shared/lib/crypto.ts';
 
 export const GOOGLE_ACCOUNTS_ORIGIN = 'https://accounts.google.com';
 export const CSP_NONCE_PLACEHOLDER = '__CSP_NONCE__';
@@ -164,7 +164,7 @@ export default async (req: Request, ctx: Context) => {
   logger.info('Injecting CSP nonce...');
 
   // Generate a secure nonce for this request
-  const nonce = generateRandomBytes(16);
+  const nonce = genRandStr(16);
 
   // Build security headers
   const csp = buildCSP(SECURITY_HEADERS.CSP_DIRECTIVES, nonce);

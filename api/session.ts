@@ -1,6 +1,6 @@
 import { UAParser } from 'ua-parser-js';
 
-import { generateRandomBytes } from '@shared/lib/crypto';
+import { genRandStr } from '@shared/lib/crypto';
 import type { Session, User } from '@shared/schemas/user.schema';
 import {
   SESSIONID_LENGTH,
@@ -23,7 +23,7 @@ type SessionData = {
 export async function initializeSession(user: User, data: SessionData): Promise<Session> {
   await upsertUser(db, user);
 
-  const sessionId = generateRandomBytes(SESSIONID_LENGTH);
+  const sessionId = genRandStr(SESSIONID_LENGTH);
   const expiresAt = setExpiryDate();
   const lastActiveAt = new Date();
 
