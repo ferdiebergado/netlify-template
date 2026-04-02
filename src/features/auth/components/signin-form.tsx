@@ -4,8 +4,9 @@ import type { ComponentProps } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { env } from '@/config';
 import { cn } from '@/lib/utils';
+import { API_BASE_URL } from '@shared/constants';
 
-const signUri = `${env.VITE_APP_HOST}/.netlify/functions/signin`;
+const signinUri = `${env.VITE_APP_HOST}${API_BASE_URL}/signin`;
 
 const noop = () => {};
 
@@ -20,7 +21,7 @@ export function SigninForm({ className, ...props }: ComponentProps<'div'>) {
         <CardContent>
           <GoogleLogin
             ux_mode="redirect"
-            login_uri={signUri}
+            login_uri={signinUri}
             theme="filled_blue"
             size="large"
             text="continue_with"
