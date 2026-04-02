@@ -48,3 +48,5 @@ export async function runInTransaction<TArgs extends unknown[], TReturn>(
     tx.close();
   }
 }
+
+void db.execute('SELECT 1');
