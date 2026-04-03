@@ -20,7 +20,9 @@ export async function parseJson<T extends z.ZodType>(
     const parsedData = schema.parse(jsonData);
     return parsedData;
   } catch (error) {
-    logger.error('Failed to parse JSON body', { error });
+    logger.error('Failed to parse JSON body', {
+      error: error instanceof z.ZodError ? z.flattenError(error).fieldErrors : error,
+    });
     throw new BadRequestError('Invalid JSON body');
   }
 }
