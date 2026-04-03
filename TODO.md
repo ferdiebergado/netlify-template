@@ -8,4 +8,4 @@
 - [x] remove next-themes
 - [x] move dark-mode to components
 - [x] logout
-- [ ] extract session cookie
+- [x] extract session cookie
