@@ -1,4 +1,5 @@
 import * as z from 'zod';
+
 import { BadRequestError, MethodNotAllowedError } from './errors';
 import logger from './logger';
 
@@ -17,12 +18,12 @@ export async function parseJson<T extends z.ZodType>(
 ): Promise<z.infer<typeof schema>> {
   try {
     const jsonData = await req.json();
-    const parsedData = schema.parse(jsonData);
-    return parsedData;
+    return schema.parse(jsonData);
   } catch (error) {
     logger.error('Failed to parse JSON body', {
       error: error instanceof z.ZodError ? z.flattenError(error).fieldErrors : error,
     });
+
     throw new BadRequestError('Invalid JSON body');
   }
 }
