@@ -163,12 +163,9 @@ describe('parseJson', () => {
       await expect(parseJson(req, schema)).rejects.toThrow(BadRequestError);
 
       // Check that logger.error was called with field errors
-      expect(logger.default.error).toHaveBeenCalledWith<[string, { error: { age: string[] } }]>(
-        'Failed to parse JSON body',
-        {
-          error: { age: ['Invalid input: expected number, received string'] },
-        }
-      );
+      expect(logger.default.error).toHaveBeenCalledWith('Failed to parse JSON body', {
+        error: { age: ['Invalid input: expected number, received string'] },
+      });
     });
 
     it('logs generic error when non-Zod error occurs', async () => {
