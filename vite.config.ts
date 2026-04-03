@@ -29,7 +29,7 @@ export default defineConfig({
           alias,
           environment: 'node',
           setupFiles: ['setup.node.ts'],
-          env: loadEnv('', process.cwd(), ''),
+          env: loadEnv('testing', process.cwd(), ''),
         },
       },
       {

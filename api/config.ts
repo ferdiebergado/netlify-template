@@ -39,8 +39,8 @@ const envSchema = z.object({
   DATABASE_URL: libsqlUrlSchema,
   TURSO_AUTH_TOKEN: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string({ error: 'GOOGLE_CLIENT_ID is not set.' }),
-  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).optional(),
-  ENV: z.enum(['development', 'production', 'test']).default('production'),
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+  ENV: z.enum(['development', 'production', 'testing']).default('production'),
 });
 
 const { success, error, data } = envSchema.safeParse(process.env);
