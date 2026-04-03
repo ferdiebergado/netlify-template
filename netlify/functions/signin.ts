@@ -25,7 +25,11 @@ export default async (req: Request, ctx: Context) => {
     const payload = Object.fromEntries(params);
 
     const { success, error, data } = GoogleAuthSchema.safeParse(payload);
-    if (!success) throw new BadRequestError(z.prettifyError(error));
+    if (!success) {
+      const errMsg = 'Invalid credentials';
+      logger.error(errMsg, { errors: z.flattenError(error).fieldErrors });
+      throw new BadRequestError(errMsg);
+    }
 
     const csrfTokenInCookie = ctx.cookies.get('g_csrf_token');
     const { g_csrf_token, credential } = data;
