@@ -1,8 +1,17 @@
 {
   "name": "netlify-template",
+  "description": "Fullstack typescript template for deployment to Netlify",
+  "author": {
+    "email": "ferdiebergado@gmail.com",
+    "name": "Ferdinand Saporas Bergado"
+  },
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "engines": {
+    "node": "22.22.0",
+    "npm": "10.9.4"
+  },
   "scripts": {
     "dev": "netlify dev",
     "build": "tsc -b && vite build",
