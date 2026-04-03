@@ -12,7 +12,7 @@ export async function upsertUser(db: Database, user: User): Promise<void> {
 INSERT INTO users (user_id, name, email, picture)
 VALUES (?, ?, ?, ?)
 ON CONFLICT (user_id)
-DO UPDATE SET last_login_at = ?, updated_at = ?
+DO UPDATE SET last_login_at = ?
 `;
 
   await db.execute(sql, [
@@ -20,7 +20,6 @@ DO UPDATE SET last_login_at = ?, updated_at = ?
     user.name ?? null,
     user.email ?? null,
     user.picture ?? null,
-    now,
     now,
   ]);
 }
