@@ -112,10 +112,11 @@ npm test
 
 Deploy to Netlify:
 
-1. Connect your GitHub repository to Netlify.
-2. Add the required environment variables in Netlify dashboard.
+1. [Import the project](https://app.netlify.com/start) to Netlify.
+2. Add the required environment variables in the Netlify dashboard.
+3. Click on **Deploy**.
 
-The application follows Netlify's recommended practices for serverless functions and edge functions.
+After your project has been imported and deployed, all subsequent pushes to branches other than the production branch along with pull requests will generate Preview Deployments, and all changes made to the Production Branch (commonly “main”) will result in a Production Deployment.
 
 ## Environment Variables
 
@@ -147,6 +148,7 @@ VITE_APP_HOST=http://localhost:8888
 │   └── lib/            # Utility functions
 ├── testing/            # Test helpers
 ├── init.sql            # Database schema
+├── netlify.toml        # Netlify configuration
 ├── setup.sh            # Initialization script
 └── vite.config.ts      # Vite configuration
 ```
