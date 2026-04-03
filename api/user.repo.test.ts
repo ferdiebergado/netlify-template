@@ -57,5 +57,8 @@ describe('user.repo', () => {
   it('should return undefined for non-existent user', async () => {
     const user = await findUser(db, 'nonexistent');
     expect(user).toBeUndefined();
+
+    const logger = await import('@api/logger');
+    expect(logger.default.warn).toHaveBeenCalledWith('user not found', { userId: 'nonexistent' });
   });
 });
