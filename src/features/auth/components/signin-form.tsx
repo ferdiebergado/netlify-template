@@ -1,16 +1,17 @@
 import { GoogleLogin } from '@react-oauth/google';
 import type { ComponentProps } from 'react';
 
+import { paths } from '@/app/routes';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { env } from '@/config';
 import { cn } from '@/lib/utils';
 import { API_BASE_URL } from '@shared/constants';
 
-const signinUri = `${env.VITE_APP_HOST}${API_BASE_URL}/signin`;
-
 const noop = () => {};
 
 export function SigninForm({ className, ...props }: ComponentProps<'div'>) {
+  const signinUri = `${env.VITE_APP_HOST}${API_BASE_URL}${paths.signin}`;
+
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
