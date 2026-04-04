@@ -18,7 +18,7 @@ export default (req: Request) => {
   if (!fetchSite || fetchSite !== 'same-origin') {
     const payload: Failure = {
       status: 'failed',
-      error: 'cross-origin requests disallowed',
+      error: fetchSite ? 'cross-origin requests disallowed' : 'missing fetch metadata',
     };
     return Response.json(payload, { status: 401 });
   }
