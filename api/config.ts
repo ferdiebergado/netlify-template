@@ -50,4 +50,13 @@ if (!success) {
   throw new Error(msg);
 }
 
-export const env = data;
+const config = {
+  host: data.HOST,
+  databaseUrl: data.DATABASE_URL,
+  tursoAuthToken: data.TURSO_AUTH_TOKEN,
+  googleClientId: data.GOOGLE_CLIENT_ID,
+  logLevel: data.LOG_LEVEL,
+  env: data.ENV,
+};
+
+export default config;

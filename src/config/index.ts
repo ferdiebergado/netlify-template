@@ -18,4 +18,10 @@ if (!success) {
   throw new Error('Invalid environment variables');
 }
 
-export const env = data;
+const config = {
+  appTitle: data.VITE_APP_TITLE,
+  googleClientId: data.VITE_GOOGLE_CLIENT_ID,
+  appHost: data.VITE_APP_HOST,
+};
+
+export default config;

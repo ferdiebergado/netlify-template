@@ -3,14 +3,14 @@ import type { ComponentProps } from 'react';
 
 import { paths } from '@/app/routes';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { env } from '@/config';
+import config from '@/config';
 import { cn } from '@/lib/utils';
 import { API_BASE_URL } from '@shared/constants';
 
 const noop = () => {};
 
 export function SigninForm({ className, ...props }: ComponentProps<'div'>) {
-  const signinUri = `${env.VITE_APP_HOST}${API_BASE_URL}${paths.signin}`;
+  const signinUri = `${config.appHost}${API_BASE_URL}${paths.signin}`;
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>

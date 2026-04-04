@@ -6,7 +6,7 @@ import {
   type ResultSet,
   type Row,
 } from '@libsql/client';
-import { env } from './config';
+import config from './config';
 import logger from './logger';
 
 export type TResultSet<T> = Omit<ResultSet, 'rows'> & {
@@ -20,8 +20,8 @@ export interface Database {
 }
 
 export const db = createClient({
-  url: env.DATABASE_URL,
-  authToken: env.TURSO_AUTH_TOKEN,
+  url: config.databaseUrl,
+  authToken: config.tursoAuthToken,
 });
 
 export async function runInTransaction<TArgs extends unknown[], TReturn>(

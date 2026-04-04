@@ -2,11 +2,13 @@ import type { Config, Context } from '@netlify/functions';
 import * as z from 'zod';
 
 import { oauthClient, verifyToken } from '@api/auth';
-import { env } from '@api/config';
+import apiConfig from '@api/config';
 import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
 import logger from '@api/logger';
 import { buildSessionCookie, initializeSession } from '@api/session';
+
+const host = apiConfig.host;
 
 export const config: Config = {
   rateLimit: {
@@ -63,7 +65,7 @@ export default async (req: Request, ctx: Context) => {
     ctx.cookies.set(sessionCookie);
 
     return Response.redirect(
-      `${env.HOST}/?success=${encodeURIComponent('Signed in successfully.')}`,
+      `${host}/?success=${encodeURIComponent('Signed in successfully.')}`,
       302
     );
   } catch (error) {
@@ -73,6 +75,6 @@ export default async (req: Request, ctx: Context) => {
 
     if (error instanceof HttpError) message = error.message;
 
-    return Response.redirect(`${env.HOST}/signin?error=${encodeURIComponent(message)}`, 302);
+    return Response.redirect(`${host}/signin?error=${encodeURIComponent(message)}`, 302);
   }
 };

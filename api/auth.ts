@@ -2,17 +2,17 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { GOOGLE_ACCOUNTS_ORIGIN } from '@shared/constants';
 import type { User } from '@shared/schemas/user.schema';
-import { env } from './config';
+import config from './config';
 import { UnauthorizedError } from './errors';
 
-const { GOOGLE_CLIENT_ID } = env;
+const { googleClientId } = config;
 
-export const oauthClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+export const oauthClient = new OAuth2Client(googleClientId);
 
 export async function verifyToken(oauthClient: OAuth2Client, token: string): Promise<User> {
   const ticket = await oauthClient.verifyIdToken({
     idToken: token,
-    audience: GOOGLE_CLIENT_ID,
+    audience: googleClientId,
   });
 
   const tokenPayload = ticket.getPayload();
