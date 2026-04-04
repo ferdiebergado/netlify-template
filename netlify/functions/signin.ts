@@ -1,4 +1,4 @@
-import type { Context } from '@netlify/functions';
+import type { Config, Context } from '@netlify/functions';
 import * as z from 'zod';
 
 import { oauthClient, verifyToken } from '@api/auth';
@@ -7,6 +7,14 @@ import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
 import logger from '@api/logger';
 import { buildSessionCookie, initializeSession } from '@api/session';
+
+export const config: Config = {
+  rateLimit: {
+    windowLimit: 10,
+    windowSize: 120,
+    aggregateBy: ['ip'],
+  },
+};
 
 export default async (req: Request, ctx: Context) => {
   try {
