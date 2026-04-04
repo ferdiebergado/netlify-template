@@ -2,7 +2,6 @@
 import type { Session } from '@shared/schemas/user.schema';
 import type { Database } from './db';
 import logger from './logger';
-import { setExpiryDate } from './session';
 
 export async function createSession(db: Database, session: Session): Promise<void> {
   logger.info('[DB]: Creating session...');
@@ -58,29 +57,31 @@ LIMIT 1
   const { rows } = await db.execute<SessionRow>(sql, [id]);
 
   if (rows.length === 0) {
-    logger.warn(`Session not found`, { sessionId: id });
+    reportMissingSession(id);
     return;
   }
 
   return mapSessionRowToSession(rows[0]);
 }
 
-export async function touchSession(db: Database, id: string): Promise<Session> {
+export async function touchSession(db: Database, id: string): Promise<Session | undefined> {
   logger.info('Updating session...', { layer: 'db' });
 
   const sql = `
 UPDATE sessions
-SET last_active_at = ?, expires_at = ?, updated_at = ?
+SET last_active_at = ?, updated_at = ?
 WHERE session_id = ? AND deleted_at IS NULL
 RETURNING *
     `;
 
   const now = new Date().toISOString();
-  const expiresAt = setExpiryDate().toISOString();
 
-  const { rows } = await db.execute<SessionRow>(sql, [now, expiresAt, now, id]);
+  const { rows } = await db.execute<SessionRow>(sql, [now, now, id]);
 
-  if (rows.length === 0) throw new Error(`Session not found for ID: ${id}`);
+  if (rows.length === 0) {
+    reportMissingSession(id);
+    return;
+  }
 
   return mapSessionRowToSession(rows[0]);
 }
@@ -134,20 +135,20 @@ ORDER BY last_active_at DESC
   return rows.map(row => mapSessionRowToSession(row));
 }
 
-function mapSessionRowToSession(row: SessionRow): Session {
-  return {
-    sessionId: row.session_id,
-    userId: row.user_id,
-    userAgent: row.user_agent,
-    ip: row.ip,
-    expiresAt: new Date(row.expires_at),
-    lastActiveAt: new Date(row.last_active_at),
-    device: row.device,
-    deviceType: row.device_type,
-    deviceVendor: row.device_vendor,
-    browser: row.browser,
-    os: row.os,
-    city: row.city,
-    country: row.country,
-  };
-}
+const mapSessionRowToSession = (row: SessionRow): Session => ({
+  sessionId: row.session_id,
+  userId: row.user_id,
+  userAgent: row.user_agent,
+  ip: row.ip,
+  expiresAt: new Date(row.expires_at),
+  lastActiveAt: new Date(row.last_active_at),
+  device: row.device,
+  deviceType: row.device_type,
+  deviceVendor: row.device_vendor,
+  browser: row.browser,
+  os: row.os,
+  city: row.city,
+  country: row.country,
+});
+
+const reportMissingSession = (sessionId: string) => logger.warn('Session not found', { sessionId });

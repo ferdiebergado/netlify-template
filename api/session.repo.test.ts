@@ -69,19 +69,16 @@ describe('session repo', () => {
       const mockSessionId = mockSession.sessionId;
       const beforeTouch = await findSession(db, mockSessionId);
       const beforeLastActiveAt = beforeTouch?.lastActiveAt;
-      const beforeExpiresAt = beforeTouch?.expiresAt;
 
       vi.advanceTimersByTime(1000 * 60);
       await touchSession(db, mockSessionId);
 
       const afterTouch = await findSession(db, mockSessionId);
       const afterLastActiveAt = afterTouch?.lastActiveAt;
-      const afterExpiresAt = afterTouch?.expiresAt;
 
       expect(afterLastActiveAt).toBeDefined();
       expect(beforeLastActiveAt).toBeDefined();
       expect(afterLastActiveAt?.getTime()).toBeGreaterThan(beforeLastActiveAt?.getTime() as number);
-      expect(afterExpiresAt?.getTime()).toBeGreaterThan(beforeExpiresAt?.getTime() as number);
     });
   });
 
