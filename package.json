@@ -18,6 +18,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
+    "test:e2e": "playwright test",
     "create-db": "sqlite3 local.db < ./init.sql",
     "db": "sqlite3 -init .sqliterc local.db",
     "init": "sh ./setup.sh",
