@@ -1,5 +1,5 @@
-import logger from '@api/logger';
 import type { Config, Context } from '@netlify/edge-functions';
+import logger from '../../api/logger';
 
 export const config: Config = {
   path: '/api/*',
