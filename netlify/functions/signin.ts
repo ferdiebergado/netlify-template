@@ -32,7 +32,12 @@ export default async (req: Request, ctx: Context) => {
     const params = new URLSearchParams(bodyText);
     const payload = Object.fromEntries(params);
 
-    const { success, error, data } = GoogleAuthSchema.safeParse(payload);
+    const authSchema = z.object({
+      credential: z.string().min(1, 'Google credential is required'),
+      g_csrf_token: z.string().min(1, 'CSRF token is required'),
+    });
+
+    const { success, error, data } = authSchema.safeParse(payload);
     if (!success) {
       const errMsg = 'Invalid credentials';
       logger.error(errMsg, { errors: z.flattenError(error).fieldErrors });
@@ -71,8 +76,3 @@ export default async (req: Request, ctx: Context) => {
     return Response.redirect(`${env.HOST}/signin?error=${encodeURIComponent(message)}`, 302);
   }
 };
-
-const GoogleAuthSchema = z.object({
-  credential: z.string().min(1, 'Google credential is required'),
-  g_csrf_token: z.string().min(1, 'CSRF token is required'),
-});
