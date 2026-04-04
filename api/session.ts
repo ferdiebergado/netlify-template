@@ -90,7 +90,10 @@ export async function getSession(req: Request): Promise<Session> {
   const sessionId = req.headers.get(SESSION_HEADER_NAME);
   if (!sessionId) throw new UnauthorizedError('no session ID provided');
 
-  return touchSession(db, sessionId);
+  const session = await touchSession(db, sessionId);
+  if (!session) throw new UnauthorizedError('session not found');
+
+  return session;
 }
 
 export const setExpiryDate = (minutes = SESSION_DURATION_MINUTES): Date =>
