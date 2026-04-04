@@ -1,5 +1,9 @@
 import logger from '@api/logger';
-import type { Context } from '@netlify/edge-functions';
+import type { Config, Context } from '@netlify/edge-functions';
+
+export const config: Config = {
+  path: '/api/*',
+};
 
 export default (req: Request, ctx: Context) => {
   logger.info('Received request', {
