@@ -31,3 +31,11 @@ CREATE TABLE IF NOT EXISTS sessions (
     is_revoked INTEGER DEFAULT 0 CHECK (is_revoked IN (0, 1)),
     FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
+
+CREATE INDEX idx_sessions_user_id ON sessions (user_id);
+
+CREATE INDEX idx_sessions_session_id ON sessions (session_id);
+
+CREATE INDEX idx_users_user_id ON users (user_id);
+
+CREATE INDEX idx_sessions_expires_at ON sessions (expires_at);
