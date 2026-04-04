@@ -8,7 +8,7 @@ import { render } from 'vitest-browser-react';
 import QueryErrorBoundary from '@/components/query-error-boundary';
 import UserProvider from '@/features/auth/components/user-provider';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import Page from './page';
+import Page from '../../src/app/page';
 
 const createTestQueryClient = () =>
   new QueryClient({

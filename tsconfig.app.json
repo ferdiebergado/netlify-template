@@ -32,5 +32,5 @@
       "@testing/*": ["./testing/*"]
     }
   },
-  "include": ["src", "setup.browser.ts", "testing/browser"]
+  "include": ["src", "setup.browser.ts", "testing/browser", "__tests__/component"]
 }

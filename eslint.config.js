@@ -26,7 +26,11 @@ export default defineConfig([
   // Frontend (React)
   // =====================
   {
-    files: ['src/**/*.{ts,tsx}', 'testing/browser/**/*.{ts,tsx}'],
+    files: [
+      'src/**/*.{ts,tsx}',
+      'testing/browser/**/*.{ts,tsx}',
+      '__tests__/component/**/*.{ts,tsx}',
+    ],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
@@ -48,7 +52,15 @@ export default defineConfig([
   // Backend / tooling
   // =====================
   {
-    files: ['netlify/**/*.{ts,js}', 'shared/**/*.{ts,js}', 'api/**/*.{ts,js}'],
+    files: [
+      'netlify/**/*.{ts,js}',
+      'shared/**/*.{ts,js}',
+      'api/**/*.{ts,js}',
+      '__tests__/unit/**/*.{ts,js}',
+      '__tests__/e2e/**/*.{ts,js}',
+      'vite.config.ts',
+      'setup.node.ts',
+    ],
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, ...sharedExtends],
     languageOptions: {
       ecmaVersion: 2020,

@@ -25,7 +25,7 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          include: ['api/**/*.{test,spec}.ts'],
+          include: ['__tests__/unit/**/*.{test,spec}.ts'],
           alias,
           environment: 'node',
           setupFiles: ['setup.node.ts'],
@@ -35,7 +35,7 @@ export default defineConfig({
       {
         test: {
           name: 'browser',
-          include: ['src/**/*.{test,spec}.tsx'],
+          include: ['__tests__/component/**/*.{test,spec}.tsx'],
           alias,
           browser: {
             enabled: true,

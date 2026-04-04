@@ -30,5 +30,14 @@
       "@testing/*": ["./testing/*"]
     }
   },
-  "include": ["vite.config.ts", "netlify", "shared", "setup.node.ts", "api", "testing/node"]
+  "include": [
+    "vite.config.ts",
+    "netlify",
+    "shared",
+    "setup.node.ts",
+    "api",
+    "testing/node",
+    "__tests__/unit",
+    "__tests__/e2e"
+  ]
 }

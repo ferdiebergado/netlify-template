@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { User } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
-import type { Database } from './db';
-import findUser, { upsertUser } from './user.repo';
+import type { Database } from '../../../api/db';
+import findUser, { upsertUser } from '../../../api/user.repo';
 
 vi.mock('@api/logger', async () => {
   const { mockLogger } = await import('@testing/node/logger');

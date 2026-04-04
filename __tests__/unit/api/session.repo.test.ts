@@ -2,9 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { Session, User } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
-import type { Database } from './db';
-import { createSession, findSession, softDeleteSession, touchSession } from './session.repo';
-import { upsertUser } from './user.repo';
+import type { Database } from '../../../api/db';
+import {
+  createSession,
+  findSession,
+  softDeleteSession,
+  touchSession,
+} from '../../../api/session.repo';
+import { upsertUser } from '../../../api/user.repo';
 
 describe('session repo', () => {
   const mockUser: User = {
