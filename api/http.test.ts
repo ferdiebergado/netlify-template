@@ -6,11 +6,12 @@ import { checkMethod, parseJson } from '@api/http';
 
 const testUrl = 'http://localhost:8888/test';
 
-vi.mock('@api/logger', () => ({
-  default: {
-    error: vi.fn(),
-  },
-}));
+vi.mock('@api/logger', async () => {
+  const { mockLogger } = await import('@testing/node/logger');
+  return {
+    default: mockLogger,
+  };
+});
 
 describe('checkMethod', () => {
   describe('when method is allowed', () => {

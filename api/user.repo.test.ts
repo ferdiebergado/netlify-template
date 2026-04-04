@@ -5,12 +5,12 @@ import { createTestDB } from '@testing/node/db';
 import type { Database } from './db';
 import findUser, { upsertUser } from './user.repo';
 
-vi.mock('@api/logger', () => ({
-  default: {
-    info: vi.fn(),
-    warn: vi.fn(),
-  },
-}));
+vi.mock('@api/logger', async () => {
+  const { mockLogger } = await import('@testing/node/logger');
+  return {
+    default: mockLogger,
+  };
+});
 
 describe('user.repo', () => {
   const mockUser: User = {
