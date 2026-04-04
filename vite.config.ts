@@ -7,11 +7,13 @@ import { defineConfig, loadEnv } from 'vite';
 
 import { CSP_NONCE_PLACEHOLDER } from './shared/constants';
 
+const dir = import.meta.dirname;
+
 const alias = {
-  '@': path.resolve(__dirname, './src'),
-  '@api': path.resolve(__dirname, './api'),
-  '@shared': path.resolve(__dirname, './shared'),
-  '@testing': path.resolve(__dirname, './testing'),
+  '@': path.resolve(dir, './src'),
+  '@api': path.resolve(dir, './api'),
+  '@shared': path.resolve(dir, './shared'),
+  '@testing': path.resolve(dir, './testing'),
 };
 
 // https://vite.dev/config/
