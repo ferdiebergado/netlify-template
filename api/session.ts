@@ -23,6 +23,13 @@ type SessionData = {
 export async function initializeSession(user: User, data: SessionData): Promise<Session> {
   await upsertUser(db, user);
 
+  const session = newSession(user.googleId, data);
+  await createSession(db, session);
+
+  return session;
+}
+
+export function newSession(userId: string, data: SessionData): Session {
   const sessionId = genRandStr(SESSIONID_LENGTH);
   const expiresAt = setExpiryDate();
   const lastActiveAt = new Date();
@@ -30,9 +37,9 @@ export async function initializeSession(user: User, data: SessionData): Promise<
   const { userAgent, ip, city, country } = data;
   const { device, browser, os } = UAParser(userAgent);
 
-  const session: Session = {
+  return {
     sessionId,
-    userId: user.googleId,
+    userId,
     userAgent,
     device: device.model,
     deviceType: device.type,
@@ -45,19 +52,16 @@ export async function initializeSession(user: User, data: SessionData): Promise<
     expiresAt,
     lastActiveAt,
   };
-
-  await createSession(db, session);
-
-  return session;
 }
 
 type Cookie = {
   name: string;
   value: string;
+  url?: string;
   domain?: string;
   path?: string;
   maxAge?: number;
-  expires?: Date;
+  expires?: number;
   httpOnly?: boolean;
   secure?: boolean;
   sameSite?: 'Strict' | 'Lax' | 'None';
@@ -75,14 +79,15 @@ export const initCookie = (): Cookie => ({
 });
 
 export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
-  const deltaMs = expiresAt.getTime() - Date.now();
+  const expires = expiresAt.getTime();
+  const deltaMs = expires - Date.now();
   const maxAge = Math.floor(deltaMs / 1000);
 
   return {
     ...initCookie(),
     value: sessionId,
     maxAge,
-    expires: expiresAt,
+    expires: Math.floor(expires / 1000),
   };
 }
 
