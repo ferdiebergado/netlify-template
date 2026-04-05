@@ -11,7 +11,7 @@ export default function Layout() {
     <TooltipProvider>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset className="bg-neutral-50 shadow-md dark:bg-neutral-900">
+        <SidebarInset className="shadow-md">
           <Header />
           <div className="flex flex-1 flex-col gap-4 p-4 sm:p-10">
             <Outlet />
