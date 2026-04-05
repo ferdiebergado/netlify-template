@@ -147,8 +147,17 @@ VITE_APP_HOST=http://localhost:8888
 │   ├── features/       # Feature modules
 │   └── lib/            # Utility functions
 ├── testing/            # Test helpers
+├── tests/              # Test suites
+│   ├── component/      # Component tests
+│   ├── e2e/            # End-to-End tests
+│   ├── integration/    # Integration tests
+│   └── unit/           # Unit tests
+├── .sqliterc           # Sqlite console configuration
 ├── init.sql            # Database schema
 ├── netlify.toml        # Netlify configuration
+├── playwright.config.ts # Playwright configuration
+├── setup.browser.ts    # Vitest browser tests setup
+├── setup.node.ts       # Vitest node tests setup
 ├── setup.sh            # Initialization script
 └── vite.config.ts      # Vite configuration
 ```

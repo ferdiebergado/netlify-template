@@ -37,7 +37,8 @@
     "setup.node.ts",
     "api",
     "testing/node",
-    "__tests__/unit",
-    "__tests__/e2e"
+    "tests/unit",
+    "tests/integration",
+    "tests/e2e"
   ]
 }

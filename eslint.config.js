@@ -26,11 +26,7 @@ export default defineConfig([
   // Frontend (React)
   // =====================
   {
-    files: [
-      'src/**/*.{ts,tsx}',
-      'testing/browser/**/*.{ts,tsx}',
-      '__tests__/component/**/*.{ts,tsx}',
-    ],
+    files: ['src/**/*.{ts,tsx}', 'testing/browser/**/*.{ts,tsx}', 'tests/component/**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
@@ -56,8 +52,9 @@ export default defineConfig([
       'netlify/**/*.{ts,js}',
       'shared/**/*.{ts,js}',
       'api/**/*.{ts,js}',
-      '__tests__/unit/**/*.{ts,js}',
-      '__tests__/e2e/**/*.{ts,js}',
+      'tests/e2e/**/*.{ts,js}',
+      'tests/integration/**/*.{ts,js}',
+      'tests/unit/**/*.{ts,js}',
       'vite.config.ts',
       'setup.node.ts',
     ],
