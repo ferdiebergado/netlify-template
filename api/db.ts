@@ -6,7 +6,11 @@ import {
   type ResultSet,
   type Row,
 } from '@libsql/client';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import config from './config';
+import { MIGRATION_FILE } from './constants';
 import logger from './logger';
 
 export type TResultSet<T> = Omit<ResultSet, 'rows'> & {
@@ -18,11 +22,6 @@ export interface Database {
   execute<T = Row>(sql: string, args?: InArgs): Promise<TResultSet<T>>;
   close: () => void;
 }
-
-export const db = createClient({
-  url: config.databaseUrl,
-  authToken: config.tursoAuthToken,
-});
 
 export async function runInTransaction<TArgs extends unknown[], TReturn>(
   db: Client,
@@ -49,4 +48,17 @@ export async function runInTransaction<TArgs extends unknown[], TReturn>(
   }
 }
 
-void db.execute('SELECT 1');
+export const db = createClient({
+  url: config.databaseUrl,
+  authToken: config.tursoAuthToken,
+});
+
+try {
+  const schemaPath = path.resolve(process.cwd(), MIGRATION_FILE);
+  const schema = readFileSync(schemaPath, { encoding: 'utf8' });
+
+  await db.executeMultiple(schema);
+} catch (error) {
+  logger.error('Failed to initialize the database', error);
+  throw error;
+}
