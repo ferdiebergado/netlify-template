@@ -32,10 +32,10 @@ CREATE TABLE IF NOT EXISTS sessions (
     FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
-CREATE INDEX idx_sessions_user_id ON sessions (user_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions (user_id);
 
-CREATE INDEX idx_sessions_session_id ON sessions (session_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_session_id ON sessions (session_id);
 
-CREATE INDEX idx_users_user_id ON users (user_id);
+CREATE INDEX IF NOT EXISTS idx_users_user_id ON users (user_id);
 
-CREATE INDEX idx_sessions_expires_at ON sessions (expires_at);
+CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions (expires_at);
