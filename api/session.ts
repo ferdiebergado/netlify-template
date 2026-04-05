@@ -79,15 +79,13 @@ export const initCookie = (): Cookie => ({
 });
 
 export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
-  const expires = expiresAt.getTime();
-  const deltaMs = expires - Date.now();
+  const deltaMs = expiresAt.getTime() - Date.now();
   const maxAge = Math.floor(deltaMs / 1000);
 
   return {
     ...initCookie(),
     value: sessionId,
     maxAge,
-    expires: Math.floor(expires / 1000),
   };
 }
 
