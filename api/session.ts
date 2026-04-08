@@ -70,7 +70,7 @@ export const initCookie = (): Cookie => ({
   path: '/',
   httpOnly: true,
   secure: true,
-  sameSite: 'Lax',
+  sameSite: 'Strict',
 });
 
 export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
