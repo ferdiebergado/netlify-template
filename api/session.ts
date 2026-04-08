@@ -28,22 +28,20 @@ export function newSession(userId: string, data: SessionData): Session {
   const sessionId = genRandStr(SESSION.ID_LENGTH);
   const expiresAt = setExpiryDate();
   const lastActiveAt = new Date();
-
-  const { userAgent, ip, city, country } = data;
-  const { device, browser, os } = UAParser(userAgent);
+  const { device, browser, os } = UAParser(data.userAgent);
 
   return {
     sessionId,
     userId,
-    userAgent,
+    userAgent: data.userAgent,
     device: device.model,
     deviceType: device.type,
     deviceVendor: device.vendor,
     browser: browser.name,
     os: os.name,
-    ip,
-    city,
-    country,
+    ip: data.ip,
+    city: data.city,
+    country: data.country,
     expiresAt,
     lastActiveAt,
   };
