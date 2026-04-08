@@ -2,12 +2,7 @@ import { UAParser } from 'ua-parser-js';
 
 import { genRandStr } from '@shared/lib/crypto';
 import type { Session, User } from '@shared/schemas/user.schema';
-import {
-  SESSIONID_LENGTH,
-  SESSION_COOKIE_NAME,
-  SESSION_DURATION_MINUTES,
-  SESSION_HEADER_NAME,
-} from './constants';
+import { SESSION } from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';
 import { createSession, touchSession } from './session.repo';
@@ -30,7 +25,7 @@ export async function initializeSession(user: User, data: SessionData): Promise<
 }
 
 export function newSession(userId: string, data: SessionData): Session {
-  const sessionId = genRandStr(SESSIONID_LENGTH);
+  const sessionId = genRandStr(SESSION.ID_LENGTH);
   const expiresAt = setExpiryDate();
   const lastActiveAt = new Date();
 
@@ -69,7 +64,7 @@ type Cookie = {
 };
 
 export const initCookie = (): Cookie => ({
-  name: SESSION_COOKIE_NAME,
+  name: SESSION.COOKIE_NAME,
   value: '',
   maxAge: 0,
   path: '/',
@@ -90,7 +85,7 @@ export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
 }
 
 export async function getSession(req: Request): Promise<Session> {
-  const sessionId = req.headers.get(SESSION_HEADER_NAME);
+  const sessionId = req.headers.get(SESSION.HEADER_NAME);
   if (!sessionId) throw new UnauthorizedError('no session ID provided');
 
   const session = await touchSession(db, sessionId);
@@ -99,5 +94,5 @@ export async function getSession(req: Request): Promise<Session> {
   return session;
 }
 
-export const setExpiryDate = (minutes = SESSION_DURATION_MINUTES): Date =>
+export const setExpiryDate = (minutes = SESSION.DURATION_MINUTES): Date =>
   new Date(Date.now() + minutes * 60_000);
