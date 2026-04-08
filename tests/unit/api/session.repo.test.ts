@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { Database } from '@api/db';
 import type { Session, User } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
-import type { Database } from '../../../api/db';
 import {
   createSession,
   findSession,
@@ -10,6 +10,13 @@ import {
   touchSession,
 } from '../../../api/session.repo';
 import { upsertUser } from '../../../api/user.repo';
+
+vi.mock('@api/logger', async () => {
+  const { mockLogger } = await import('@testing/node/logger');
+  return {
+    default: mockLogger,
+  };
+});
 
 describe('session repo', () => {
   const mockUser: User = {
@@ -25,7 +32,7 @@ describe('session repo', () => {
     userId: mockUser.googleId,
     userAgent: 'vitest',
     ip: '127.0.0.1',
-    expiresAt: now,
+    expiresAt: new Date(now.getTime() + 1000 * 60 * 60), // expires in 1 hour
     lastActiveAt: now,
     device: 'Vivobook 16',
     deviceType: 'desktop',
@@ -52,7 +59,6 @@ describe('session repo', () => {
       await createSession(db, mockSession);
 
       const session = await findSession(db, mockSession.sessionId);
-
       expect(session).toEqual(mockSession);
     });
   });
