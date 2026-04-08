@@ -47,14 +47,16 @@ type SessionRow = {
 export async function findSession(db: Database, id: string): Promise<Session | undefined> {
   logger.info('[DB]: Retrieving session...');
 
+  const now = new Date().toISOString();
+
   const sql = `
 SELECT session_id, user_id, expires_at, user_agent, ip, device, device_type, device_vendor, browser, os, city, country, last_active_at
 FROM sessions
-WHERE session_id = ? AND deleted_at IS NULL AND is_revoked = 0
+WHERE session_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL 
 LIMIT 1
 `;
 
-  const { rows } = await db.execute<SessionRow>(sql, [id]);
+  const { rows } = await db.execute<SessionRow>(sql, [id, now]);
 
   if (rows.length === 0) {
     reportMissingSession(id);
@@ -70,13 +72,13 @@ export async function touchSession(db: Database, id: string): Promise<Session | 
   const sql = `
 UPDATE sessions
 SET last_active_at = ?, updated_at = ?
-WHERE session_id = ? AND deleted_at IS NULL
+WHERE session_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL
 RETURNING *
     `;
 
   const now = new Date().toISOString();
 
-  const { rows } = await db.execute<SessionRow>(sql, [now, now, id]);
+  const { rows } = await db.execute<SessionRow>(sql, [now, now, id, now]);
 
   if (rows.length === 0) {
     reportMissingSession(id);
@@ -92,10 +94,10 @@ export async function softDeleteSession(db: Database, id: string): Promise<boole
   const sql = `
 UPDATE sessions
 SET deleted_at = ?
-WHERE session_id = ? AND deleted_at IS NULL
+WHERE session_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL
     `;
 
-  const { rowsAffected } = await db.execute(sql, [now, id]);
+  const { rowsAffected } = await db.execute(sql, [now, id, now]);
 
   return rowsAffected === 1;
 }
@@ -111,11 +113,11 @@ export async function revokeSession(
 
   const sql = `
 UPDATE sessions
-SET is_revoked = 1, deleted_at = ?
-WHERE session_id = ? AND user_id = ? AND deleted_at IS NULL
+SET is_revoked = 1, updated_at = ?
+WHERE session_id = ? AND user_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL 
 `;
 
-  const { rowsAffected } = await db.execute(sql, [now, sessionId, userId]);
+  const { rowsAffected } = await db.execute(sql, [now, sessionId, userId, now]);
 
   return rowsAffected === 1;
 }
@@ -123,14 +125,16 @@ WHERE session_id = ? AND user_id = ? AND deleted_at IS NULL
 export async function findSessionsByUserId(db: Database, userId: string): Promise<Session[]> {
   logger.info('[DB]: Retrieving sessions for user...');
 
+  const now = new Date().toISOString();
+
   const sql = `
 SELECT session_id, user_id, expires_at, user_agent, device, device_type, device_vendor, browser, os, ip, city, country, last_active_at
 FROM sessions
-WHERE user_id = ? AND deleted_at IS NULL AND is_revoked = 0
+WHERE user_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL
 ORDER BY last_active_at DESC
 `;
 
-  const { rows } = await db.execute<SessionRow>(sql, [userId]);
+  const { rows } = await db.execute<SessionRow>(sql, [userId, now]);
 
   return rows.map(row => mapSessionRowToSession(row));
 }
