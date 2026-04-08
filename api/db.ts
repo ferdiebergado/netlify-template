@@ -54,7 +54,7 @@ export const db = createClient({
 });
 
 try {
-  const schemaPath = path.resolve(process.cwd(), MIGRATION_FILE);
+  const schemaPath = path.resolve(MIGRATION_FILE);
   const schema = readFileSync(schemaPath, { encoding: 'utf8' });
 
   await db.executeMultiple(schema);
