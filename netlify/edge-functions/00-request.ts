@@ -6,12 +6,11 @@ export const config: Config = {
 };
 
 export default (req: Request, ctx: Context) => {
-  logger.info('Received request', {
+  const request = {
     requestId: ctx.requestId,
     method: req.method,
     url: req.url,
-    headers: Object.fromEntries(req.headers.entries()),
-    geo: ctx.geo,
-    ip: ctx.ip,
-  });
+  };
+
+  logger.info('Received request', { request });
 };

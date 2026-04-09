@@ -9,8 +9,6 @@ import logger from '@api/logger';
 import { buildSessionCookie, initializeSession } from '@api/session';
 import type { User } from '@shared/schemas/user.schema';
 
-const host = apiConfig.host;
-
 export const config: Config = {
   rateLimit: {
     windowLimit: 10,
@@ -28,8 +26,9 @@ export default async (req: Request, ctx: Context) => {
     try {
       bodyText = await req.text();
     } catch (error) {
-      logger.error('Error reading request body:', { error });
-      throw new BadRequestError('Invalid request body');
+      throw new BadRequestError(
+        error instanceof Error ? error.message : 'Failed to read request body'
+      );
     }
 
     const params = new URLSearchParams(bodyText);
@@ -41,11 +40,8 @@ export default async (req: Request, ctx: Context) => {
     });
 
     const { success, error, data } = authSchema.safeParse(payload);
-    if (!success) {
-      const errMsg = 'Invalid credentials';
-      logger.error(errMsg, { errors: z.flattenError(error).fieldErrors });
-      throw new BadRequestError(errMsg);
-    }
+    if (!success)
+      throw new BadRequestError('Invalid credentials', z.flattenError(error).fieldErrors);
 
     const csrfTokenInCookie = ctx.cookies.get('g_csrf_token');
     const { g_csrf_token, credential } = data;
@@ -74,16 +70,22 @@ export default async (req: Request, ctx: Context) => {
     ctx.cookies.set(sessionCookie);
 
     return Response.redirect(
-      `${host}/?success=${encodeURIComponent('Signed in successfully.')}`,
+      `${apiConfig.host}/?success=${encodeURIComponent('Signed in successfully.')}`,
       302
     );
   } catch (error) {
-    logger.error('Signin failed', { error });
+    const meta = {
+      requestId: ctx.requestId,
+      ip: ctx.ip,
+      geo: ctx.geo,
+    };
+
+    logger.notice('Signin failed', { meta, error });
 
     let message = 'Something went wrong during sign-in.';
 
     if (error instanceof HttpError) message = error.message;
 
-    return Response.redirect(`${host}/signin?error=${encodeURIComponent(message)}`, 302);
+    return Response.redirect(`${apiConfig.host}/signin?error=${encodeURIComponent(message)}`, 302);
   }
 };

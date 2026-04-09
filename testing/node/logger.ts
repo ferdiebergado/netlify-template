@@ -4,4 +4,5 @@ export const mockLogger = {
   info: vi.fn(),
   warn: vi.fn(),
   error: vi.fn(),
+  notice: vi.fn(),
 };

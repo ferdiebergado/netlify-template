@@ -20,6 +20,14 @@ export default (req: Request, ctx: Context) => {
       error: 'invalid session',
     };
 
+    const meta = {
+      requestId: ctx.requestId,
+      ip: ctx.ip,
+      geo: ctx.geo,
+    };
+
+    logger.notice('No session cookie found', { meta });
+
     return Response.json(payload, { status: 401 });
   }
 

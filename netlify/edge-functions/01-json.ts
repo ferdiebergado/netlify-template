@@ -1,4 +1,4 @@
-import type { Config } from '@netlify/edge-functions';
+import type { Config, Context } from '@netlify/edge-functions';
 
 import logger from '../../api/logger.ts';
 import { API_BASE_URL } from '../../shared/constants.ts';
@@ -10,7 +10,7 @@ export const config: Config = {
   method: ['POST', 'PUT', 'PATCH'],
 };
 
-export default (req: Request) => {
+export default (req: Request, ctx: Context) => {
   logger.info('Validating content-type...');
 
   const contentType = req.headers.get('Content-Type');
@@ -20,6 +20,15 @@ export default (req: Request) => {
       status: 'failed',
       error: 'Unsupported data type',
     };
+
+    const meta = {
+      requestId: ctx.requestId,
+      contentType,
+      ip: ctx.ip,
+      geo: ctx.geo,
+    };
+
+    logger.notice(payload.error, { meta });
     return Response.json(payload, { status: 415 });
   }
 };

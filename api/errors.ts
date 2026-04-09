@@ -3,8 +3,8 @@ import type { HttpMethod } from './http';
 import logger from './logger';
 
 export class HttpError extends Error {
-  public readonly statusCode: number;
-  public readonly name: string;
+  readonly statusCode: number;
+  readonly name: string;
 
   constructor(statusCode: number, message: string) {
     super(message);
@@ -20,8 +20,11 @@ export class NotFoundError extends HttpError {
 }
 
 export class BadRequestError extends HttpError {
-  constructor(message = 'Bad request') {
+  readonly errors?: Record<string, string[]>;
+
+  constructor(message = 'Bad request', errors?: Record<string, string[]>) {
     super(400, message);
+    this.errors = errors;
   }
 }
 
@@ -41,8 +44,6 @@ export class MethodNotAllowedError extends HttpError {
 }
 
 export function respondWithError(error: unknown) {
-  logger.error('request failed', { error });
-
   const failure: Failure = {
     status: 'failed',
     error: 'Something went wrong.',
@@ -59,8 +60,15 @@ export function respondWithError(error: unknown) {
         },
       });
     }
+
     failure.error = error.message;
     statusCode = error.statusCode;
+  }
+
+  if (statusCode === 500) {
+    logger.error('Internal Server Error', { error });
+  } else {
+    logger.notice('Client error', { error });
   }
 
   return Response.json(failure, { status: statusCode });
