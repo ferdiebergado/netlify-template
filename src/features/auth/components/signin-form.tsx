@@ -17,7 +17,7 @@ export function SigninForm({ className, ...props }: ComponentProps<'div'>) {
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>Signin with your Google account</CardDescription>
+          <CardDescription>Sign in with your Google account</CardDescription>
         </CardHeader>
         <CardContent>
           <GoogleLogin
