@@ -11,6 +11,7 @@ import path from 'node:path';
 
 import config from './config';
 import { MIGRATION_FILE } from './constants';
+import { ServiceUnavailableError } from './errors';
 import logger from './logger';
 
 export type TResultSet<T> = Omit<ResultSet, 'rows'> & {
@@ -59,6 +60,7 @@ try {
 
   await db.executeMultiple(schema);
 } catch (error) {
-  logger.error('Failed to initialize the database', error);
-  throw error;
+  const msg = 'Failed to initialize the database';
+  logger.error(msg, error);
+  throw new ServiceUnavailableError(msg);
 }

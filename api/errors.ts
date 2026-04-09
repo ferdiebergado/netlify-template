@@ -43,6 +43,12 @@ export class MethodNotAllowedError extends HttpError {
   }
 }
 
+export class ServiceUnavailableError extends HttpError {
+  constructor(message = 'Service Unavailable') {
+    super(503, message);
+  }
+}
+
 export function respondWithError(error: unknown) {
   const failure: Failure = {
     status: 'failed',
@@ -65,10 +71,19 @@ export function respondWithError(error: unknown) {
     statusCode = error.statusCode;
   }
 
-  if (statusCode === 500) {
-    logger.error('Internal Server Error', { error });
-  } else {
-    logger.notice('Client error', { error });
+  switch (statusCode) {
+    case 503: {
+      logger.crit('Service Unavailable', { error });
+      break;
+    }
+    case 500: {
+      logger.error('Internal Server Error', { error });
+      break;
+    }
+    default: {
+      logger.notice('Client error', { error });
+      break;
+    }
   }
 
   return Response.json(failure, { status: statusCode });
