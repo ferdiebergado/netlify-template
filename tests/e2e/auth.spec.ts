@@ -6,8 +6,10 @@ test.describe('Authentication', () => {
 
     test('should show the login page', async ({ page }) => {
       await page.goto('http://localhost:8888/signin');
-      const url = page.url();
-      expect(url).toBe('http://localhost:8888/signin');
+      await page.waitForURL('http://localhost:8888/signin');
+
+      const description = page.getByText('Sign in with your Google account');
+      await expect(description).toBeVisible();
     });
 
     test('should redirect to login page when accessing protected route', async ({ page }) => {

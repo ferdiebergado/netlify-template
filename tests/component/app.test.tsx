@@ -55,7 +55,7 @@ describe('App Component', () => {
     const heading = getByText(/welcome back/i);
     await expect.element(heading).toBeInTheDocument();
 
-    const desc = getByText(/signin with your google account/i);
+    const desc = getByText(/sign in with your google account/i);
     await expect.element(desc).toBeInTheDocument();
   });
 });
