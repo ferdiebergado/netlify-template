@@ -1,13 +1,12 @@
-import { createClient } from '@libsql/client';
+import { createClient, type Client } from '@libsql/client';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { MIGRATION_FILE } from '@api/constants';
-import type { Database } from '@api/db';
 
 let schemaCache: string;
 
-export async function createTestDB(): Promise<Database> {
+export async function createTestDB(): Promise<Client> {
   try {
     const db = createClient({
       url: ':memory:',

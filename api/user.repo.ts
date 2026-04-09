@@ -1,9 +1,10 @@
 /* eslint-disable unicorn/no-null */
+import type { Client } from '@libsql/client';
+
 import type { Profile, User } from '@shared/schemas/user.schema';
-import type { Database } from './db';
 import logger from './logger';
 
-export async function upsertUser(db: Database, user: User): Promise<void> {
+export async function upsertUser(db: Client, user: User): Promise<void> {
   logger.info('[DB]: Upserting user...');
 
   const now = new Date().toISOString();
@@ -30,7 +31,7 @@ type UserRow = {
   picture?: string;
 };
 
-export default async function findUser(db: Database, id: string): Promise<Profile | undefined> {
+export default async function findUser(db: Client, id: string): Promise<Profile | undefined> {
   logger.info('[DB]: Finding user...');
 
   const sql = `
@@ -40,12 +41,12 @@ WHERE user_id = ? AND deleted_at IS NULL
 LIMIT 1
 `;
 
-  const { rows } = await db.execute<UserRow>(sql, [id]);
+  const { rows } = await db.execute(sql, [id]);
 
   if (rows.length === 0) {
     logger.warn('user not found', { userId: id });
     return;
   }
 
-  return rows[0];
+  return rows[0] as unknown as UserRow;
 }

@@ -1,11 +1,4 @@
-import {
-  createClient,
-  type Client,
-  type InArgs,
-  type InStatement,
-  type ResultSet,
-  type Row,
-} from '@libsql/client';
+import { createClient, type Client, type Transaction } from '@libsql/client';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
@@ -14,19 +7,9 @@ import { MIGRATION_FILE } from './constants';
 import { ServiceUnavailableError } from './errors';
 import logger from './logger';
 
-export type TResultSet<T> = Omit<ResultSet, 'rows'> & {
-  rows: T[];
-};
-
-export interface Database {
-  execute<T = Row>(stmt: InStatement): Promise<TResultSet<T>>;
-  execute<T = Row>(sql: string, args?: InArgs): Promise<TResultSet<T>>;
-  close: () => void;
-}
-
 export async function runInTransaction<TArgs extends unknown[], TReturn>(
   db: Client,
-  fn: (tx: Database, ...args: TArgs) => Promise<TReturn>,
+  fn: (tx: Transaction, ...args: TArgs) => Promise<TReturn>,
   args: TArgs
 ): Promise<TReturn> {
   logger.info('Beginning transaction...');
@@ -55,6 +38,7 @@ export const db = createClient({
 });
 
 try {
+  logger.info('Initializing database schema...');
   const schemaPath = path.resolve(MIGRATION_FILE);
   const schema = readFileSync(schemaPath, { encoding: 'utf8' });
 

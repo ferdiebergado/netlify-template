@@ -1,9 +1,10 @@
 /* eslint-disable unicorn/no-null */
+import type { Client } from '@libsql/client';
+
 import type { Session } from '@shared/schemas/user.schema';
-import type { Database } from './db';
 import logger from './logger';
 
-export async function createSession(db: Database, session: Session): Promise<void> {
+export async function createSession(db: Client, session: Session): Promise<void> {
   logger.info('[DB]: Creating session...');
 
   const sql = `
@@ -44,7 +45,7 @@ type SessionRow = {
   country?: string;
 };
 
-export async function findSession(db: Database, id: string): Promise<Session | undefined> {
+export async function findSession(db: Client, id: string): Promise<Session | undefined> {
   logger.info('[DB]: Retrieving session...');
 
   const now = new Date().toISOString();
@@ -56,17 +57,17 @@ WHERE session_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 A
 LIMIT 1
 `;
 
-  const { rows } = await db.execute<SessionRow>(sql, [id, now]);
+  const { rows } = await db.execute(sql, [id, now]);
 
   if (rows.length === 0) {
     reportMissingSession(id);
     return;
   }
 
-  return mapSessionRowToSession(rows[0]);
+  return mapSessionRowToSession(rows[0] as unknown as SessionRow);
 }
 
-export async function touchSession(db: Database, id: string): Promise<Session | undefined> {
+export async function touchSession(db: Client, id: string): Promise<Session | undefined> {
   logger.info('Updating session...', { layer: 'db' });
 
   const sql = `
@@ -78,17 +79,17 @@ RETURNING *
 
   const now = new Date().toISOString();
 
-  const { rows } = await db.execute<SessionRow>(sql, [now, now, id, now]);
+  const { rows } = await db.execute(sql, [now, now, id, now]);
 
   if (rows.length === 0) {
     reportMissingSession(id);
     return;
   }
 
-  return mapSessionRowToSession(rows[0]);
+  return mapSessionRowToSession(rows[0] as unknown as SessionRow);
 }
 
-export async function softDeleteSession(db: Database, id: string): Promise<boolean> {
+export async function softDeleteSession(db: Client, id: string): Promise<boolean> {
   const now = new Date().toISOString();
 
   const sql = `
@@ -103,7 +104,7 @@ WHERE session_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 A
 }
 
 export async function revokeSession(
-  db: Database,
+  db: Client,
   sessionId: string,
   userId: string
 ): Promise<boolean> {
@@ -122,7 +123,7 @@ WHERE session_id = ? AND user_id = ? AND datetime(expires_at) > datetime(?) AND 
   return rowsAffected === 1;
 }
 
-export async function findSessionsByUserId(db: Database, userId: string): Promise<Session[]> {
+export async function findSessionsByUserId(db: Client, userId: string): Promise<Session[]> {
   logger.info('[DB]: Retrieving sessions for user...');
 
   const now = new Date().toISOString();
@@ -134,9 +135,9 @@ WHERE user_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND 
 ORDER BY last_active_at DESC
 `;
 
-  const { rows } = await db.execute<SessionRow>(sql, [userId, now]);
+  const { rows } = await db.execute(sql, [userId, now]);
 
-  return rows.map(row => mapSessionRowToSession(row));
+  return rows.map(row => mapSessionRowToSession(row as unknown as SessionRow));
 }
 
 const mapSessionRowToSession = (row: SessionRow): Session => ({

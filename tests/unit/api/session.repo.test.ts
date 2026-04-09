@@ -1,6 +1,6 @@
+import type { Client } from '@libsql/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { Database } from '@api/db';
 import type { Session, User } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
 import {
@@ -43,7 +43,7 @@ describe('session repo', () => {
     country: 'Philippines',
   };
 
-  let db: Database;
+  let db: Client;
 
   beforeEach(async () => {
     db = await createTestDB();

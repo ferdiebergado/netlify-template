@@ -1,9 +1,9 @@
+import type { Client } from '@libsql/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import findUser, { upsertUser } from '@api/user.repo';
 import type { User } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
-import type { Database } from '../../../api/db';
-import findUser, { upsertUser } from '../../../api/user.repo';
 
 vi.mock('@api/logger', async () => {
   const { mockLogger } = await import('@testing/node/logger');
@@ -20,7 +20,7 @@ describe('user.repo', () => {
     picture: 'http://example.com/avatar.jpg',
   };
 
-  let db: Database;
+  let db: Client;
 
   beforeEach(async () => {
     db = await createTestDB();
@@ -38,8 +38,8 @@ describe('user.repo', () => {
     await upsertUser(db, mockUser);
 
     const sql = `SELECT last_login_at FROM users WHERE user_id = ? LIMIT 1`;
-    const { rows } = await db.execute<{ last_login_at: string }>(sql, [mockUser.googleId]);
-    const lastLoginAt = new Date(rows[0].last_login_at);
+    const { rows } = await db.execute(sql, [mockUser.googleId]);
+    const lastLoginAt = new Date((rows[0] as unknown as { last_login_at: string }).last_login_at);
 
     expect(lastLoginAt.getTime()).toBeCloseTo(Date.now(), -2);
   });
