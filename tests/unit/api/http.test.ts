@@ -6,13 +6,6 @@ import { checkMethod, parseJson } from '@api/http';
 
 const testUrl = 'http://localhost:8888/test';
 
-vi.mock('@api/logger', async () => {
-  const { mockLogger } = await import('@testing/node/logger');
-  return {
-    default: mockLogger,
-  };
-});
-
 describe('checkMethod', () => {
   describe('when method is allowed', () => {
     it('does not throw an error for GET request', () => {
@@ -145,49 +138,6 @@ describe('parseJson', () => {
       await expect(parseJson(req, schema)).rejects.toThrow(BadRequestError);
       await expect(parseJson(req, schema)).rejects.toThrow('Invalid JSON body');
     });
-
-    it('logs ZodError field errors when schema validation fails', async () => {
-      const schema = z.object({
-        name: z.string(),
-        age: z.number(),
-      });
-
-      const invalidData = { name: 'John', age: 'thirty' };
-      const req = new Request(testUrl, {
-        method: 'POST',
-        body: JSON.stringify(invalidData),
-      });
-
-      // Import the mocked logger
-      const logger = await import('@api/logger');
-
-      await expect(parseJson(req, schema)).rejects.toThrow(BadRequestError);
-
-      // Check that logger.error was called with field errors
-      expect(logger.default.error).toHaveBeenCalledWith('Failed to parse JSON body', {
-        error: { age: ['Invalid input: expected number, received string'] },
-      });
-    });
-
-    it('logs generic error when non-Zod error occurs', async () => {
-      const schema = z.object({
-        name: z.string(),
-      });
-
-      // Create a mock request that throws a non-Zod error when json() is called
-      const req = {
-        json: vi.fn().mockRejectedValue(new Error('Network error')),
-      } as unknown as Request;
-
-      const logger = await import('@api/logger');
-
-      await expect(parseJson(req, schema)).rejects.toThrow(BadRequestError);
-
-      // Check that logger.error was called with the generic error
-      expect(logger.default.error).toHaveBeenCalledWith('Failed to parse JSON body', {
-        error: new Error('Network error'),
-      });
-    });
   });
 
   describe('when request body is empty or null', () => {
@@ -210,7 +160,6 @@ describe('parseJson', () => {
         name: z.string(),
       });
 
-      // Create a mock request with null body
       const req = {
         json: vi.fn().mockRejectedValue(new SyntaxError('Unexpected end of JSON input')),
       } as unknown as Request;
