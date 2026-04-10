@@ -6,7 +6,7 @@ import apiConfig from '@api/config';
 import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
 import logger from '@api/logger';
-import { buildSessionCookie, initializeSession } from '@api/session';
+import { bakeSessionCookie, initializeSession } from '@api/session';
 import type { User } from '@shared/schemas/user.schema';
 
 export const config: Config = {
@@ -66,7 +66,7 @@ export default async (req: Request, ctx: Context) => {
     };
 
     const { sessionId, expiresAt } = await initializeSession(user, sessionData);
-    const sessionCookie = buildSessionCookie(sessionId, expiresAt);
+    const sessionCookie = bakeSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
 
     return Response.redirect(

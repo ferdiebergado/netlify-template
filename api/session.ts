@@ -54,31 +54,38 @@ type Cookie = {
   domain?: string;
   path?: string;
   maxAge?: number;
-  expires?: number;
+  expires?: Date;
   httpOnly?: boolean;
   secure?: boolean;
   sameSite?: 'Strict' | 'Lax' | 'None';
   partitioned?: boolean;
 };
 
-export const initCookie = (): Cookie => ({
-  name: SESSION.COOKIE_NAME,
-  value: '',
-  maxAge: 0,
+const BASE_COOKIE: Readonly<Omit<Cookie, 'name' | 'value'>> = {
   path: '/',
   httpOnly: true,
   secure: true,
   sameSite: 'Strict',
-});
+};
 
-export function buildSessionCookie(sessionId: string, expiresAt: Date): Cookie {
+export function bakeSessionCookie(sessionId: string, expiresAt: Date): Cookie {
   const deltaMs = expiresAt.getTime() - Date.now();
-  const maxAge = Math.floor(deltaMs / 1000);
+  const maxAge = Math.max(0, Math.floor(deltaMs / 1000));
 
   return {
-    ...initCookie(),
+    ...BASE_COOKIE,
+    name: SESSION.COOKIE_NAME,
     value: sessionId,
     maxAge,
+  };
+}
+
+export function emptySessionCookie(): Cookie {
+  return {
+    ...BASE_COOKIE,
+    name: SESSION.COOKIE_NAME,
+    value: '',
+    maxAge: 0,
   };
 }
 

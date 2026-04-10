@@ -1,7 +1,7 @@
 import { db } from '@api/db';
-import { respondWithError } from '@api/errors';
+import { NotFoundError, respondWithError } from '@api/errors';
 import { checkMethod } from '@api/http';
-import { getSession, initCookie } from '@api/session';
+import { emptySessionCookie, getSession } from '@api/session';
 import { softDeleteSession } from '@api/session.repo';
 import type { Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
@@ -10,7 +10,9 @@ export default async (req: Request, ctx: Context) => {
   try {
     checkMethod(req, ['POST']);
     const { sessionId } = await getSession(req);
-    await softDeleteSession(db, sessionId);
+    const isDeleted = await softDeleteSession(db, sessionId);
+
+    if (!isDeleted) throw new NotFoundError('Session not found or already deleted');
 
     const payload: Success = {
       status: 'success',
@@ -19,7 +21,7 @@ export default async (req: Request, ctx: Context) => {
       },
     };
 
-    const sessionCookie = initCookie();
+    const sessionCookie = emptySessionCookie();
     ctx.cookies.set(sessionCookie);
     return Response.json(payload);
   } catch (error) {
