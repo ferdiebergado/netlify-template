@@ -13,7 +13,7 @@ export const config: Config = {
 export default (req: Request, ctx: Context) => {
   logger.info('Validating content-type...');
 
-  const contentType = req.headers.get('Content-Type');
+  const contentType = req.headers.get('content-type');
 
   if (!contentType || !/^application\/json(;.*)?$/i.test(contentType)) {
     const payload: Failure = {

@@ -19,7 +19,7 @@ export default (req: Request, ctx: Context) => {
     geo: ctx.geo,
   };
 
-  const fetchSite = req.headers.get('Sec-Fetch-Site');
+  const fetchSite = req.headers.get('sec-fetch-site');
 
   if (!fetchSite) {
     const payload: Failure = {

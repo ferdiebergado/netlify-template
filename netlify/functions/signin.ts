@@ -59,7 +59,7 @@ export default async (req: Request, ctx: Context) => {
         : await verifyToken(oauthClient, credential);
 
     const sessionData = {
-      userAgent: req.headers.get('User-Agent') ?? 'unknown',
+      userAgent: req.headers.get('user-agent') ?? 'unknown',
       ip: ctx.ip,
       city: ctx.geo.city,
       country: ctx.geo.country?.name,
