@@ -5,9 +5,10 @@ import { SESSION } from '@api/constants';
 import { API_BASE_URL } from '@shared/constants';
 
 describe('Authentication', () => {
-  it('should sign in successfully with valid credentials', async () => {
-    const csrfToken = 'test-csrf-token';
-    const response = await fetch(`${config.host}${API_BASE_URL}/signin`, {
+  const csrfToken = 'test-csrf-token';
+
+  const signin = async () =>
+    await fetch(`${config.host}${API_BASE_URL}/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -20,9 +21,15 @@ describe('Authentication', () => {
       redirect: 'manual',
     });
 
-    expect(response.status).toBe(302);
-    expect(response.headers.get('Location')).toContain('/?success=Signed%20in%20successfully.');
-    const sessionCookie = response.headers.get('Set-Cookie');
+  it('should sign in successfully with valid credentials', async () => {
+    const signinResponse = await signin();
+
+    expect(signinResponse.status).toBe(302);
+    expect(signinResponse.headers.get('Location')).toContain(
+      '/?success=Signed%20in%20successfully.'
+    );
+
+    const sessionCookie = signinResponse.headers.get('Set-Cookie');
     expect(sessionCookie).toBeTruthy();
     expect(sessionCookie).toContain(`${SESSION.COOKIE_NAME}=`);
     expect(sessionCookie).toContain('Max-Age=7775999');
@@ -33,20 +40,7 @@ describe('Authentication', () => {
   });
 
   it('should signout successfully and clear the session cookie', async () => {
-    // First, sign in to get a session cookie
-    const csrfToken = 'test-csrf-token';
-    const signInResponse = await fetch(`${config.host}${API_BASE_URL}/signin`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Cookie: `g_csrf_token=${csrfToken}`,
-      },
-      body: new URLSearchParams({
-        credential: 'test-token',
-        g_csrf_token: csrfToken,
-      }),
-      redirect: 'manual',
-    });
+    const signInResponse = await signin();
 
     // Extract the session cookie from the sign in response
     const sessionCookieHeader = signInResponse.headers.get('Set-Cookie');
@@ -88,4 +82,17 @@ describe('Authentication', () => {
     expect(setCookieHeader).toContain('SameSite=Strict');
     expect(setCookieHeader).toContain('Path=/');
   });
+
+  it.todo('should return 401 Unauthorized when accessing protected endpoint without a session');
+  it.todo(
+    'should return 401 Unauthorized when accessing protected endpoint with an invalid session'
+  );
+  it.todo(
+    'should return 401 Unauthorized when accessing protected endpoint with an expired session'
+  );
+  it.todo('should return 401 Unauthorized when signing out without a session');
+  it.todo('should return 401 Unauthorized when signing out with an invalid session');
+  it.todo('should return 401 Unauthorized when signing out with an expired session');
+  it.todo('should return 400 Bad Request when signing in with missing credential');
+  it.todo('should return 400 Bad Request when signing in with invalid credential');
 });
