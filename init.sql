@@ -2,12 +2,13 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
     user_id TEXT UNIQUE NOT NULL,
     name TEXT,
-    email TEXT,
+    email TEXT UNIQUE,
     picture TEXT,
+    role TEXT DEFAULT 'user', -- ['admin', 'user', 'guest']
+    is_active INTEGER DEFAULT 1 CHECK (is_active IN (0, 1)),
     last_login_at TEXT DEFAULT (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW')),
     created_at TEXT DEFAULT (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW')),
-    updated_at TEXT DEFAULT (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW')),
-    deleted_at TEXT
+    updated_at TEXT DEFAULT (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW'))
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
@@ -39,3 +40,13 @@ CREATE INDEX IF NOT EXISTS idx_sessions_session_id ON sessions (session_id);
 CREATE INDEX IF NOT EXISTS idx_users_user_id ON users (user_id);
 
 CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions (expires_at);
+
+CREATE TRIGGER IF NOT EXISTS update_user_timestamp AFTER
+UPDATE ON users BEGIN
+UPDATE users
+SET
+    updated_at = (STRFTIME ('%Y-%m-%dT%H:%M:%fZ', 'NOW'))
+WHERE
+    id = old.id;
+
+END;

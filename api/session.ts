@@ -1,7 +1,7 @@
 import { UAParser } from 'ua-parser-js';
 
 import { genRandStr } from '@shared/lib/crypto';
-import type { Session, User } from '@shared/schemas/user.schema';
+import type { Profile, Session } from '@shared/schemas/user.schema';
 import { SESSION } from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';
@@ -15,10 +15,10 @@ type SessionData = {
   country?: string;
 };
 
-export async function initializeSession(user: User, data: SessionData): Promise<Session> {
+export async function initializeSession(user: Profile, data: SessionData): Promise<Session> {
   await upsertUser(db, user);
 
-  const session = newSession(user.googleId, data);
+  const session = newSession(user.userId, data);
   await createSession(db, session);
 
   return session;

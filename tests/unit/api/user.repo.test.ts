@@ -2,7 +2,7 @@ import type { Client } from '@libsql/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import findUser, { upsertUser } from '@api/user.repo';
-import type { User } from '@shared/schemas/user.schema';
+import type { Profile } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
 
 vi.mock('@api/logger', async () => {
@@ -13,8 +13,8 @@ vi.mock('@api/logger', async () => {
 });
 
 describe('user.repo', () => {
-  const mockUser: User = {
-    googleId: 'user123',
+  const mockUser: Profile = {
+    userId: 'user123',
     name: 'John Doe',
     email: 'john.doe@example.com',
     picture: 'http://example.com/avatar.jpg',
@@ -38,16 +38,17 @@ describe('user.repo', () => {
     await upsertUser(db, mockUser);
 
     const sql = `SELECT last_login_at FROM users WHERE user_id = ? LIMIT 1`;
-    const { rows } = await db.execute(sql, [mockUser.googleId]);
+    const { rows } = await db.execute(sql, [mockUser.userId]);
     const lastLoginAt = new Date((rows[0] as unknown as { last_login_at: string }).last_login_at);
 
     expect(lastLoginAt.getTime()).toBeCloseTo(Date.now(), -2);
   });
 
   it('should find a user by ID', async () => {
-    const user = await findUser(db, mockUser.googleId);
+    const user = await findUser(db, mockUser.userId);
 
     expect(user).toEqual({
+      userId: mockUser.userId,
       name: mockUser.name,
       email: mockUser.email,
       picture: mockUser.picture,

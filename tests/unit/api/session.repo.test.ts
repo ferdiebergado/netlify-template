@@ -1,15 +1,10 @@
 import type { Client } from '@libsql/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { Session, User } from '@shared/schemas/user.schema';
+import { createSession, findSession, softDeleteSession, touchSession } from '@api/session.repo';
+import { upsertUser } from '@api/user.repo';
+import type { Profile, Session } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
-import {
-  createSession,
-  findSession,
-  softDeleteSession,
-  touchSession,
-} from '../../../api/session.repo';
-import { upsertUser } from '../../../api/user.repo';
 
 vi.mock('@api/logger', async () => {
   const { mockLogger } = await import('@testing/node/logger');
@@ -19,8 +14,8 @@ vi.mock('@api/logger', async () => {
 });
 
 describe('session repo', () => {
-  const mockUser: User = {
-    googleId: 'abc',
+  const mockUser: Profile = {
+    userId: 'abc',
     name: 'antonio',
     email: 'tatayoyo@gmail.com',
   };
@@ -29,7 +24,7 @@ describe('session repo', () => {
 
   const mockSession: Session = {
     sessionId: '123',
-    userId: mockUser.googleId,
+    userId: mockUser.userId,
     userAgent: 'vitest',
     ip: '127.0.0.1',
     expiresAt: new Date(now.getTime() + 1000 * 60 * 60), // expires in 1 hour

@@ -7,7 +7,7 @@ import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
 import logger from '@api/logger';
 import { bakeSessionCookie, initializeSession } from '@api/session';
-import type { User } from '@shared/schemas/user.schema';
+import type { Profile } from '@shared/schemas/user.schema';
 
 export const config: Config = {
   rateLimit: {
@@ -48,10 +48,10 @@ export default async (req: Request, ctx: Context) => {
     if (!csrfTokenInCookie || g_csrf_token !== csrfTokenInCookie)
       throw new BadRequestError('invalid csrf token');
 
-    const user: User =
+    const user: Profile =
       apiConfig.env === 'development' && credential === 'test-token'
         ? {
-            googleId: 'test-user-id',
+            userId: 'test-user-id',
             name: 'Test User',
             email: 'test@example.com',
             picture: 'https://example.com/test-user.jpg',

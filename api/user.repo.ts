@@ -1,10 +1,10 @@
 /* eslint-disable unicorn/no-null */
 import type { Client } from '@libsql/client';
 
-import type { Profile, User } from '@shared/schemas/user.schema';
+import { ProfileSchema, type Profile } from '@shared/schemas/user.schema';
 import logger from './logger';
 
-export async function upsertUser(db: Client, user: User): Promise<void> {
+export async function upsertUser(db: Client, user: Profile): Promise<void> {
   logger.info('[DB]: Upserting user...');
 
   const now = new Date().toISOString();
@@ -17,7 +17,7 @@ DO UPDATE SET last_login_at = ?
 `;
 
   await db.execute(sql, [
-    user.googleId,
+    user.userId,
     user.name ?? null,
     user.email ?? null,
     user.picture ?? null,
@@ -37,7 +37,7 @@ export default async function findUser(db: Client, id: string): Promise<Profile 
   const sql = `
 SELECT name, email, picture
 FROM users
-WHERE user_id = ? AND deleted_at IS NULL
+WHERE user_id = ? AND is_active = 1
 LIMIT 1
 `;
 
@@ -48,5 +48,12 @@ LIMIT 1
     return;
   }
 
-  return rows[0] as unknown as UserRow;
+  const user = rows[0] as unknown as UserRow;
+
+  return ProfileSchema.parse({
+    userId: id,
+    name: user.name,
+    email: user.email,
+    picture: user.picture,
+  });
 }
