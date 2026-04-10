@@ -7,15 +7,14 @@ import { getSession } from '@api/session';
 import { revokeSession } from '@api/session.repo';
 import type { Success } from '@shared/types/api';
 
-const revokeSessionSchema = z.object({
-  sessionId: z.string().min(1),
-});
-
 export default async (req: Request) => {
   try {
     checkMethod(req, ['POST']);
 
     const { userId } = await getSession(req);
+    const revokeSessionSchema = z.object({
+      sessionId: z.string().min(1),
+    });
     const { sessionId } = await parseJson(req, revokeSessionSchema);
     const success = await revokeSession(db, sessionId, userId);
     if (!success) throw new BadRequestError('Failed to revoke session');
