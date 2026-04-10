@@ -13,11 +13,6 @@ export const config: Config = {
 export default (req: Request, ctx: Context) => {
   logger.info('Checking fetch metadata...');
 
-  const payload: Failure = {
-    status: 'failed',
-    error: '',
-  };
-
   const meta = {
     requestId: ctx.requestId,
     ip: ctx.ip,
@@ -27,14 +22,20 @@ export default (req: Request, ctx: Context) => {
   const fetchSite = req.headers.get('Sec-Fetch-Site');
 
   if (!fetchSite) {
-    payload.error = 'missing fetch metadata';
+    const payload: Failure = {
+      status: 'failed',
+      error: 'missing fetch metadata',
+    };
     logger.notice('Missing fetch metadata', { meta });
+    return Response.json(payload, { status: 401 });
   }
 
   if (fetchSite !== 'same-origin') {
-    payload.error = 'cross-origin requests disallowed';
+    const payload: Failure = {
+      status: 'failed',
+      error: 'cross-origin requests disallowed',
+    };
     logger.warning('Cross-origin request blocked', { meta });
+    return Response.json(payload, { status: 401 });
   }
-
-  return Response.json(payload, { status: 401 });
 };
