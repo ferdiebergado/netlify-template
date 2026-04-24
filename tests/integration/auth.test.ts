@@ -1,14 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import config from '@api/config';
 import { SESSION } from '@api/constants';
 import { API_BASE_URL } from '@shared/constants';
 
 describe('Authentication', () => {
+  const apiUrl = `${config.host}${API_BASE_URL}`;
   const csrfToken = 'test-csrf-token';
 
   const signin = async () =>
-    await fetch(`${config.host}${API_BASE_URL}/signin`, {
+    await fetch(`${apiUrl}/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -52,7 +53,7 @@ describe('Authentication', () => {
     const sessionCookie = sessionCookieMatch ? sessionCookieMatch[1] : '';
 
     // Now test the signout functionality
-    const signOutResponse = await fetch(`${config.host}${API_BASE_URL}/signout`, {
+    const signOutResponse = await fetch(`${apiUrl}/signout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,13 +84,35 @@ describe('Authentication', () => {
     expect(setCookieHeader).toContain('Path=/');
   });
 
-  it.todo('should return 401 Unauthorized when accessing protected endpoint without a session');
-  it.todo(
-    'should return 401 Unauthorized when accessing protected endpoint with an invalid session'
-  );
-  it.todo(
-    'should return 401 Unauthorized when accessing protected endpoint with an expired session'
-  );
+  it('should return 401 Unauthorized when accessing protected endpoint without a session', async () => {
+    const res = await fetch(`${apiUrl}/me`);
+
+    expect(res.status).toEqual(401);
+  });
+
+  it('should return 401 Unauthorized when accessing protected endpoint with an invalid session', async () => {
+    const res = await fetch(`${apiUrl}/me`, {
+      headers: {
+        Cookie: `${SESSION.COOKIE_NAME}=abc123; HttpOnly; Secure; SameSite=Strict; Max-Age=999999; Path=/`,
+      },
+    });
+
+    expect(res.status).toEqual(401);
+  });
+
+  it('should return 401 Unauthorized when accessing protected endpoint with an expired session', async () => {
+    vi.useFakeTimers();
+
+    await signin();
+
+    vi.advanceTimersByTime(SESSION.DURATION_MINUTES * 1000 + 60 * 60 * 1000);
+
+    const res = await fetch(`${apiUrl}/me`);
+    expect(res.status).toEqual(401);
+
+    vi.useRealTimers();
+  });
+
   it.todo('should return 401 Unauthorized when signing out without a session');
   it.todo('should return 401 Unauthorized when signing out with an invalid session');
   it.todo('should return 401 Unauthorized when signing out with an expired session');
