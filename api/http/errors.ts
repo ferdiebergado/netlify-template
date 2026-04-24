@@ -73,15 +73,15 @@ export function respondWithError(error: unknown) {
 
   switch (statusCode) {
     case 503: {
-      logger.crit('Service Unavailable', { error });
+      logger.crit({ error }, 'Service Unavailable');
       break;
     }
     case 500: {
-      logger.error('Internal Server Error', { error });
+      logger.error(error, 'Internal Server Error');
       break;
     }
     default: {
-      logger.notice('Client error', { error });
+      logger.notice({ error }, 'Client error');
       break;
     }
   }

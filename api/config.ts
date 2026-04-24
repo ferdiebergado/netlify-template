@@ -46,7 +46,7 @@ const envSchema = z.object({
 const { success, error, data } = envSchema.safeParse(process.env);
 if (!success) {
   const msg = 'Invalid environment variable/s';
-  logger.error(msg, { errors: z.flattenError(error).fieldErrors });
+  logger.error({ error, errors: z.flattenError(error).fieldErrors }, msg);
   throw new Error(msg);
 }
 

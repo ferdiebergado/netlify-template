@@ -12,5 +12,5 @@ export default (req: Request, ctx: Context) => {
     url: req.url,
   };
 
-  logger.info('Received request', { request });
+  logger.info({ request }, 'Received request');
 };

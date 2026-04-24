@@ -56,7 +56,7 @@ LIMIT 1
   const { rows } = await db.execute(sql, [id]);
 
   if (rows.length === 0) {
-    logger.warn('user not found', { userId: id });
+    logger.warn({ userId: id }, 'user not found');
     return;
   }
 

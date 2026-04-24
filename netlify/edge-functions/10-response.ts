@@ -151,7 +151,7 @@ function buildPermissionsPolicy(directives: Record<string, string>): string {
 }
 
 export default async (req: Request, ctx: Context) => {
-  logger.info(`Processing security headers...`, { url: req.url });
+  logger.info({ url: req.url }, 'Processing security headers...');
 
   const res = await ctx.next();
   const contentType = res.headers.get('content-type');

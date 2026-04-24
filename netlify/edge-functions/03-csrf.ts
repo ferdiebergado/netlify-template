@@ -26,7 +26,7 @@ export default (req: Request, ctx: Context) => {
       status: 'failed',
       error: 'missing fetch metadata',
     };
-    logger.notice('Missing fetch metadata', { meta });
+    logger.notice({ meta }, 'Missing fetch metadata');
     return Response.json(payload, { status: 401 });
   }
 
@@ -35,7 +35,7 @@ export default (req: Request, ctx: Context) => {
       status: 'failed',
       error: 'cross-origin requests disallowed',
     };
-    logger.warning('Cross-origin request blocked', { meta });
+    logger.warn({ meta }, 'Cross-origin request blocked');
     return Response.json(payload, { status: 401 });
   }
 };

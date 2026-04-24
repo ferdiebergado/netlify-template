@@ -26,7 +26,7 @@ export default (req: Request, ctx: Context) => {
       geo: ctx.geo,
     };
 
-    logger.notice('No session cookie found', { meta });
+    logger.notice({ meta }, 'No session cookie found');
 
     return Response.json(payload, { status: 401 });
   }

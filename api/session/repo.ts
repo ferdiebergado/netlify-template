@@ -53,7 +53,7 @@ LIMIT 1
 }
 
 export async function touchSession(db: Client, id: string): Promise<Session | undefined> {
-  logger.info('Updating session...', { layer: 'db' });
+  logger.info('Updating session...');
 
   const sql = `
       UPDATE sessions
@@ -119,5 +119,6 @@ const mapSessionRowToSession = (row: SessionRow): Session =>
     createdAt: row.created_at,
   });
 
-const reportMissingSession = (sessionId: string) =>
-  logger.warning('Session not found', { sessionId });
+const reportMissingSession = (sessionId: string) => {
+  logger.warn({ sessionId }, 'Session not found');
+};

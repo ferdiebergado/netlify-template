@@ -74,7 +74,7 @@ export default async (req: Request, ctx: Context) => {
       geo: ctx.geo,
     };
 
-    logger.notice('Signin failed', { meta, error });
+    logger.notice({ meta, error }, 'Signin failed');
 
     let message = 'Something went wrong during sign-in.';
 

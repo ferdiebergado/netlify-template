@@ -28,7 +28,7 @@ export default (req: Request, ctx: Context) => {
       geo: ctx.geo,
     };
 
-    logger.notice(payload.error, { meta });
+    logger.notice({ meta }, payload.error);
     return Response.json(payload, { status: 415 });
   }
 };
