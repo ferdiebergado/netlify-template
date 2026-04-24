@@ -108,23 +108,6 @@ WHERE session_id = ? AND user_id = ? AND datetime(expires_at) > datetime(?) AND 
   return rowsAffected === 1;
 }
 
-export async function findSessionsByUserId(db: Client, userId: number): Promise<Session[]> {
-  logger.info('[DB]: Retrieving sessions for user...');
-
-  const now = new Date().toISOString();
-
-  const sql = `
-SELECT *
-FROM sessions
-WHERE user_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL
-ORDER BY last_active_at DESC
-`;
-
-  const { rows } = await db.execute(sql, [userId, now]);
-
-  return rows.map(row => mapSessionRowToSession(row as unknown as SessionRow));
-}
-
 const mapSessionRowToSession = (row: SessionRow): Session => ({
   id: row.id,
   sessionId: row.session_id,
