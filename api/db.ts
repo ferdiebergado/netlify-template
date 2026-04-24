@@ -7,6 +7,39 @@ import { MIGRATION_FILE } from './constants';
 import { ServiceUnavailableError } from './http/errors';
 import logger from './logger';
 
+let db: Client | undefined;
+
+export async function getDb(): Promise<Client> {
+  if (!db) {
+    db = createClient({
+      url: config.databaseUrl,
+      authToken: config.tursoAuthToken,
+    });
+  }
+
+  try {
+    const sql = `SELECT name FROM sqlite_master WHERE type='table' AND name='users'`;
+    const { rows } = await db.execute(sql);
+
+    if (rows.length === 0) {
+      logger.info('Initializing database schema...');
+      const schemaPath = path.resolve(MIGRATION_FILE);
+      const schema = readFileSync(schemaPath, { encoding: 'utf8' });
+
+      await db.executeMultiple(schema);
+      logger.info('Database schema initialized successfully');
+    } else {
+      logger.info('Database schema already initialized');
+    }
+  } catch (error) {
+    const msg = 'Failed to check or initialize the database';
+    logger.error(error, msg);
+    throw new ServiceUnavailableError(msg);
+  }
+
+  return db;
+}
+
 export async function runInTransaction<TArgs extends unknown[], TReturn>(
   db: Client,
   fn: (tx: Transaction, ...args: TArgs) => Promise<TReturn>,
@@ -30,40 +63,4 @@ export async function runInTransaction<TArgs extends unknown[], TReturn>(
     logger.info('Closing transaction...');
     tx.close();
   }
-}
-
-let db: Client | null = null;
-
-export async function getDb(): Promise<Client> {
-  if (!db) {
-    db = createClient({
-      url: config.databaseUrl,
-      authToken: config.tursoAuthToken,
-    });
-  }
-
-  // Check if the database is already initialized by checking if the users table exists
-  try {
-    const result = await db.execute(
-      "SELECT name FROM sqlite_master WHERE type='table' AND name='users'"
-    );
-
-    // If the users table doesn't exist, initialize the database schema
-    if (result.rows.length === 0) {
-      logger.info('Initializing database schema...');
-      const schemaPath = path.resolve(MIGRATION_FILE);
-      const schema = readFileSync(schemaPath, { encoding: 'utf8' });
-
-      await db.executeMultiple(schema);
-      logger.info('Database schema initialized successfully');
-    } else {
-      logger.info('Database schema already initialized');
-    }
-  } catch (error) {
-    const msg = 'Failed to check or initialize the database';
-    logger.error(error, msg);
-    throw new ServiceUnavailableError(msg);
-  }
-
-  return db;
 }
