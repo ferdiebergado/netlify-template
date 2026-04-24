@@ -3,7 +3,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { GOOGLE_ACCOUNTS_ORIGIN } from '@shared/constants';
 import type { CreateUser } from '@shared/schemas/user.schema';
 import config from './config';
-import { UnauthorizedError } from './errors';
+import { UnauthorizedError } from './http/errors';
 
 export const oauthClient = new OAuth2Client(config.googleClientId);
 

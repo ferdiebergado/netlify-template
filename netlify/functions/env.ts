@@ -1,7 +1,7 @@
 import { release } from 'node:os';
 
-import { respondWithError } from '@api/errors';
 import { checkMethod } from '@api/http';
+import { respondWithError } from '@api/http/errors';
 import { getSession } from '@api/session';
 import { formatBytes, formatDuration } from '@api/utils';
 import type { AppEnv, Success } from '@shared/types/api';

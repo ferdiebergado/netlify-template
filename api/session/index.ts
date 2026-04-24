@@ -1,11 +1,11 @@
 import { genRandStr } from '@shared/lib/crypto';
 import type { CreateSession, Session } from '@shared/schemas/session.schema';
 import type { CreateUser } from '@shared/schemas/user.schema';
-import { SESSION } from './constants';
-import { db } from './db';
-import { UnauthorizedError } from './errors';
-import { createSession, touchSession } from './session.repo';
-import { upsertUser } from './user.repo';
+import { SESSION } from '../constants';
+import { db } from '../db';
+import { UnauthorizedError } from '../http/errors';
+import { upsertUser } from '../user/repo';
+import { createSession, touchSession } from './repo';
 
 export async function initializeSession(user: CreateUser): Promise<Session> {
   const id = await upsertUser(db, user);
@@ -22,48 +22,6 @@ export function newSession(userId: number): CreateSession {
     sessionId,
     userId,
     expiresAt,
-  };
-}
-
-type Cookie = {
-  name: string;
-  value: string;
-  url?: string;
-  domain?: string;
-  path?: string;
-  maxAge?: number;
-  expires?: Date;
-  httpOnly?: boolean;
-  secure?: boolean;
-  sameSite?: 'Strict' | 'Lax' | 'None';
-  partitioned?: boolean;
-};
-
-const BASE_COOKIE: Readonly<Omit<Cookie, 'name' | 'value'>> = {
-  path: '/',
-  httpOnly: true,
-  secure: true,
-  sameSite: 'Strict',
-};
-
-export function bakeSessionCookie(sessionId: string, expiresAt: Date): Cookie {
-  const deltaMs = expiresAt.getTime() - Date.now();
-  const maxAge = Math.max(0, Math.floor(deltaMs / 1000));
-
-  return {
-    ...BASE_COOKIE,
-    name: SESSION.COOKIE_NAME,
-    value: sessionId,
-    maxAge,
-  };
-}
-
-export function emptySessionCookie(): Cookie {
-  return {
-    ...BASE_COOKIE,
-    name: SESSION.COOKIE_NAME,
-    value: '',
-    maxAge: 0,
   };
 }
 

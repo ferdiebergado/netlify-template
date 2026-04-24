@@ -1,5 +1,5 @@
 import { verifyToken } from '@api/auth';
-import { UnauthorizedError } from '@api/errors';
+import { UnauthorizedError } from '@api/http/errors';
 import { GOOGLE_ACCOUNTS_ORIGIN } from '@shared/constants';
 import type { CreateUser } from '@shared/schemas/user.schema';
 import type { OAuth2Client, TokenPayload } from 'google-auth-library';

@@ -3,10 +3,11 @@ import * as z from 'zod';
 
 import { oauthClient, verifyToken } from '@api/auth';
 import apiConfig from '@api/config';
-import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
+import { BadRequestError, HttpError } from '@api/http/errors';
 import logger from '@api/logger';
-import { bakeSessionCookie, initializeSession } from '@api/session';
+import { initializeSession } from '@api/session';
+import { bakeSessionCookie } from '@api/session/cookie';
 import type { CreateUser } from '@shared/schemas/user.schema';
 
 export const config: Config = {

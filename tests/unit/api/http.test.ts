@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import * as z from 'zod';
 
-import { BadRequestError, MethodNotAllowedError } from '@api/errors';
 import { checkMethod, parseJson } from '@api/http';
+import { BadRequestError, MethodNotAllowedError } from '@api/http/errors';
 
 const testUrl = 'http://localhost:8888/test';
 

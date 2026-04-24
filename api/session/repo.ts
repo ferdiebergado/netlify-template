@@ -1,7 +1,7 @@
 import type { Client } from '@libsql/client';
 
-import type { CreateSession, Session } from '@shared/schemas/session.schema';
-import logger from './logger';
+import { SessionSchema, type CreateSession, type Session } from '@shared/schemas/session.schema';
+import logger from '../logger';
 
 type SessionRow = {
   id: number;
@@ -108,15 +108,16 @@ WHERE session_id = ? AND user_id = ? AND datetime(expires_at) > datetime(?) AND 
   return rowsAffected === 1;
 }
 
-const mapSessionRowToSession = (row: SessionRow): Session => ({
-  id: row.id,
-  sessionId: row.session_id,
-  userId: row.user_id,
-  expiresAt: new Date(row.expires_at),
-  lastActiveAt: row.last_active_at,
-  updatedAt: row.updated_at,
-  createdAt: row.created_at,
-});
+const mapSessionRowToSession = (row: SessionRow): Session =>
+  SessionSchema.parse({
+    id: row.id,
+    sessionId: row.session_id,
+    userId: row.user_id,
+    expiresAt: new Date(row.expires_at),
+    lastActiveAt: row.last_active_at,
+    updatedAt: row.updated_at,
+    createdAt: row.created_at,
+  });
 
 const reportMissingSession = (sessionId: string) =>
   logger.warning('Session not found', { sessionId });

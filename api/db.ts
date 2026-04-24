@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import config from './config';
 import { MIGRATION_FILE } from './constants';
-import { ServiceUnavailableError } from './errors';
+import { ServiceUnavailableError } from './http/errors';
 import logger from './logger';
 
 export async function runInTransaction<TArgs extends unknown[], TReturn>(

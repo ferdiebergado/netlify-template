@@ -3,7 +3,7 @@ import type { Client } from '@libsql/client';
 
 import { UserSchema, type CreateUser, type User } from '@shared/schemas/user.schema';
 import type { Role } from '@shared/types/user';
-import logger from './logger';
+import logger from '../logger';
 
 export async function upsertUser(db: Client, user: CreateUser): Promise<User['id']> {
   logger.info('[DB]: Upserting user...');

@@ -1,8 +1,8 @@
 import { db } from '@api/db';
-import { respondWithError, UnauthorizedError } from '@api/errors';
 import { checkMethod } from '@api/http';
+import { respondWithError, UnauthorizedError } from '@api/http/errors';
 import { getSession } from '@api/session';
-import findUser from '@api/user.repo';
+import findUser from '@api/user/repo';
 import type { Success } from '@shared/types/api';
 
 export default async (req: Request) => {

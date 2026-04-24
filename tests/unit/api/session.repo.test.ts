@@ -1,8 +1,8 @@
 import type { Client } from '@libsql/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createSession, findSession, softDeleteSession, touchSession } from '@api/session.repo';
-import { upsertUser } from '@api/user.repo';
+import { createSession, findSession, softDeleteSession, touchSession } from '@api/session/repo';
+import { upsertUser } from '@api/user/repo';
 import type { CreateSession } from '@shared/schemas/session.schema';
 import type { CreateUser } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';

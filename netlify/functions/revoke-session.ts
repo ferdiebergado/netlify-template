@@ -1,10 +1,10 @@
 import * as z from 'zod';
 
 import { db } from '@api/db';
-import { BadRequestError, respondWithError } from '@api/errors';
 import { checkMethod, parseJson } from '@api/http';
+import { BadRequestError, respondWithError } from '@api/http/errors';
 import { getSession } from '@api/session';
-import { revokeSession } from '@api/session.repo';
+import { revokeSession } from '@api/session/repo';
 import type { Success } from '@shared/types/api';
 
 export default async (req: Request) => {

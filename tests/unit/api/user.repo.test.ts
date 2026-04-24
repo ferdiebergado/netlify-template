@@ -1,7 +1,7 @@
 import type { Client } from '@libsql/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import findUser, { upsertUser, type UserRow } from '@api/user.repo';
+import findUser, { upsertUser, type UserRow } from '@api/user/repo';
 import { type CreateUser } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
 

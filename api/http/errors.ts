@@ -1,6 +1,6 @@
 import type { Failure } from '@shared/types/api';
-import type { HttpMethod } from './http';
-import logger from './logger';
+import type { HttpMethod } from '.';
+import logger from '../logger';
 
 export class HttpError extends Error {
   readonly statusCode: number;

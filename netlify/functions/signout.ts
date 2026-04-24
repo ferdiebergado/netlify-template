@@ -1,8 +1,9 @@
 import { db } from '@api/db';
-import { NotFoundError, respondWithError } from '@api/errors';
 import { checkMethod } from '@api/http';
-import { emptySessionCookie, getSession } from '@api/session';
-import { softDeleteSession } from '@api/session.repo';
+import { NotFoundError, respondWithError } from '@api/http/errors';
+import { getSession } from '@api/session';
+import { emptySessionCookie } from '@api/session/cookie';
+import { softDeleteSession } from '@api/session/repo';
 import type { Context } from '@netlify/functions';
 import type { Success } from '@shared/types/api';
 

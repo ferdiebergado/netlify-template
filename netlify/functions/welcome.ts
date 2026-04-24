@@ -1,5 +1,5 @@
-import { respondWithError } from '@api/errors';
 import { checkMethod } from '@api/http';
+import { respondWithError } from '@api/http/errors';
 import { getSession } from '@api/session';
 import type { Success } from '@shared/types/api';
 
