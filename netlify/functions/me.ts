@@ -1,4 +1,4 @@
-import { db } from '@api/db';
+import { getDb } from '@api/db';
 import { checkMethod } from '@api/http';
 import { respondWithError, UnauthorizedError } from '@api/http/errors';
 import { getSession } from '@api/session';
@@ -8,6 +8,8 @@ import type { Success } from '@shared/types/api';
 export default async (req: Request) => {
   try {
     checkMethod(req, ['GET']);
+
+    const db = await getDb();
     const { userId } = await getSession(req);
     const user = await findUser(db, userId);
 

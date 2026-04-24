@@ -22,7 +22,7 @@ export async function runInTransaction<TArgs extends unknown[], TReturn>(
     await tx.commit();
     return res;
   } catch (error) {
-    logger.error('Transaction failed:', error);
+    logger.error(error, 'Transaction failed:');
     logger.info('Rolling back transaction...');
     await tx.rollback();
     throw error;
@@ -32,19 +32,38 @@ export async function runInTransaction<TArgs extends unknown[], TReturn>(
   }
 }
 
-export const db = createClient({
-  url: config.databaseUrl,
-  authToken: config.tursoAuthToken,
-});
+let db: Client | null = null;
 
-try {
-  logger.info('Initializing database schema...');
-  const schemaPath = path.resolve(MIGRATION_FILE);
-  const schema = readFileSync(schemaPath, { encoding: 'utf8' });
+export async function getDb(): Promise<Client> {
+  if (!db) {
+    db = createClient({
+      url: config.databaseUrl,
+      authToken: config.tursoAuthToken,
+    });
+  }
 
-  await db.executeMultiple(schema);
-} catch (error) {
-  const msg = 'Failed to initialize the database';
-  logger.error(msg, error);
-  throw new ServiceUnavailableError(msg);
+  // Check if the database is already initialized by checking if the users table exists
+  try {
+    const result = await db.execute(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='users'"
+    );
+
+    // If the users table doesn't exist, initialize the database schema
+    if (result.rows.length === 0) {
+      logger.info('Initializing database schema...');
+      const schemaPath = path.resolve(MIGRATION_FILE);
+      const schema = readFileSync(schemaPath, { encoding: 'utf8' });
+
+      await db.executeMultiple(schema);
+      logger.info('Database schema initialized successfully');
+    } else {
+      logger.info('Database schema already initialized');
+    }
+  } catch (error) {
+    const msg = 'Failed to check or initialize the database';
+    logger.error(error, msg);
+    throw new ServiceUnavailableError(msg);
+  }
+
+  return db;
 }

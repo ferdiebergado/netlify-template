@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { db } from '@api/db';
+import { getDb } from '@api/db';
 import { checkMethod, parseJson } from '@api/http';
 import { BadRequestError, respondWithError } from '@api/http/errors';
 import { getSession } from '@api/session';
@@ -16,6 +16,7 @@ export default async (req: Request) => {
       sessionId: z.string().min(1),
     });
     const { sessionId } = await parseJson(req, revokeSessionSchema);
+    const db = await getDb();
     const success = await revokeSession(db, sessionId, userId);
     if (!success) throw new BadRequestError('Failed to revoke session');
 

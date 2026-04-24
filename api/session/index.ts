@@ -2,12 +2,13 @@ import { genRandStr } from '@shared/lib/crypto';
 import type { CreateSession, Session } from '@shared/schemas/session.schema';
 import type { CreateUser } from '@shared/schemas/user.schema';
 import { SESSION } from '../constants';
-import { db } from '../db';
+import { getDb } from '../db';
 import { UnauthorizedError } from '../http/errors';
 import { upsertUser } from '../user/repo';
 import { createSession, touchSession } from './repo';
 
 export async function initializeSession(user: CreateUser): Promise<Session> {
+  const db = await getDb();
   const id = await upsertUser(db, user);
   const session = newSession(id);
 
@@ -26,6 +27,7 @@ export function newSession(userId: number): CreateSession {
 }
 
 export async function getSession(req: Request): Promise<Session> {
+  const db = await getDb();
   const sessionId = req.headers.get(SESSION.HEADER_NAME);
   if (!sessionId) throw new UnauthorizedError('no session ID provided');
 
