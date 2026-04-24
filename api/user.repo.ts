@@ -1,43 +1,55 @@
 /* eslint-disable unicorn/no-null */
 import type { Client } from '@libsql/client';
 
-import { ProfileSchema, type Profile } from '@shared/schemas/user.schema';
+import { UserSchema, type CreateUser, type User } from '@shared/schemas/user.schema';
+import type { Role } from '@shared/types/user';
 import logger from './logger';
 
-export async function upsertUser(db: Client, user: Profile): Promise<void> {
+export async function upsertUser(db: Client, user: CreateUser): Promise<User['id']> {
   logger.info('[DB]: Upserting user...');
 
-  const now = new Date().toISOString();
-
   const sql = `
-INSERT INTO users (user_id, name, email, picture)
-VALUES (?, ?, ?, ?)
-ON CONFLICT (user_id)
+INSERT INTO users (google_id, name, email, picture, role, is_active)
+VALUES (?, ?, ?, ?, ?, ?)
+ON CONFLICT (google_id)
 DO UPDATE SET last_login_at = ?
+RETURNING id
 `;
 
-  await db.execute(sql, [
-    user.userId,
+  const { rows } = await db.execute(sql, [
+    user.googleId,
     user.name ?? null,
     user.email ?? null,
     user.picture ?? null,
-    now,
+    user.role ?? 'user',
+    user.isActive ?? 1,
+    new Date().toISOString(),
   ]);
+
+  return rows[0].id as unknown as number;
 }
 
-type UserRow = {
+export type UserRow = {
+  id: number;
+  google_id: string;
   name?: string;
   email?: string;
   picture?: string;
+  role: Role;
+  is_active: number;
+  last_login_at: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string;
 };
 
-export default async function findUser(db: Client, id: string): Promise<Profile | undefined> {
+export default async function findUser(db: Client, id: number): Promise<User | undefined> {
   logger.info('[DB]: Finding user...');
 
   const sql = `
-SELECT name, email, picture
+SELECT * 
 FROM users
-WHERE user_id = ? AND is_active = 1
+WHERE id = ? AND is_active = 1
 LIMIT 1
 `;
 
@@ -50,10 +62,21 @@ LIMIT 1
 
   const user = rows[0] as unknown as UserRow;
 
-  return ProfileSchema.parse({
-    userId: id,
+  return mapUserRowToUser(user);
+}
+
+function mapUserRowToUser(user: UserRow): User {
+  return UserSchema.parse({
+    id: user.id,
+    googleId: user.google_id,
     name: user.name,
     email: user.email,
     picture: user.picture,
+    role: user.role,
+    isActive: user.is_active,
+    lastLoginAt: user.last_login_at,
+    createdAt: user.created_at,
+    updatedAt: user.updated_at,
+    deletedAt: user.deleted_at,
   });
 }

@@ -6,13 +6,13 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useCurrentUser } from '@/features/auth/hooks';
 import { useSignoutMutation } from '@/features/auth/mutations';
-import SessionCard from './session-card';
 import UserAvatar from './user-avatar';
 import { UserInfoCard } from './user-info-card';
 
@@ -38,31 +38,18 @@ export default function UserProfile() {
           </Button>
         }
       />
-      <SheetContent
-        side="right"
-        className="flex w-full flex-col bg-neutral-50 p-5 sm:max-w-md dark:bg-neutral-900"
-      >
-        <SheetHeader className="text-left">
+      <SheetContent className="bg-neutral-50 sm:max-w-md dark:bg-neutral-900">
+        <SheetHeader>
           <SheetTitle className="text-xl font-semibold">User Profile</SheetTitle>
-          <SheetDescription>Manage your account information and active sessions</SheetDescription>
+          <SheetDescription>Manage your account information</SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 flex-1">
-          {/* User Info Section */}
+        <div className="p-4">
           <UserInfoCard user={user} />
-
-          {/* Devices Section */}
-          <SessionCard />
         </div>
 
-        <div className="mt-6">
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full"
-            onClick={handleSignout}
-            disabled={isPending}
-          >
+        <SheetFooter>
+          <Button onClick={handleSignout} disabled={isPending}>
             {isPending ? (
               <>
                 <LoaderIcon className="animate-spin" data-icon="inline-start" />
@@ -75,7 +62,7 @@ export default function UserProfile() {
               </>
             )}
           </Button>
-        </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

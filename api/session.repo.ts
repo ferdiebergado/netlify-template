@@ -1,49 +1,34 @@
-/* eslint-disable unicorn/no-null */
 import type { Client } from '@libsql/client';
 
-import type { Session } from '@shared/schemas/user.schema';
+import type { CreateSession, Session } from '@shared/schemas/session.schema';
 import logger from './logger';
 
-export async function createSession(db: Client, session: Session): Promise<void> {
+type SessionRow = {
+  id: number;
+  session_id: string;
+  user_id: number;
+  expires_at: string;
+  last_active_at: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function createSession(db: Client, session: CreateSession): Promise<Session> {
   logger.info('[DB]: Creating session...');
 
   const sql = `
-INSERT INTO sessions (session_id, user_id, ip, user_agent, device, device_type, device_vendor, browser, os, city, country, expires_at, last_active_at)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO sessions (session_id, user_id, expires_at)
+VALUES (?, ?, ?)
+RETURNING *
 `;
 
-  await db.execute(sql, [
+  const { rows } = await db.execute(sql, [
     session.sessionId,
     session.userId,
-    session.ip,
-    session.userAgent,
-    session.device ?? null,
-    session.deviceType ?? null,
-    session.deviceVendor ?? null,
-    session.browser ?? null,
-    session.os ?? null,
-    session.city ?? null,
-    session.country ?? null,
     session.expiresAt.toISOString(),
-    session.lastActiveAt.toISOString(),
   ]);
+  return mapSessionRowToSession(rows[0] as unknown as SessionRow);
 }
-
-type SessionRow = {
-  session_id: string;
-  user_id: string;
-  expires_at: string;
-  user_agent: string;
-  ip: string;
-  last_active_at: string;
-  device: string;
-  device_type: string;
-  device_vendor: string;
-  browser: string;
-  os: string;
-  city?: string;
-  country?: string;
-};
 
 export async function findSession(db: Client, id: string): Promise<Session | undefined> {
   logger.info('[DB]: Retrieving session...');
@@ -51,7 +36,7 @@ export async function findSession(db: Client, id: string): Promise<Session | und
   const now = new Date().toISOString();
 
   const sql = `
-SELECT session_id, user_id, expires_at, user_agent, ip, device, device_type, device_vendor, browser, os, city, country, last_active_at
+SELECT *
 FROM sessions
 WHERE session_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL 
 LIMIT 1
@@ -106,7 +91,7 @@ WHERE session_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 A
 export async function revokeSession(
   db: Client,
   sessionId: string,
-  userId: string
+  userId: number
 ): Promise<boolean> {
   logger.info('[DB]: Revoking session...');
 
@@ -123,13 +108,13 @@ WHERE session_id = ? AND user_id = ? AND datetime(expires_at) > datetime(?) AND 
   return rowsAffected === 1;
 }
 
-export async function findSessionsByUserId(db: Client, userId: string): Promise<Session[]> {
+export async function findSessionsByUserId(db: Client, userId: number): Promise<Session[]> {
   logger.info('[DB]: Retrieving sessions for user...');
 
   const now = new Date().toISOString();
 
   const sql = `
-SELECT session_id, user_id, expires_at, user_agent, device, device_type, device_vendor, browser, os, ip, city, country, last_active_at
+SELECT *
 FROM sessions
 WHERE user_id = ? AND datetime(expires_at) > datetime(?) AND is_revoked = 0 AND deleted_at IS NULL
 ORDER BY last_active_at DESC
@@ -141,19 +126,13 @@ ORDER BY last_active_at DESC
 }
 
 const mapSessionRowToSession = (row: SessionRow): Session => ({
+  id: row.id,
   sessionId: row.session_id,
   userId: row.user_id,
-  userAgent: row.user_agent,
-  ip: row.ip,
   expiresAt: new Date(row.expires_at),
-  lastActiveAt: new Date(row.last_active_at),
-  device: row.device,
-  deviceType: row.device_type,
-  deviceVendor: row.device_vendor,
-  browser: row.browser,
-  os: row.os,
-  city: row.city,
-  country: row.country,
+  lastActiveAt: row.last_active_at,
+  updatedAt: row.updated_at,
+  createdAt: row.created_at,
 });
 
 const reportMissingSession = (sessionId: string) => logger.warn('Session not found', { sessionId });

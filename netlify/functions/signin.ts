@@ -7,7 +7,7 @@ import { BadRequestError, HttpError } from '@api/errors';
 import { checkMethod } from '@api/http';
 import logger from '@api/logger';
 import { bakeSessionCookie, initializeSession } from '@api/session';
-import type { Profile } from '@shared/schemas/user.schema';
+import type { CreateUser } from '@shared/schemas/user.schema';
 
 export const config: Config = {
   rateLimit: {
@@ -48,24 +48,17 @@ export default async (req: Request, ctx: Context) => {
     if (!csrfTokenInCookie || g_csrf_token !== csrfTokenInCookie)
       throw new BadRequestError('invalid csrf token');
 
-    const user: Profile =
+    const user: CreateUser =
       apiConfig.env === 'development' && credential === 'test-token'
         ? {
-            userId: 'test-user-id',
+            googleId: 'test-user-id',
             name: 'Test User',
             email: 'test@example.com',
             picture: 'https://example.com/test-user.jpg',
           }
         : await verifyToken(oauthClient, credential);
 
-    const sessionData = {
-      userAgent: req.headers.get('user-agent') ?? 'unknown',
-      ip: ctx.ip,
-      city: ctx.geo.city,
-      country: ctx.geo.country?.name,
-    };
-
-    const { sessionId, expiresAt } = await initializeSession(user, sessionData);
+    const { sessionId, expiresAt } = await initializeSession(user);
     const sessionCookie = bakeSessionCookie(sessionId, expiresAt);
     ctx.cookies.set(sessionCookie);
 

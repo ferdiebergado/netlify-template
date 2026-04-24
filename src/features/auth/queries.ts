@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { fetchMe, fetchSessions, revokeSession } from './api';
+import { fetchMe, revokeSession } from './api';
 
 export const queryKeys = {
   me: ['me'] as const,
@@ -12,14 +12,6 @@ export function useMeQuery() {
     queryFn: fetchMe,
     retry: false,
     staleTime: Infinity,
-  });
-}
-
-export function useSessionsQuery() {
-  return useSuspenseQuery({
-    queryKey: queryKeys.sessions,
-    queryFn: fetchSessions,
-    staleTime: 60 * 1000,
   });
 }
 

@@ -1,49 +1,27 @@
-import { UAParser } from 'ua-parser-js';
-
 import { genRandStr } from '@shared/lib/crypto';
-import type { Profile, Session } from '@shared/schemas/user.schema';
+import type { CreateSession, Session } from '@shared/schemas/session.schema';
+import type { CreateUser } from '@shared/schemas/user.schema';
 import { SESSION } from './constants';
 import { db } from './db';
 import { UnauthorizedError } from './errors';
 import { createSession, touchSession } from './session.repo';
 import { upsertUser } from './user.repo';
 
-type SessionData = {
-  userAgent: string;
-  ip: string;
-  city?: string;
-  country?: string;
-};
+export async function initializeSession(user: CreateUser): Promise<Session> {
+  const id = await upsertUser(db, user);
+  const session = newSession(id);
 
-export async function initializeSession(user: Profile, data: SessionData): Promise<Session> {
-  await upsertUser(db, user);
-
-  const session = newSession(user.userId, data);
-  await createSession(db, session);
-
-  return session;
+  return await createSession(db, session);
 }
 
-export function newSession(userId: string, data: SessionData): Session {
+export function newSession(userId: number): CreateSession {
   const sessionId = genRandStr(SESSION.ID_LENGTH);
   const expiresAt = setExpiryDate();
-  const lastActiveAt = new Date();
-  const { device, browser, os } = UAParser(data.userAgent);
 
   return {
     sessionId,
     userId,
-    userAgent: data.userAgent,
-    device: device.model,
-    deviceType: device.type,
-    deviceVendor: device.vendor,
-    browser: browser.name,
-    os: os.name,
-    ip: data.ip,
-    city: data.city,
-    country: data.country,
     expiresAt,
-    lastActiveAt,
   };
 }
 

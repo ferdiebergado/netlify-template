@@ -1,7 +1,7 @@
 import { verifyToken } from '@api/auth';
 import { UnauthorizedError } from '@api/errors';
 import { GOOGLE_ACCOUNTS_ORIGIN } from '@shared/constants';
-import type { Profile } from '@shared/schemas/user.schema';
+import type { CreateUser } from '@shared/schemas/user.schema';
 import type { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -41,11 +41,11 @@ describe('verifyToken', () => {
 
       const user = await verifyToken(oauthClient, 'token123');
 
-      expect(user).toEqual<Profile>({
-        userId: '123',
+      expect(user).toEqual<CreateUser>({
         name: 'Alice',
         email: 'alice@example.com',
         picture: 'https://example.com/alice.jpg',
+        googleId: payload.sub,
       });
     });
   });
@@ -127,11 +127,11 @@ describe('verifyToken', () => {
 
       const user = await verifyToken(oauthClient, 'token123');
 
-      expect(user).toEqual<Profile>({
-        userId: '',
+      expect(user).toEqual<CreateUser>({
         name: 'Alice',
         email: 'alice@example.com',
         picture: undefined,
+        googleId: '',
       });
     });
 
@@ -145,9 +145,11 @@ describe('verifyToken', () => {
 
       const user = await verifyToken(oauthClient, 'token123');
 
-      expect(user).toEqual<Profile>({
-        userId: '123',
+      expect(user).toEqual<CreateUser>({
         email: 'alice@example.com',
+        googleId: payload.sub,
+        name: undefined,
+        picture: undefined,
       });
     });
   });

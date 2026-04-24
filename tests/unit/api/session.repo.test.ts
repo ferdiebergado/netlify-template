@@ -3,7 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createSession, findSession, softDeleteSession, touchSession } from '@api/session.repo';
 import { upsertUser } from '@api/user.repo';
-import type { Profile, Session } from '@shared/schemas/user.schema';
+import type { CreateSession } from '@shared/schemas/session.schema';
+import type { CreateUser } from '@shared/schemas/user.schema';
 import { createTestDB } from '@testing/node/db';
 
 vi.mock('@api/logger', async () => {
@@ -14,35 +15,27 @@ vi.mock('@api/logger', async () => {
 });
 
 describe('session repo', () => {
-  const mockUser: Profile = {
-    userId: 'abc',
-    name: 'antonio',
-    email: 'tatayoyo@gmail.com',
-  };
-
   const now = new Date();
 
-  const mockSession: Session = {
+  const mockUser: CreateUser = {
+    googleId: 'abc123',
+    name: 'antonio',
+    email: 'tatayoyo@gmail.com',
+    picture: 'https://example.com/avatar.jpg',
+  };
+
+  const mockSession: CreateSession = {
     sessionId: '123',
-    userId: mockUser.userId,
-    userAgent: 'vitest',
-    ip: '127.0.0.1',
-    expiresAt: new Date(now.getTime() + 1000 * 60 * 60), // expires in 1 hour
-    lastActiveAt: now,
-    device: 'Vivobook 16',
-    deviceType: 'desktop',
-    deviceVendor: 'Asus',
-    browser: 'Chrome',
-    os: 'linux',
-    city: 'Binan',
-    country: 'Philippines',
+    userId: 0,
+    expiresAt: new Date(now.getTime() + 1000 * 60 * 60),
   };
 
   let db: Client;
 
   beforeEach(async () => {
     db = await createTestDB();
-    await upsertUser(db, mockUser);
+    const userId = await upsertUser(db, mockUser);
+    mockSession.userId = userId;
   });
 
   afterEach(() => {
@@ -51,40 +44,50 @@ describe('session repo', () => {
 
   describe('createSession', () => {
     it('should save the session', async () => {
-      await createSession(db, mockSession);
+      const session = await createSession(db, mockSession);
 
-      const session = await findSession(db, mockSession.sessionId);
-      expect(session).toEqual(mockSession);
+      expect(session.sessionId).toEqual(mockSession.sessionId);
+      expect(session.userId).toEqual(mockSession.userId);
+      expect(session.expiresAt).toEqual(mockSession.expiresAt);
+      expect(new Date(session.lastActiveAt).getTime()).toBeCloseTo(now.getTime(), -2);
     });
   });
 
   describe('findSession', () => {
     it('should find the session', async () => {
       await createSession(db, mockSession);
+      const now = new Date();
 
       const foundSession = await findSession(db, mockSession.sessionId);
 
-      expect(foundSession).toEqual(mockSession);
+      expect(foundSession?.userId).toEqual(mockSession.userId);
+      expect(foundSession?.expiresAt).toEqual(mockSession.expiresAt);
+      expect(new Date(foundSession?.lastActiveAt as string).getTime()).toBeCloseTo(
+        now.getTime(),
+        -2
+      );
     });
   });
 
   describe('touchSession', () => {
     it("should update the session's last active time", async () => {
-      vi.useFakeTimers();
       await createSession(db, mockSession);
       const mockSessionId = mockSession.sessionId;
       const beforeTouch = await findSession(db, mockSessionId);
       const beforeLastActiveAt = beforeTouch?.lastActiveAt;
+      expect(beforeLastActiveAt).toBeDefined();
 
+      vi.useFakeTimers();
       vi.advanceTimersByTime(1000 * 60);
       await touchSession(db, mockSessionId);
 
       const afterTouch = await findSession(db, mockSessionId);
       const afterLastActiveAt = afterTouch?.lastActiveAt;
-
       expect(afterLastActiveAt).toBeDefined();
-      expect(beforeLastActiveAt).toBeDefined();
-      expect(afterLastActiveAt?.getTime()).toBeGreaterThan(beforeLastActiveAt?.getTime() as number);
+
+      const lastActiveDate = new Date(afterLastActiveAt as string);
+      const beforeLastActiveDate = new Date(beforeLastActiveAt as string);
+      expect(lastActiveDate.getTime()).toBeGreaterThan(beforeLastActiveDate.getTime());
     });
   });
 

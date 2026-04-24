@@ -8,7 +8,7 @@ type UserAvatarProps = {
 
 export default function UserAvatar({ user }: UserAvatarProps) {
   return (
-    <Avatar className="h-8 w-8 rounded-lg">
+    <Avatar className="size-8 rounded-lg">
       <AvatarImage src={user.picture} alt={user.name} />
       <AvatarFallback className="rounded-lg">
         <User />

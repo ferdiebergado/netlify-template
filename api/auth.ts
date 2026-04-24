@@ -1,13 +1,13 @@
 import { OAuth2Client } from 'google-auth-library';
 
 import { GOOGLE_ACCOUNTS_ORIGIN } from '@shared/constants';
-import type { Profile } from '@shared/schemas/user.schema';
+import type { CreateUser } from '@shared/schemas/user.schema';
 import config from './config';
 import { UnauthorizedError } from './errors';
 
 export const oauthClient = new OAuth2Client(config.googleClientId);
 
-export async function verifyToken(oauthClient: OAuth2Client, token: string): Promise<Profile> {
+export async function verifyToken(oauthClient: OAuth2Client, token: string): Promise<CreateUser> {
   const ticket = await oauthClient.verifyIdToken({
     idToken: token,
     audience: config.googleClientId,
@@ -20,7 +20,7 @@ export async function verifyToken(oauthClient: OAuth2Client, token: string): Pro
   if (tokenPayload.iss !== GOOGLE_ACCOUNTS_ORIGIN) throw new UnauthorizedError('Invalid issuer');
 
   return {
-    userId: tokenPayload.sub,
+    googleId: tokenPayload.sub,
     name: tokenPayload.name,
     email: tokenPayload.email,
     picture: tokenPayload.picture,

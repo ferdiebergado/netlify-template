@@ -3,17 +3,17 @@ import type { Profile } from '@shared/schemas/user.schema';
 import { UserCircle } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 
-interface UserInfoCardProps {
+type UserInfoCardProps = {
   user: Profile;
-}
+};
 
 export function UserInfoCard({ user }: UserInfoCardProps) {
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
-          <UserCircle className="h-5 w-5" />
-          User Information
+          <UserCircle className="size-5" />
+          Account
         </CardTitle>
         <CardAction>
           <a
@@ -25,10 +25,8 @@ export function UserInfoCard({ user }: UserInfoCardProps) {
           </a>
         </CardAction>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex justify-center">
-          <img src={user.picture || ''} className="h-25 w-25 rounded-full" />
-        </div>
+      <CardContent>
+        <img src={user.picture ?? ''} className="mx-auto block size-25 rounded-full" />
 
         <div className="space-y-5 text-sm">
           <div>

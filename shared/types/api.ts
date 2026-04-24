@@ -1,5 +1,6 @@
+import type { Session } from '@shared/schemas/session.schema';
 import type { UnknownRecord } from 'type-fest';
-import type { Session, User } from '../schemas/user.schema';
+import type { User } from '../schemas/user.schema';
 
 export type APIData = UnknownRecord & {
   message?: string;
