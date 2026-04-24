@@ -15,8 +15,6 @@ vi.mock('@api/logger', async () => {
 });
 
 describe('session repo', () => {
-  const now = new Date();
-
   const mockUser: CreateUser = {
     googleId: 'abc123',
     name: 'antonio',
@@ -27,7 +25,7 @@ describe('session repo', () => {
   const mockSession: CreateSession = {
     sessionId: '123',
     userId: 0,
-    expiresAt: new Date(now.getTime() + 1000 * 60 * 60),
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60),
   };
 
   let db: Client;
@@ -49,23 +47,19 @@ describe('session repo', () => {
       expect(session.sessionId).toEqual(mockSession.sessionId);
       expect(session.userId).toEqual(mockSession.userId);
       expect(session.expiresAt).toEqual(mockSession.expiresAt);
-      expect(new Date(session.lastActiveAt).getTime()).toBeCloseTo(now.getTime(), -2);
+      expect(new Date(session.lastActiveAt).getTime()).toBeCloseTo(Date.now(), -2);
     });
   });
 
   describe('findSession', () => {
     it('should find the session', async () => {
       await createSession(db, mockSession);
-      const now = new Date();
 
       const foundSession = await findSession(db, mockSession.sessionId);
 
       expect(foundSession?.userId).toEqual(mockSession.userId);
       expect(foundSession?.expiresAt).toEqual(mockSession.expiresAt);
-      expect(new Date(foundSession?.lastActiveAt as string).getTime()).toBeCloseTo(
-        now.getTime(),
-        -2
-      );
+      expect(new Date(foundSession?.lastActiveAt as string).getTime()).toBeCloseTo(Date.now(), -2);
     });
   });
 
