@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { type ReactNode } from 'react';
 import { BrowserRouter } from 'react-router';
 import { Toaster } from 'sonner';
+import 'sonner/dist/styles.css';
 
 import DarkModeProvider from '@/components/dark-mode/mode-provider';
 import QueryErrorBoundary from '@/components/query-error-boundary';
