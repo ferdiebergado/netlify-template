@@ -1,6 +1,5 @@
 import type { Config, Context } from '@netlify/edge-functions';
 
-import apiConfig from '../../api/config.ts';
 import logger from '../../api/logger.ts';
 import { CSP_NONCE_PLACEHOLDER, GOOGLE_ACCOUNTS_ORIGIN } from '../../shared/constants.ts';
 import { genRandStr } from '../../shared/lib/crypto.ts';
@@ -118,11 +117,8 @@ function buildCSP(directives: Record<string, string[]>, nonce?: string): string 
   return Object.entries(directives)
     .map(([directive, values]) => {
       let value = '';
-      if (directive === 'style-src' && apiConfig.env === 'development') {
-        value = `'unsafe-inline'`;
-      } else if ((directive === 'script-src' || directive === 'style-src') && nonce) {
+      if ((directive === 'script-src' || directive === 'style-src') && nonce)
         value = `'nonce-${nonce}'`;
-      }
 
       values = [...values, value];
 
